@@ -14,5 +14,5 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/list_board_item" />
+        tools:listitem="@layout/item_board" />
 </FrameLayout>

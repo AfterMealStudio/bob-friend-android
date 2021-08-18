@@ -37,6 +37,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+
     //네이버지도 api
     compile files('libs/libDaumMapAndroid.jar')
     implementation fileTree(include: ['*.jar'], dir: 'libs')

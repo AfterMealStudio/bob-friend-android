@@ -1,6 +1,7 @@
 package com.example.bob_friend_android
 
 import android.Manifest
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val PERMISSIONS_REQUEST_CODE = 100
     private var REQUIRED_PERMISSIONS = arrayOf<String>( Manifest.permission.ACCESS_FINE_LOCATION)
     var flag = 1
+    var backKeyPressedTime: Long = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,13 +39,17 @@ class MainActivity : AppCompatActivity() {
         binding.mainEditTextSearch.visibility = View.INVISIBLE
         binding.search.setOnClickListener { binding.mainEditTextSearch.visibility = View.VISIBLE }
 
+        binding.mainWriteBtn.setOnClickListener {
+            val intent = Intent(this, WriteBoardActivity::class.java)
+            startActivity(intent)
+        }
         iconColorChange()
         setFragment()
     }
 
 
     private fun iconColorChange() {
-        binding.mainFloatingBtn.setColorFilter(Color.parseColor("#0A1931"))
+        binding.mainWriteBtn.setColorFilter(Color.parseColor("#0A1931"))
         binding.menu.setColorFilter(Color.parseColor("#FFFFFFFF"))
         binding.search.setColorFilter(Color.parseColor("#FFFFFFFF"))
     }
@@ -63,5 +69,15 @@ class MainActivity : AppCompatActivity() {
         }
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    override fun onBackPressed() {
+        if(System.currentTimeMillis() > backKeyPressedTime + 2500) {
+            backKeyPressedTime = System.currentTimeMillis()
+            return
+        }
+        if (System.currentTimeMillis() > backKeyPressedTime + 2500) {
+            finishAffinity()
+        }
     }
 }
