@@ -130,13 +130,34 @@
                         android:text="@string/read_member"
                         android:textColor="@color/main_color1"
                         android:gravity="start"/>
-                    <TextView
-                        android:id="@+id/read_member2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/read_member2"
-                        android:textSize="20sp"
-                        android:gravity="start"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/read_member2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/read_member2"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:id="@+id/read_member3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/read_member3"
+                            android:textSize="20sp" />
+                        <TextView
+                            android:id="@+id/read_member4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/read_member4"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -230,10 +251,18 @@
                 android:layout_weight="1"
                 android:text="@string/read_appointment_place" />
 
+            <view
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/comment_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                tools:listitem="@layout/item_board_comments"/>
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

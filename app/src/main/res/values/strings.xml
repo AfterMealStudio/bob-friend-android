@@ -25,7 +25,7 @@
     <string name="userEmail2">이메일 주소</string>
     <string name="userPassword2">비밀번호</string>
     <string name="userPasswordCheck2">비밀번호 확인</string>
-    <string name="userName2">실명을 입력하세요.</string>
+    <string name="userName2">닉네임을 입력하세요.</string>
     <string name="userPhoneNumber2">"-" 없이 입력하세요.</string>
     <string name="userDateOfBirth2">Ex)20001212</string>
 
@@ -63,6 +63,7 @@
     <string name="write_today">오늘</string>
     <string name="write_notToday">오늘이 아님</string>
 
+
     <!--게시글 보기-->
     <string name="read">약속 내용</string>
     <string name="read_title">제목</string>
@@ -78,8 +79,14 @@
     <string name="read_title2">오늘</string>
     <string name="read_content2">오늘</string>
     <string name="read_age2">오늘</string>
-    <string name="read_member2">오늘</string>
+    <string name="read_member2">현재</string>
+    <string name="read_member3">/</string>
+    <string name="read_member4">전체</string>
     <string name="read_meeting_time2">오늘</string>
     <string name="read_appointment_place2">오늘</string>
     <string name="read_writer2">오늘</string>
+
+
+    <!--댓글-->
+    <string name="comment_report">신고하기</string>
 </resources>

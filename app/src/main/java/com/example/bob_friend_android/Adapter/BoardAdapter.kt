@@ -1,13 +1,18 @@
-package com.example.bob_friend_android
+package com.example.bob_friend_android.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bob_friend_android.DataModel.Board
+import com.example.bob_friend_android.R
+import com.example.bob_friend_android.ReadBoardActivity
+import java.util.*
 
-class MyBoardAdapter(private val context: Context, private val boardList : ArrayList<BoardData>) : RecyclerView.Adapter<MyBoardAdapter.ViewHolder>() {
+class BoardAdapter(private val context: Context, private val boardList : ArrayList<Board>) : RecyclerView.Adapter<BoardAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_board,parent,false)
         return ViewHolder(view)
@@ -29,7 +34,7 @@ class MyBoardAdapter(private val context: Context, private val boardList : Array
         private val currentNumberOfComments: TextView = itemView.findViewById(R.id.currentNumberOfComments)
         private val createDate: TextView = itemView.findViewById(R.id.createDate)
 
-        fun bind(item: BoardData) {
+        fun bind(item: Board) {
             boardTitle.text = item.boardTitle
             boardContent.text = item.boardContent
             userName.text = item.userName
@@ -38,7 +43,16 @@ class MyBoardAdapter(private val context: Context, private val boardList : Array
             currentNumberOfComments.text = item.currentNumberOfComments.toString()
             createDate.text = item.createDate
 
-            //Glide.with(itemView).load(item.img).into(imgProfile)
+
+            itemView.setOnClickListener {
+                Intent(context, ReadBoardActivity::class.java)
+            }
+//            itemView.setOnClickListener {
+//                Intent(context, ProfileDetailActivity::class.java).apply {
+//                    putExtra("data", item)
+//                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                }.run { context.startActivity(this) }
+//            }
         }
     }
 }

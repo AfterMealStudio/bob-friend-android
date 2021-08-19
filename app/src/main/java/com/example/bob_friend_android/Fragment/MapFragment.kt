@@ -9,16 +9,13 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.Fragment
 import com.example.bob_friend_android.R
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
@@ -35,8 +32,10 @@ private const val ARG_PARAM2 = "param2"
  */
 class MapFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View?
     {
         val view : View = inflater.inflate(R.layout.fragment_map, container, false)
 
@@ -47,7 +46,10 @@ class MapFragment : Fragment() {
         mapViewContainer.addView(mapView)
 
         //허가 받고 처음 페이지는 내위치에 띄움
-        val permissionCheck = ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+        val permissionCheck = ContextCompat.checkSelfPermission(
+            requireActivity(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
             val lm: LocationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             try {
@@ -57,7 +59,7 @@ class MapFragment : Fragment() {
                 val uLongitude = userNowLocation.longitude
                 val uNowPosition = MapPoint.mapPointWithGeoCoord(uLatitude, uLongitude)
                 mapView.setMapCenterPoint(uNowPosition, true)
-            }catch(e: NullPointerException){
+            }catch (e: NullPointerException){
                 Log.e("LOCATION_ERROR", e.toString())
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     ActivityCompat.finishAffinity(requireActivity())
@@ -74,5 +76,10 @@ class MapFragment : Fragment() {
         }
 
         return view
+    }
+
+    fun finish() {
+        mapView.removeView(mapView)
+        super.finish()
     }
 }
