@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bob_friend_android.Adapter.SearchAdapter
 import com.example.bob_friend_android.DataModel.SearchKeyword
@@ -32,6 +33,9 @@ class MainActivity : AppCompatActivity() {
     private val bindingMap by lazy { FragmentMapBinding.inflate(layoutInflater) }
     private val PERMISSIONS_REQUEST_CODE = 100
     private var REQUIRED_PERMISSIONS = arrayOf<String>( Manifest.permission.ACCESS_FINE_LOCATION)
+    val fragmentMap = MapFragment()
+    val fragmentList = ListFragment()
+
 
     var flag = 1 //프레그먼트 교체
 
@@ -58,20 +62,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.rvList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvList.adapter = listAdapter
+
         // 리스트 아이템 클릭 시 해당 위치로 이동
         listAdapter.setItemClickListener(object: SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
-                val mapPoint = MapPoint.mapPointWithGeoCoord(listItems[position].y, listItems[position].x)
-                bindingMap.mapView.setMapCenterPointAndZoomLevel(mapPoint, 1, true)
+                setDataAtFragment(fragmentMap, listItems[position].name, listItems[position].y, listItems[position].x)
+                Log.d("MainActivity", "argument:${fragmentMap.arguments} x:${listItems[position].x}, y:${listItems[position].y}")
+
+                fragmentMap.setPosition(listItems[position].y, listItems[position].x)
             }
         })
-
-        // 검색 버튼
-        binding.search.setOnClickListener {
-            keyword = binding.mainEditTextSearch.text.toString()
-            pageNumber = 1
-            searchKeyword(keyword)
-        }
 
 
         setSupportActionBar(binding.mainToolbar)
@@ -81,17 +81,24 @@ class MainActivity : AppCompatActivity() {
 
         binding.menu.setOnClickListener { binding.mainDrawerLayout.openDrawer(GravityCompat.START) }
 
+        binding.rvList.visibility = View.INVISIBLE
         binding.mainEditTextSearch.visibility = View.INVISIBLE
-        binding.search.setOnClickListener { binding.mainEditTextSearch.visibility = View.VISIBLE }
+        binding.search.setOnClickListener {
+            binding.mainEditTextSearch.visibility = View.VISIBLE
+            Log.d("Test", "Search")
+            keyword = binding.mainEditTextSearch.text.toString()
+            pageNumber = 1
+            searchKeyword(keyword)
+            binding.rvList.visibility = View.VISIBLE
+        }
 
         binding.mainWriteBtn.setOnClickListener {
             val intent = Intent(this, WriteBoardActivity::class.java)
             startActivity(intent)
         }
+
         iconColorChange()
         setFragment()
-
-        searchKeyword("은행")
     }
 
 
@@ -106,16 +113,30 @@ class MainActivity : AppCompatActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         when(flag){
             1 -> {
-                transaction.replace(R.id.frameLayout, MapFragment())
+                transaction.replace(R.id.frameLayout, fragmentMap)
                 flag = 2
             }
             2 -> {
-                transaction.replace(R.id.frameLayout, ListFragment())
+                transaction.replace(R.id.frameLayout, fragmentList)
                 flag = 1
             }
         }
+
+        Log.d("MapFragment", "flag=${flag}")
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun setDataAtFragment(fragment:Fragment, placeName:String, y:Double, x:Double) {
+        val bundle = Bundle()
+        bundle.putString("placeName", placeName)
+        bundle.putDouble("x", x)
+        bundle.putDouble("y", y)
+        bundle.putBoolean("click", true)
+
+        fragment.arguments = bundle
+
+        Log.d("MainActivity", "x:${x}, y:${y}")
     }
 
 
@@ -132,32 +153,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun searchKeyword(keyword: String) {
         val retrofit = Retrofit.Builder()   // Retrofit 구성
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val api = retrofit.create(KakaoAPI::class.java)   // 통신 인터페이스를 객체로 생성
         val call = api.getSearchKeyword(API_KEY, keyword)   // 검색 조건 입력
 
         // API 서버에 요청
         call.enqueue(object: Callback<SearchKeyword> {
-            override fun onResponse(call: Call<SearchKeyword>, response: Response<SearchKeyword>) {
-                // 통신 성공
-                addItemsAndMarkers(response.body())
+            override fun onResponse(
+                    call: Call<SearchKeyword>,
+                    response: Response<SearchKeyword>
+            ) {
+                // 통신 성공 (검색 결과는 response.body()에 담겨있음)
+                Log.d("Test", "Raw: ${response.raw()}")
+                Log.d("Test", "Body: ${response.body()}")
+                addItems(response.body())
             }
 
             override fun onFailure(call: Call<SearchKeyword>, t: Throwable) {
                 // 통신 실패
-                Log.w("LocalSearch", "통신 실패: ${t.message}")
+                Log.w("MainActivity", "통신 실패: ${t.message}")
             }
         })
     }
 
 
-    private fun addItemsAndMarkers(searchResult: SearchKeyword?) {
-        if (!searchResult?.documents.isNullOrEmpty()) {
-            // 검색 결과 있음
-            listItems.clear()                   // 리스트 초기화
-            bindingMap.mapView.removeAllPOIItems() // 지도의 마커 모두 제거
+    private fun addItems(searchResult: SearchKeyword?) {
+        if (!searchResult?.documents.isNullOrEmpty()) { // 검색 결과 있음
+            listItems.clear()
             for (document in searchResult!!.documents) {
                 // 결과를 리사이클러 뷰에 추가
                 val item = SearchLocation(document.place_name,
@@ -167,24 +191,11 @@ class MainActivity : AppCompatActivity() {
                     document.y.toDouble())
                 listItems.add(item)
 
-                // 지도에 마커 추가
-                val point = MapPOIItem()
-                point.apply {
-                    itemName = document.place_name
-                    mapPoint = MapPoint.mapPointWithGeoCoord(document.y.toDouble(),
-                        document.x.toDouble())
-                    markerType = MapPOIItem.MarkerType.BluePin
-                    selectedMarkerType = MapPOIItem.MarkerType.RedPin
-                }
-                bindingMap.mapView.addPOIItem(point)
+                fragmentMap.addMarkers(document.place_name, document.x.toDouble(),
+                        document.y.toDouble())
             }
             listAdapter.notifyDataSetChanged()
-
-//            binding.btnNextPage.isEnabled = !searchResult.meta.is_end // 페이지가 더 있을 경우 다음 버튼 활성화
-//            binding.btnPrevPage.isEnabled = pageNumber != 1             // 1페이지가 아닐 경우 이전 버튼 활성화
-
-        } else {
-            // 검색 결과 없음
+        } else { // 검색 결과 없음
             Toast.makeText(this, "검색 결과가 없습니다", Toast.LENGTH_SHORT).show()
         }
     }
