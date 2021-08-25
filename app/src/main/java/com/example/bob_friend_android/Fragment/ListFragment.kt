@@ -16,6 +16,7 @@ import java.util.*
 class ListFragment : Fragment() {
     private val boardList : ArrayList<Board> = ArrayList()
     lateinit var boardRecyclerView : RecyclerView
+    private lateinit var boardAdapter: BoardAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -45,6 +46,7 @@ class ListFragment : Fragment() {
         boardRecyclerView = view.findViewById(R.id.recyclerview) as RecyclerView
         boardRecyclerView.layoutManager = LinearLayoutManager(requireActivity())
         boardRecyclerView.adapter = BoardAdapter(requireActivity(), boardList)
+
         return view
     }
 }

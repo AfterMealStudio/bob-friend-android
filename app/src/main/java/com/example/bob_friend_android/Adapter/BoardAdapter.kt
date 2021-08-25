@@ -9,13 +9,23 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.DataModel.Board
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.ReadBoardActivity
+import com.example.bob_friend_android.Activity.ReadBoardActivity
 import java.util.*
 
 class BoardAdapter(private val context: Context, private val boardList : ArrayList<Board>) : RecyclerView.Adapter<BoardAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_board,parent,false)
         return ViewHolder(view)
+    }
+
+    var datas = mutableListOf<Board>()
+
+    interface OnItemClickListener{
+        fun onItemClick(v:View, data: Board, pos : Int)
+    }
+    private var listener : OnItemClickListener? = null
+    fun setOnItemClickListener(listener : OnItemClickListener) {
+        this.listener = listener
     }
 
     override fun getItemCount(): Int = boardList.size
@@ -43,16 +53,19 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
             currentNumberOfComments.text = item.currentNumberOfComments.toString()
             createDate.text = item.createDate
 
-
             itemView.setOnClickListener {
-                Intent(context, ReadBoardActivity::class.java)
+                Intent(context, ReadBoardActivity::class.java).apply {
+                    putExtra("boardTitle", boardTitle.text)
+                    putExtra("boardContent", boardContent.text)
+                    putExtra("userName", userName.text)
+                    putExtra("currentNumberOfParticipants", currentNumberOfParticipants.text)
+                    putExtra("totalNumberOfParticipants", totalNumberOfParticipants.text)
+                    putExtra("currentNumberOfComments", currentNumberOfComments.text)
+                    putExtra("createDate", createDate.text)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }.run { context.startActivity(this) }
             }
-//            itemView.setOnClickListener {
-//                Intent(context, ProfileDetailActivity::class.java).apply {
-//                    putExtra("data", item)
-//                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                }.run { context.startActivity(this) }
-//            }
+
         }
     }
 }

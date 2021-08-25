@@ -52,16 +52,18 @@ class MapFragment : Fragment() {
         val kakaoMap = view.findViewById<View>(R.id.map_view)
         val mapViewContainer = kakaoMap as ViewGroup
 
-        setMyLocation()
-
         x = arguments?.getDouble("x")
         y = arguments?.getDouble("y")
         placeName = arguments?.getString("placeName")
         click = arguments?.getBoolean("click")
 
-        if (click==true) { addMarkers(placeName!!, x!!, y!!) }
+        if (click==true) {
+            addMarkers(placeName!!, x!!, y!!)
+        } else {
+            setMyLocation()
+        }
 
-        Log.d("MapFragment", "arguments:${arguments} x:${x}, y:${y}, click:${click}")
+        //Log.d("MapFragment", "arguments:${arguments} x:${x}, y:${y}, click:${click}")
 
         mapViewContainer.addView(mapView)
 
@@ -81,8 +83,11 @@ class MapFragment : Fragment() {
         point.apply {
             itemName = name
             mapPoint = MapPoint.mapPointWithGeoCoord(y,x)
-            markerType = MapPOIItem.MarkerType.BluePin
-            selectedMarkerType = MapPOIItem.MarkerType.RedPin
+            customImageResourceId = R.drawable.maps_and_flags
+            customSelectedImageResourceId = R.drawable.maps_and_flags
+            markerType = MapPOIItem.MarkerType.CustomImage
+            selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+            isCustomImageAutoscale = false
         }
         mapView.addPOIItem(point)
     }
@@ -111,10 +116,16 @@ class MapFragment : Fragment() {
                 val uNowPosition = MapPoint.mapPointWithGeoCoord(uLatitude, uLongitude)
                 mapView.setMapCenterPoint(uNowPosition, true)
                 val marker = MapPOIItem()
-                marker.itemName = "내위치"
-                marker.mapPoint = MapPoint.mapPointWithGeoCoord(uLatitude, uLongitude)
-                marker.markerType = MapPOIItem.MarkerType.BluePin
-                marker.selectedMarkerType = MapPOIItem.MarkerType.RedPin
+                marker.apply {
+                    itemName = "내위치"
+                    mapPoint = MapPoint.mapPointWithGeoCoord(uLatitude, uLongitude)
+                    customImageResourceId = R.drawable.maps_and_flags
+                    customSelectedImageResourceId = R.drawable.maps_and_flags
+                    markerType = MapPOIItem.MarkerType.CustomImage
+                    selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+                    isCustomImageAutoscale = false
+                    setCustomImageAnchor(0.5f, 1.0f)
+                }
                 mapView.addPOIItem(marker)
 
             }catch (e: NullPointerException){

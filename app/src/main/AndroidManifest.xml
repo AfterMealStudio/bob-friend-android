@@ -13,17 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bobfriendandroid"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReadBoardActivity"></activity>
-        <activity android:name=".WriteBoardActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".Activity.ReadBoardActivity"></activity>
+        <activity android:name=".Activity.WriteBoardActivity" />
+        <activity android:name=".Activity.RegisterActivity" />
+        <activity android:name=".Activity.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Activity.MainActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

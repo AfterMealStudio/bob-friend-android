@@ -1,4 +1,4 @@
-package com.example.bob_friend_android
+package com.example.bob_friend_android.Activity
 
 import android.Manifest
 import android.content.Intent
@@ -17,10 +17,11 @@ import com.example.bob_friend_android.DataModel.SearchKeyword
 import com.example.bob_friend_android.DataModel.SearchLocation
 import com.example.bob_friend_android.Fragment.ListFragment
 import com.example.bob_friend_android.Fragment.MapFragment
+import com.example.bob_friend_android.KakaoAPI
+import com.example.bob_friend_android.R
+import com.example.bob_friend_android.Activity.WriteBoardActivity
 import com.example.bob_friend_android.databinding.ActivityMainBinding
 import com.example.bob_friend_android.databinding.FragmentMapBinding
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -69,6 +70,8 @@ class MainActivity : AppCompatActivity() {
                 setDataAtFragment(fragmentMap, listItems[position].name, listItems[position].y, listItems[position].x)
                 Log.d("MainActivity", "argument:${fragmentMap.arguments} x:${listItems[position].x}, y:${listItems[position].y}")
 
+                fragmentMap.addMarkers(listItems[position].name, listItems[position].y,
+                        listItems[position].x)
                 fragmentMap.setPosition(listItems[position].y, listItems[position].x)
             }
         })
@@ -81,15 +84,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.menu.setOnClickListener { binding.mainDrawerLayout.openDrawer(GravityCompat.START) }
 
-        binding.rvList.visibility = View.INVISIBLE
+
         binding.mainEditTextSearch.visibility = View.INVISIBLE
         binding.search.setOnClickListener {
             binding.mainEditTextSearch.visibility = View.VISIBLE
-            Log.d("Test", "Search")
+
             keyword = binding.mainEditTextSearch.text.toString()
             pageNumber = 1
-            searchKeyword(keyword)
-            binding.rvList.visibility = View.VISIBLE
+            if(keyword!="") {
+                searchKeyword(keyword)
+            }
         }
 
         binding.mainWriteBtn.setOnClickListener {
@@ -189,11 +193,8 @@ class MainActivity : AppCompatActivity() {
                     document.address_name,
                     document.x.toDouble(),
                     document.y.toDouble())
-                listItems.add(item)
+                listItems.add(item)}
 
-                fragmentMap.addMarkers(document.place_name, document.x.toDouble(),
-                        document.y.toDouble())
-            }
             listAdapter.notifyDataSetChanged()
         } else { // 검색 결과 없음
             Toast.makeText(this, "검색 결과가 없습니다", Toast.LENGTH_SHORT).show()

@@ -1,4 +1,4 @@
-package com.example.bob_friend_android
+package com.example.bob_friend_android.Activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -15,6 +15,7 @@ class ReadBoardActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityReadBoardBinding
     private val commentList : ArrayList<Comment> = ArrayList()
+    lateinit var datas : Board
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

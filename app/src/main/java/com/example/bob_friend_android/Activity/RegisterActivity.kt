@@ -1,9 +1,8 @@
-package com.example.bob_friend_android
+package com.example.bob_friend_android.Activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.bob_friend_android.databinding.ActivityLoginBinding
 import com.example.bob_friend_android.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {

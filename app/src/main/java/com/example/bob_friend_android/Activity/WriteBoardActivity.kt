@@ -1,12 +1,11 @@
-package com.example.bob_friend_android
+package com.example.bob_friend_android.Activity
 
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityWriteBoardBinding
 
 class WriteBoardActivity : AppCompatActivity() {
