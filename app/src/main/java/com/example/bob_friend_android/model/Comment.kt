@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.DataModel
+package com.example.bob_friend_android.model
 
 data class Comment (
         private var commentId: Long,

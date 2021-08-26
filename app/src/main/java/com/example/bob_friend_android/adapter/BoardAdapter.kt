@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.Adapter
+package com.example.bob_friend_android.adapter
 
 import android.content.Context
 import android.content.Intent
@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bob_friend_android.DataModel.Board
+import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.Activity.ReadBoardActivity
+import com.example.bob_friend_android.view.ReadBoardActivity
 import java.util.*
 
 class BoardAdapter(private val context: Context, private val boardList : ArrayList<Board>) : RecyclerView.Adapter<BoardAdapter.ViewHolder>() {
@@ -48,20 +48,20 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
             boardTitle.text = item.boardTitle
             boardContent.text = item.boardContent
             userName.text = item.userName
-            currentNumberOfParticipants.text = item.currentNumberOfParticipants.toString()
-            totalNumberOfParticipants.text = item.totalNumberOfParticipants.toString()
-            currentNumberOfComments.text = item.currentNumberOfComments.toString()
-            createDate.text = item.createDate
+//            currentNumberOfParticipants.text = item.currentNumberOfParticipants.toString()
+//            totalNumberOfParticipants.text = item.totalNumberOfParticipants.toString()
+//            currentNumberOfComments.text = item.currentNumberOfComments.toString()
+//            createDate.text = item.createDate
 
             itemView.setOnClickListener {
                 Intent(context, ReadBoardActivity::class.java).apply {
                     putExtra("boardTitle", boardTitle.text)
                     putExtra("boardContent", boardContent.text)
                     putExtra("userName", userName.text)
-                    putExtra("currentNumberOfParticipants", currentNumberOfParticipants.text)
-                    putExtra("totalNumberOfParticipants", totalNumberOfParticipants.text)
-                    putExtra("currentNumberOfComments", currentNumberOfComments.text)
-                    putExtra("createDate", createDate.text)
+//                    putExtra("currentNumberOfParticipants", currentNumberOfParticipants.text)
+//                    putExtra("totalNumberOfParticipants", totalNumberOfParticipants.text)
+//                    putExtra("currentNumberOfComments", currentNumberOfComments.text)
+//                    putExtra("createDate", createDate.text)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { context.startActivity(this) }
             }

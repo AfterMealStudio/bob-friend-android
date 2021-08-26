@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.DataModel
+package com.example.bob_friend_android.model
 
 class SearchLocation(val name: String,      // 장소명
                  val road: String,      // 도로명 주소

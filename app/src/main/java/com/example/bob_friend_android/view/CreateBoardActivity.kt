@@ -1,20 +1,32 @@
-package com.example.bob_friend_android.Activity
+package com.example.bob_friend_android.view
 
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.ActivityWriteBoardBinding
+import com.example.bob_friend_android.databinding.ActivityCreateBoardBinding
+import com.example.bob_friend_android.viewmodel.CreateBoardViewModel
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
-class WriteBoardActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityWriteBoardBinding
+class CreateBoardActivity : AppCompatActivity() {
+    private lateinit var binding : ActivityCreateBoardBinding
+    private lateinit var viewModel : CreateBoardViewModel
+    var isToday : Boolean = true
+    private val format : DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityWriteBoardBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_create_board)
+        viewModel = ViewModelProvider(this).get(CreateBoardViewModel::class.java)
+        binding.create = this
+        binding.lifecycleOwner = this
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -42,6 +54,9 @@ class WriteBoardActivity : AppCompatActivity() {
         }
 
         binding.writeOkBtn.setOnClickListener {
+            val boardTitle = binding.editCreateTitle.text.toString().trim()
+            val boardContent = binding.editCreateContent.text.toString().trim()
+            viewModel.CreateBoard(boardTitle, boardContent, this)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

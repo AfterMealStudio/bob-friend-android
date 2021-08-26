@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,21 +14,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bobfriendandroid"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Activity.ReadBoardActivity"></activity>
-        <activity android:name=".Activity.WriteBoardActivity" />
-        <activity android:name=".Activity.RegisterActivity" />
-        <activity android:name=".Activity.LoginActivity">
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="76ae2d3e91f458eca0e0cda68b199d93" />
+
+        <activity android:name=".view.ReadBoardActivity"></activity>
+        <activity android:name=".view.CreateBoardActivity" />
+        <activity android:name=".view.JoinActivity" />
+        <activity android:name=".view.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.MainActivity" />
-
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="76ae2d3e91f458eca0e0cda68b199d93" />
+        <activity android:name=".view.MainActivity" />
     </application>
 
 </manifest>

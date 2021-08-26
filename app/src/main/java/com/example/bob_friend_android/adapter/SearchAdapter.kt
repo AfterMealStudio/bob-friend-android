@@ -1,13 +1,14 @@
-package com.example.bob_friend_android.Adapter
+package com.example.bob_friend_android.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bob_friend_android.DataModel.SearchLocation
+import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.R
 import java.util.*
+import kotlin.collections.ArrayList
 
 class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.ViewHolder {
@@ -17,6 +18,10 @@ class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapt
 
     override fun getItemCount(): Int {
         return itemList.size
+    }
+
+    fun getItems(): ArrayList<SearchLocation> {
+         return itemList
     }
 
     override fun onBindViewHolder(holder: SearchAdapter.ViewHolder, position: Int) {

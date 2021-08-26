@@ -1,6 +1,6 @@
 package com.example.bob_friend_android
 
-import com.example.bob_friend_android.DataModel.SearchKeyword
+import com.example.bob_friend_android.model.SearchKeyword
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

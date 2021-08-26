@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.Adapter
+package com.example.bob_friend_android.adapter
 
 import android.content.Context
 import android.util.Log
@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.bob_friend_android.DataModel.Comment
+import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.R
 
 class CommentAdapter(private var list: MutableList<Comment>): RecyclerView.Adapter<CommentAdapter.ViewHolder>() {

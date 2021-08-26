@@ -1,13 +1,12 @@
-package com.example.bob_friend_android.Activity
+package com.example.bob_friend_android.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bob_friend_android.Adapter.BoardAdapter
-import com.example.bob_friend_android.Adapter.CommentAdapter
-import com.example.bob_friend_android.DataModel.Board
-import com.example.bob_friend_android.DataModel.Comment
+import com.example.bob_friend_android.adapter.CommentAdapter
+import com.example.bob_friend_android.model.Board
+import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.databinding.ActivityReadBoardBinding
 import java.util.*
 
