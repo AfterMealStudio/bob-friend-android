@@ -54,9 +54,9 @@ class CreateBoardActivity : AppCompatActivity() {
         }
 
         binding.writeOkBtn.setOnClickListener {
-            val boardTitle = binding.editCreateTitle.text.toString().trim()
+            val title = binding.editCreateTitle.text.toString().trim()
             val boardContent = binding.editCreateContent.text.toString().trim()
-            viewModel.CreateBoard(boardTitle, boardContent, this)
+            viewModel.CreateBoard(title, boardContent, this)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()

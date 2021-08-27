@@ -1,43 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:orientation="vertical">
 
-    <data>
-        <variable
-            name="header"
-            type="com.example.bob_friend_android.viewmodel.HeaderViewModel" />
-    </data>
+    <ImageView
+        android:id="@+id/header_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_launcher_background"/>
 
-    <LinearLayout
-        android:id="@+id/header_layout"
+    <TextView
+        android:id="@+id/header_username"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:text="@string/userName"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/header_icon"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_launcher_background"/>
-
-        <TextView
-            android:id="@+id/header_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="절찬출근거절중"
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/header_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="노는게 제일좋아 ! 친구들 모여라 !"
-            android:textColor="#EB554C4C"
-            android:textSize="15dp" />
-    </LinearLayout>
-</layout>
+    <TextView
+        android:id="@+id/header_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/read_write_time"
+        android:textColor="#EB554C4C"
+        android:textSize="15dp" />
+</LinearLayout>

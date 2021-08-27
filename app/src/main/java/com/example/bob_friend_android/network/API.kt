@@ -22,9 +22,17 @@ interface API {
 
     //회원탈퇴
     @DELETE("api/user/{username}")
-    fun deleteUser(@Header("X-AUTH-TOKEN") token: String, @Path("username") id: Int): Call<Void>
+    fun deleteUser(@Header("Authorization") token: String, @Path("username") id: Int): Call<Void>
 
     //약속잡기
     @POST("/recruitments")
     fun addRecruitmens(@Header("Authorization") token: String, @Body board: Board): Call<Board>
+
+    //약속조회
+    @GET("/recruitments")
+    fun getRecruitmens(@Header("Authorization") token: String): Call<List<Board>>
+
+    //약속삭제
+    @DELETE("/recruitments/{id}")
+    fun deleteRecruitmens(@Header("Authorization") token: String, @Path("id") boardId: Int): Call<Void>
 }

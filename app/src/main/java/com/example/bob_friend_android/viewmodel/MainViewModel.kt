@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import com.example.bob_friend_android.App
-import com.example.bob_friend_android.KakaoAPI
+import com.example.bob_friend_android.network.KakaoAPI
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.model.SearchKeyword
 import com.example.bob_friend_android.model.SearchLocation
@@ -31,6 +31,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         var email: String
         val token = App.prefs.getString("token", "")
         Log.d(TAG,"token: $token")
+
         RetrofitBuilder.api.getUserId(token).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 username = response.body()?.username.toString()

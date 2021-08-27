@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.Fragment
+package com.example.bob_friend_android.view
 
 import android.Manifest
 import android.content.Context
@@ -23,16 +23,7 @@ import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MapFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MapFragment : Fragment() {
     private var x: Double? = null
     private var y: Double? = null
@@ -63,8 +54,6 @@ class MapFragment : Fragment() {
             setMyLocation()
         }
 
-        //Log.d("MapFragment", "arguments:${arguments} x:${x}, y:${y}, click:${click}")
-
         mapViewContainer.addView(mapView)
 
         return view
@@ -83,8 +72,8 @@ class MapFragment : Fragment() {
         point.apply {
             itemName = name
             mapPoint = MapPoint.mapPointWithGeoCoord(y,x)
-            customImageResourceId = R.drawable.maps_and_flags
-            customSelectedImageResourceId = R.drawable.maps_and_flags
+            customImageResourceId = R.drawable.main_color1_marker
+            customSelectedImageResourceId = R.drawable.main_color2_marker
             markerType = MapPOIItem.MarkerType.CustomImage
             selectedMarkerType = MapPOIItem.MarkerType.CustomImage
             isCustomImageAutoscale = false
@@ -94,7 +83,7 @@ class MapFragment : Fragment() {
 
 
     fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
-        var ft: FragmentTransaction = fragmentManager.beginTransaction()
+        val ft: FragmentTransaction = fragmentManager.beginTransaction()
         ft.detach(fragment).attach(fragment).commit()
     }
 
@@ -119,8 +108,8 @@ class MapFragment : Fragment() {
                 marker.apply {
                     itemName = "내위치"
                     mapPoint = MapPoint.mapPointWithGeoCoord(uLatitude, uLongitude)
-                    customImageResourceId = R.drawable.maps_and_flags
-                    customSelectedImageResourceId = R.drawable.maps_and_flags
+                    customImageResourceId = R.drawable.main_color1_marker
+                    customSelectedImageResourceId = R.drawable.main_color2_marker
                     markerType = MapPOIItem.MarkerType.CustomImage
                     selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                     isCustomImageAutoscale = false

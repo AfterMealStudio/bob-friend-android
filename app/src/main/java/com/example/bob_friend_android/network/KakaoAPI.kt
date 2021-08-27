@@ -1,4 +1,4 @@
-package com.example.bob_friend_android
+package com.example.bob_friend_android.network
 
 import com.example.bob_friend_android.model.SearchKeyword
 import retrofit2.Call
