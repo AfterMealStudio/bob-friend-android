@@ -1,24 +1,32 @@
 package com.example.bob_friend_android.view
 
 
+import android.app.Activity
+import android.app.Instrumentation
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.RelativeLayout
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityCreateBoardBinding
 import com.example.bob_friend_android.viewmodel.CreateBoardViewModel
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.*
+import net.daum.mf.map.api.MapView
 
 class CreateBoardActivity : AppCompatActivity() {
+    private val TAG = "CreateBoardActivity2"
     private lateinit var binding : ActivityCreateBoardBinding
     private lateinit var viewModel : CreateBoardViewModel
-    var isToday : Boolean = true
-    private val format : DateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN)
+    private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
+
+    lateinit var mapView: MapView
+    lateinit var mapViewContainer: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,5 +69,35 @@ class CreateBoardActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        mapView = MapView(this)
+        mapViewContainer = binding.writeMapView
+        mapViewContainer.addView(mapView)
+        Log.d(TAG, "onCreate: $mapView")
+
+        getLocationResultText = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+                result: ActivityResult ->
+                if(result.resultCode == RESULT_OK) {
+                    val location = result.data?.getStringExtra("location")
+                    val name = result.data?.getStringExtra("name")
+                    val y = result.data?.getStringExtra("y")
+                    val x = result.data?.getStringExtra("x")
+                    val locationName = "$location $name"
+
+                    binding.writeLocation.text = locationName
+                }
+            }
+
+        binding.writeSearchBtn.setOnClickListener {
+            val intent = Intent(this, BoardSearchActivity::class.java)
+            getLocationResultText.launch(intent)
+        }
+    }
+
+
+    override fun finish() {
+        mapViewContainer.removeView(binding.writeMapView)
+        super.finish()
     }
 }

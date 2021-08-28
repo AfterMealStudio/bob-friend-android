@@ -15,9 +15,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.example.bob_friend_android.R
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -29,24 +28,32 @@ class MapFragment : Fragment() {
     private var y: Double? = null
     private var placeName: String? = null
     private var click: Boolean? = false
-    private lateinit var mapView:MapView
 
+    lateinit var mapView:MapView
+    private lateinit var kakaoMap: View
+    private lateinit var mapViewContainer: ViewGroup
+
+    lateinit var myView: View
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View?
     {
-        val view : View = inflater.inflate(R.layout.fragment_map, container, false)
-
-        mapView = MapView(requireActivity())
-        val kakaoMap = view.findViewById<View>(R.id.map_view)
-        val mapViewContainer = kakaoMap as ViewGroup
+        myView = inflater.inflate(R.layout.fragment_map, container, false)
 
         x = arguments?.getDouble("x")
         y = arguments?.getDouble("y")
         placeName = arguments?.getString("placeName")
         click = arguments?.getBoolean("click")
+        mapView = MapView(requireActivity())
+        kakaoMap = myView.findViewById(R.id.map_view)!!
+        mapViewContainer = kakaoMap as ViewGroup
+        mapViewContainer.addView(mapView)
 
         if (click==true) {
             addMarkers(placeName!!, x!!, y!!)
@@ -54,9 +61,7 @@ class MapFragment : Fragment() {
             setMyLocation()
         }
 
-        mapViewContainer.addView(mapView)
-
-        return view
+        return myView
     }
 
 
@@ -79,12 +84,6 @@ class MapFragment : Fragment() {
             isCustomImageAutoscale = false
         }
         mapView.addPOIItem(point)
-    }
-
-
-    fun refreshFragment(fragment: Fragment, fragmentManager: FragmentManager) {
-        val ft: FragmentTransaction = fragmentManager.beginTransaction()
-        ft.detach(fragment).attach(fragment).commit()
     }
 
 
@@ -124,14 +123,12 @@ class MapFragment : Fragment() {
                 }else{
                     ActivityCompat.finishAffinity(requireActivity())
                 }
-
-                val intent = Intent(requireActivity(), MapFragment::class.java)
-                startActivity(intent)
-                System.exit(0)
             }
         }else{
             Toast.makeText(requireActivity(), "위치 권한이 없습니다.", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 }
 
