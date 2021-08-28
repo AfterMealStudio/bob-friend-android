@@ -37,6 +37,9 @@
 
     <!--글쓰기-->
     <string name="write_board">약속 작성하기</string>
+    <string name="write_board_search">장소 검색하기</string>
+    <string name="write_search">검색</string>
+    <string name="write_board_search2">장소를 검색해주세요.</string>
     <string name="write">작성하기</string>
     <string name="write_title">제목</string>
     <string name="write_content">내용</string>
@@ -58,7 +61,6 @@
     <string name="write_minute">분</string>
     <string name="write_time2">ex) 14</string>
     <string name="write_minute2">ex) 30</string>
-    <string name="write_search">장소 검색하기</string>
     <string name="write_search2"> 세부내용 ex) 정문 앞에서 만나요.</string>
     <string name="write_today">오늘</string>
     <string name="write_notToday">오늘이 아님</string>
@@ -89,4 +91,13 @@
 
     <!--댓글-->
     <string name="comment_report">신고하기</string>
+    <string name="title_activity_board_search">BoardSearchActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

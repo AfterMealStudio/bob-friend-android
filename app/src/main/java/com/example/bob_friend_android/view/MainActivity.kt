@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
     private val PERMISSIONS_REQUEST_CODE = 100
     private var REQUIRED_PERMISSIONS = arrayOf<String>( Manifest.permission.ACCESS_FINE_LOCATION)
 
-    val fragmentMap = MapFragment()
-    val fragmentList = ListFragment()
+    lateinit var fragmentMap: MapFragment
+    lateinit var fragmentList:ListFragment
     var flag:Int = 1 //프레그먼트 교체
 
     var backKeyPressedTime: Long = 0
@@ -62,6 +62,8 @@ class MainActivity : AppCompatActivity() {
         binding.rvList.adapter = searchAdapter
         binding.rvList.visibility = View.GONE
 
+        fragmentMap = MapFragment()
+        fragmentList = ListFragment()
 
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
@@ -93,6 +95,8 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.mainWriteBtn.setOnClickListener {
+//            binding.frameLayout.removeView(fragmentMap.myView)
+
             val intent = Intent(this, CreateBoardActivity::class.java)
             startActivity(intent)
         }
@@ -169,5 +173,16 @@ class MainActivity : AppCompatActivity() {
     fun hideKeyboard(){
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.mainEditTextSearch.windowToken, 0)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        supportFragmentManager.beginTransaction().commitNow()
+        fragmentMap.mapView.visibility = View.VISIBLE
+    }
+
+    override fun onPause() {
+        fragmentMap.mapView.visibility = View.INVISIBLE
+        super.onPause()
     }
 }

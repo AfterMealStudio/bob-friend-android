@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="create"
             type="com.example.bob_friend_android.view.CreateBoardActivity" />
@@ -20,9 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/main_color1"
+            android:gravity="center"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -39,8 +40,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/white"
                 android:text="@string/write_board"
+                android:textColor="@color/white"
                 android:textSize="20sp" />
         </androidx.appcompat.widget.Toolbar>
 
@@ -70,8 +71,8 @@
                     android:id="@+id/write_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/main_color1"
-                    android:text="@string/write_title" />
+                    android:text="@string/write_title"
+                    android:textColor="@color/main_color1" />
 
                 <EditText
                     android:id="@+id/editCreateTitle"
@@ -84,26 +85,26 @@
                     android:id="@+id/write_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/main_color1"
                     android:layout_marginTop="5dp"
-                    android:text="@string/write_content" />
+                    android:text="@string/write_content"
+                    android:textColor="@color/main_color1" />
 
                 <EditText
                     android:id="@+id/editCreateContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="100dp"
                     android:ems="10"
                     android:gravity="start"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textMultiLine"
+                    android:minHeight="100dp" />
 
                 <TextView
                     android:id="@+id/write_people_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/main_color1"
-                    android:text="@string/write_member" />
+                    android:text="@string/write_member"
+                    android:textColor="@color/main_color1" />
 
                 <EditText
                     android:id="@+id/editTextTextPersonName7"
@@ -118,8 +119,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/main_color1"
-                    android:text="@string/gender" />
+                    android:text="@string/gender"
+                    android:textColor="@color/main_color1" />
 
                 <RadioGroup
                     android:layout_width="match_parent"
@@ -152,9 +153,9 @@
                     android:id="@+id/write_age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/main_color1"
                     android:layout_marginTop="5dp"
-                    android:text="@string/write_age" />
+                    android:text="@string/write_age"
+                    android:textColor="@color/main_color1" />
 
                 <RadioGroup
                     android:id="@+id/age_group"
@@ -196,8 +197,8 @@
                         android:id="@+id/write_ageFrom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/main_color1"
-                        android:text="@string/write_ageFrom" />
+                        android:text="@string/write_ageFrom"
+                        android:textColor="@color/main_color1" />
 
                     <TextView
                         android:id="@+id/textView3"
@@ -218,9 +219,9 @@
                     <TextView
                         android:id="@+id/write_ageTo"
                         android:layout_width="wrap_content"
-                        android:textColor="@color/main_color1"
                         android:layout_height="wrap_content"
-                        android:text="@string/write_ageTo" />
+                        android:text="@string/write_ageTo"
+                        android:textColor="@color/main_color1" />
                 </LinearLayout>
 
                 <TextView
@@ -228,8 +229,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/main_color1"
-                    android:text="@string/write_meeting_time" />
+                    android:text="@string/write_meeting_time"
+                    android:textColor="@color/main_color1" />
 
                 <RadioGroup
                     android:id="@+id/day_group"
@@ -276,8 +277,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
-                        android:textColor="@color/main_color1"
-                        android:text="@string/write_time" />
+                        android:text="@string/write_time"
+                        android:textColor="@color/main_color1" />
 
                     <EditText
                         android:id="@+id/write_minute"
@@ -291,8 +292,8 @@
                         android:id="@+id/write_minute2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/main_color1"
-                        android:text="@string/write_minute" />
+                        android:text="@string/write_minute"
+                        android:textColor="@color/main_color1" />
                 </LinearLayout>
 
                 <TextView
@@ -300,40 +301,37 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/main_color1"
-                    android:text="@string/write_appointment_place" />
+                    android:text="@string/write_appointment_place"
+                    android:textColor="@color/main_color1" />
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/write_search_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/main_color1"
-                    android:textStyle="bold"
                     android:backgroundTint="@color/main_color3"
-                    android:text="@string/write_search" />
+                    android:text="@string/write_board_search"
+                    android:textColor="@color/main_color1"
+                    android:textStyle="bold" />
 
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/mapView"
+                <RelativeLayout
+                    android:id="@+id/write_map_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"/>
+
+                <TextView
+                    android:id="@+id/write_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
-
-                <EditText
-                    android:id="@+id/editTextTextPersonName9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/write_search2"
-                    android:inputType="textPersonName" />
 
                 <Button
                     android:id="@+id/write_ok_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="60dp"
-                    android:textStyle="bold"
+                    android:backgroundTint="@color/main_color1"
                     android:text="@string/write"
-                    android:backgroundTint="@color/main_color1"/>
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </ScrollView>

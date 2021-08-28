@@ -1,6 +1,5 @@
 package com.example.bob_friend_android.model
 
-import java.time.LocalDateTime
 
 data class Board (
     var id : Int = 0,
