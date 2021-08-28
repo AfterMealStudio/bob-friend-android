@@ -36,7 +36,7 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val boardTitle: TextView = itemView.findViewById(R.id.boardTitle)
-        private val userName: TextView = itemView.findViewById(R.id.writer)
+//        private val userName: TextView = itemView.findViewById(R.id.writer)
         private val currentNumberOfPeople: TextView = itemView.findViewById(R.id.currentNumberOfParticipants)
         private val totalNumberOfPeople: TextView = itemView.findViewById(R.id.totalNumberOfParticipants)
         private val currentNumberOfComments: TextView = itemView.findViewById(R.id.currentNumberOfComments)
@@ -44,7 +44,7 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
 
         fun bind(item: Board) {
             boardTitle.text = item.title
-            userName.text = item.author?.username
+//            userName.text = item.author?.username
             currentNumberOfPeople.text = item.currentNumberOfPeople.toString()
             totalNumberOfPeople.text = item.totalNumberOfPeople.toString()
 //            currentNumberOfComments.text = item.currentNumberOfComments.toString()
@@ -54,7 +54,7 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
                 Intent(context, DetailBoardActivity::class.java).apply {
                     putExtra("title", boardTitle.text)
                     putExtra("content", item.content.toString())
-                    putExtra("username", userName.text)
+                    putExtra("username", item.author?.username.toString())
                     putExtra("currentNumberOfPeople", currentNumberOfPeople.text)
                     putExtra("totalNumberOfPeople", totalNumberOfPeople.text)
 //                    putExtra("currentNumberOfComments", currentNumberOfComments.text)
