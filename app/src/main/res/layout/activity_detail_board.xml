@@ -131,14 +131,12 @@
                     android:layout_marginTop="10dp"
                     android:text="@string/read_appointment_place" />
 
-                <LinearLayout
+                <RelativeLayout
+                    android:id="@+id/detail_map_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:minHeight="200dp"
-                    android:backgroundTint="@color/main_color3"
-                    android:background="@color/main_color1"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:minHeight="200dp">
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/detail_appointment_place_name"

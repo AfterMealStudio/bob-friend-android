@@ -176,9 +176,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        super.onResume()
         supportFragmentManager.beginTransaction().commitNow()
         fragmentMap.mapView.visibility = View.VISIBLE
+        super.onResume()
     }
 
     override fun onPause() {

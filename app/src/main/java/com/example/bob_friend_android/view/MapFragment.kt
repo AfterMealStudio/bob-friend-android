@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -30,14 +31,11 @@ class MapFragment : Fragment() {
     private var click: Boolean? = false
 
     lateinit var mapView:MapView
-    private lateinit var kakaoMap: View
+    private lateinit var kakaoMap: ConstraintLayout
     private lateinit var mapViewContainer: ViewGroup
 
     lateinit var myView: View
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,16 +48,13 @@ class MapFragment : Fragment() {
         y = arguments?.getDouble("y")
         placeName = arguments?.getString("placeName")
         click = arguments?.getBoolean("click")
-        mapView = MapView(requireActivity())
+
         kakaoMap = myView.findViewById(R.id.map_view)!!
-        mapViewContainer = kakaoMap as ViewGroup
+        mapView = MapView(requireActivity())
+        mapViewContainer = kakaoMap
         mapViewContainer.addView(mapView)
 
-        if (click==true) {
-            addMarkers(placeName!!, x!!, y!!)
-        } else {
-            setMyLocation()
-        }
+        setMyLocation()
 
         return myView
     }
@@ -118,11 +113,7 @@ class MapFragment : Fragment() {
 
             }catch (e: NullPointerException){
                 Log.e("LOCATION_ERROR", e.toString())
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    ActivityCompat.finishAffinity(requireActivity())
-                }else{
-                    ActivityCompat.finishAffinity(requireActivity())
-                }
+                ActivityCompat.finishAffinity(requireActivity())
             }
         }else{
             Toast.makeText(requireActivity(), "위치 권한이 없습니다.", Toast.LENGTH_SHORT).show()

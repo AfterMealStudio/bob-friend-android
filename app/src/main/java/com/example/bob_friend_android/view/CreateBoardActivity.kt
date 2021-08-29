@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityCreateBoardBinding
 import com.example.bob_friend_android.viewmodel.CreateBoardViewModel
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 class CreateBoardActivity : AppCompatActivity() {
@@ -23,13 +25,13 @@ class CreateBoardActivity : AppCompatActivity() {
     private lateinit var viewModel : CreateBoardViewModel
     private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
 
-    lateinit var mapView: MapView
-    lateinit var mapViewContainer: RelativeLayout
+    private lateinit var mapView: MapView
+    private lateinit var mapViewContainer: RelativeLayout
 
     var address: String = "null"
     var name: String = "null"
-    var y: String = "null"
-    var x: String = "null"
+    var y: Double? = 0.0
+    var x: Double? = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,11 +92,23 @@ class CreateBoardActivity : AppCompatActivity() {
                 if(result.resultCode == RESULT_OK) {
                     address = result.data?.getStringExtra("location").toString()
                     name = result.data?.getStringExtra("name").toString()
-                    y = result.data?.getStringExtra("y").toString()
-                    x = result.data?.getStringExtra("x").toString()
-                    val locationName = "$address $name"
+                    y = result.data?.getDoubleExtra("y",0.0)
+                    x = result.data?.getDoubleExtra("x",0.0)
 
-                    binding.writeLocation.text = locationName
+                    binding.writeLocation.text = name
+                    val marker = MapPOIItem()
+                    marker.apply {
+                        itemName = "내위치"
+                        mapPoint = MapPoint.mapPointWithGeoCoord(y!!, x!!)
+                        customImageResourceId = R.drawable.main_color1_marker
+                        customSelectedImageResourceId = R.drawable.main_color2_marker
+                        markerType = MapPOIItem.MarkerType.CustomImage
+                        selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+                        isCustomImageAutoscale = false
+                        setCustomImageAnchor(0.5f, 1.0f)
+                        mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
+                    }
+                    mapView.addPOIItem(marker)
                 }
             }
 
@@ -106,7 +120,7 @@ class CreateBoardActivity : AppCompatActivity() {
 
 
     override fun finish() {
-        mapViewContainer.removeView(binding.writeMapView)
+        binding.writeMapView.visibility = View.GONE
         super.finish()
     }
 }
