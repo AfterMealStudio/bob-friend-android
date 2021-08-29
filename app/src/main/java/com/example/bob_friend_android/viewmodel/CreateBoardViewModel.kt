@@ -18,9 +18,9 @@ class CreateBoardViewModel(application: Application): AndroidViewModel(applicati
 
     val TAG = "CreateBoardViewModel"
 
-    fun CreateBoard(title : String, content: String, context: Context) {
+    fun CreateBoard(title : String, content: String, count:String, address: String, locationName: String, context: Context) {
 
-        val board = Board(title = title, content = content)
+        val board = Board(title = title, content = content, totalNumberOfPeople = count, restaurantAddress = address, restaurantName = locationName)
         val token = App.prefs.getString("token", "no token")
 
         Log.d(TAG, "!title=$title, content=$content")
@@ -31,9 +31,6 @@ class CreateBoardViewModel(application: Application): AndroidViewModel(applicati
                 if (code == 200) {
                     Log.d(TAG, "!!title=$title, content=$content")
                     Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
-                    //val intent = Intent(context, MainActivity::class.java)
-                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    //context.startActivity(intent)
                 }
             }
 

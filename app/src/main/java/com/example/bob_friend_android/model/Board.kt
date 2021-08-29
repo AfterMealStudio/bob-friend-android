@@ -1,6 +1,5 @@
 package com.example.bob_friend_android.model
 
-import java.time.LocalDateTime
 
 data class Board (
     var id : Int = 0,
@@ -9,7 +8,7 @@ data class Board (
     var author : User? = null,
     var member : List<User>? = null,
     var currentNumberOfPeople: Int? = null,
-    var totalNumberOfPeople: Int? = null,
+    var totalNumberOfPeople: String? = null,
     var full: Boolean? = null,
     var restaurantName: String? = "",
     var restaurantAddress: String? = "",

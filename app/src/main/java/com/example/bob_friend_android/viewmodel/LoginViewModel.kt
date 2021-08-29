@@ -32,7 +32,6 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     if (response.isSuccessful && response.body() != null) {
                         val intent = Intent(context, MainActivity::class.java)
                         App.prefs.setString("token", response.body()!!.token)
-                        Log.d(TAG, "token:${response.body()}")
                         App.prefs.setString("username", username)
                         App.prefs.setString("password", password)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -57,8 +56,8 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    private fun validation(id : String, password: String, context: Context): Boolean {
-        if (id.length == 0 || password.length == 0) {
+    private fun validation(username : String, password: String, context: Context): Boolean {
+        if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(context, "아이디와 비밀번호를 입력해주세요!", Toast.LENGTH_SHORT).show()
             return false
         }

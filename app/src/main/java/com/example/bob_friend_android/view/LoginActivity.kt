@@ -42,11 +42,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.loginBtn.setOnClickListener {
-            val id = binding.editTextEmail.text.toString().trim()
+            val username = binding.editTextEmail.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
-            Log.d(TAG, "id: ${id}")
+            Log.d(TAG, "username: $username")
 
-            viewModel.login(id ,password, this)
+            viewModel.login(username ,password, this)
         }
 
         binding.registerBtn.setOnClickListener {

@@ -32,9 +32,10 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
                     if (response.errorBody() != null) {
                         val error = response.errorBody()!!.string()
                         if (error == "300") {
-                            Toast.makeText(context, "이미 있는 아이디입니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "이미 있는 이메일입니다.", Toast.LENGTH_SHORT).show()
                         }
                     } else {
+                        App.prefs.setString("email", "")
                         App.prefs.setString("username", "")
                         App.prefs.setString("password", "")
                         Toast.makeText(context, "회원가입 되었습니다.", Toast.LENGTH_SHORT).show()
@@ -57,9 +58,9 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
 
     }
 
-    private fun validation(email : String, id : String, password : String, passwordCheck: String, context: Context): Boolean {
+    private fun validation(email : String, username: String, password : String, passwordCheck: String, context: Context): Boolean {
 
-        if (id.length == 0 || password.length == 0 || passwordCheck.length == 0) {
+        if (email.length == 0 || password.length == 0 || passwordCheck.length == 0) {
             Toast.makeText(context, "아이디와 비밀번호가 비어있습니다.", Toast.LENGTH_SHORT).show()
             return false
         }
@@ -74,7 +75,7 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
             return false
         }
 
-        if (checkType(id)) {
+        if (checkType(email)) {
             Toast.makeText(context, "아이디는 영어 대문자, 소문자, 숫자로만 구성할 수 있습니다.", Toast.LENGTH_SHORT).show()
             return false
         }

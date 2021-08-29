@@ -15,13 +15,16 @@
         android:theme="@style/Theme.Bobfriendandroid"
         android:usesCleartextTraffic="true">
 
+
+
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="76ae2d3e91f458eca0e0cda68b199d93" />
 
-        <activity android:name=".view.DetailBoardActivity"/>
+        <activity android:name=".view.DetailBoardActivity" />
         <activity android:name=".view.CreateBoardActivity" />
         <activity android:name=".view.JoinActivity" />
+        <activity android:name=".view.BoardSearchActivity"/>
         <activity android:name=".view.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,8 +34,7 @@
         </activity>
         <activity
             android:name=".view.MainActivity"
-            android:windowSoftInputMode="adjustResize"
-        />
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

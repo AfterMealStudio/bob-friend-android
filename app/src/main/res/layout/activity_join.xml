@@ -97,7 +97,7 @@
                 android:text="@string/userPasswordCheck" />
 
             <EditText
-                android:id="@+id/editText_username_check"
+                android:id="@+id/editText_password_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
