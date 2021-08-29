@@ -1,8 +1,6 @@
 package com.example.bob_friend_android.view
 
 
-import android.app.Activity
-import android.app.Instrumentation
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -20,13 +18,18 @@ import com.example.bob_friend_android.viewmodel.CreateBoardViewModel
 import net.daum.mf.map.api.MapView
 
 class CreateBoardActivity : AppCompatActivity() {
-    private val TAG = "CreateBoardActivity2"
+    private val TAG = "CreateBoardActivity"
     private lateinit var binding : ActivityCreateBoardBinding
     private lateinit var viewModel : CreateBoardViewModel
     private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
 
     lateinit var mapView: MapView
     lateinit var mapViewContainer: RelativeLayout
+
+    var address: String = "null"
+    var name: String = "null"
+    var y: String = "null"
+    var x: String = "null"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +67,13 @@ class CreateBoardActivity : AppCompatActivity() {
         binding.writeOkBtn.setOnClickListener {
             val title = binding.editCreateTitle.text.toString().trim()
             val boardContent = binding.editCreateContent.text.toString().trim()
-            viewModel.CreateBoard(title, boardContent, this)
+            val count = binding.editPeopleCount.text.toString().trim()
+            val location = binding.writeLocation.text.toString().trim()
+            val gender = binding.editCreateTitle.text.toString().trim()
+            val age = binding.editCreateContent.text.toString().trim()
+            val time = binding.editCreateContent.text.toString().trim()
+
+            viewModel.CreateBoard(title, boardContent, count, address, name, this)
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -79,11 +88,11 @@ class CreateBoardActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()) {
                 result: ActivityResult ->
                 if(result.resultCode == RESULT_OK) {
-                    val location = result.data?.getStringExtra("location")
-                    val name = result.data?.getStringExtra("name")
-                    val y = result.data?.getStringExtra("y")
-                    val x = result.data?.getStringExtra("x")
-                    val locationName = "$location $name"
+                    address = result.data?.getStringExtra("location").toString()
+                    name = result.data?.getStringExtra("name").toString()
+                    y = result.data?.getStringExtra("y").toString()
+                    x = result.data?.getStringExtra("x").toString()
+                    val locationName = "$address $name"
 
                     binding.writeLocation.text = locationName
                 }

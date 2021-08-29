@@ -37,6 +37,7 @@ class DetailBoardActivity : AppCompatActivity() {
         val createAt = intent.getStringExtra("createdAt")
         val currentNumberOfPeople = intent.getStringExtra("currentNumberOfPeople")
         val totalNumberOfPeople = intent.getStringExtra("totalNumberOfPeople")
+        val location = intent.getStringExtra("location")
 
         binding.detailTitle.text = title
         binding.detailContent.text = content
@@ -44,10 +45,9 @@ class DetailBoardActivity : AppCompatActivity() {
         binding.detailWriteTime.text = createAt
         binding.detailCurrentMember.text = currentNumberOfPeople
         binding.detailTotalMember.text = totalNumberOfPeople
+        binding.detailAppointmentPlaceName.text = location
 
 
-        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
-        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
         commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
         commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
         commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))

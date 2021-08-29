@@ -107,7 +107,7 @@
                     android:textColor="@color/main_color1" />
 
                 <EditText
-                    android:id="@+id/editTextTextPersonName7"
+                    android:id="@+id/editPeopleCount"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -123,6 +123,7 @@
                     android:textColor="@color/main_color1" />
 
                 <RadioGroup
+                    android:id="@+id/gender_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">

@@ -33,7 +33,7 @@ class JoinActivity : AppCompatActivity() {
             val email = binding.editTextEmail.text.toString().trim()
             val username = binding.editTextUsername.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
-            val passwordCheck = binding.editTextUsernameCheck.text.toString().trim()
+            val passwordCheck = binding.editTextPasswordCheck.text.toString().trim()
             builder.setPositiveButton("예") { dialog, which ->
                 viewModel.join(email ,username, password, passwordCheck, this)
             }

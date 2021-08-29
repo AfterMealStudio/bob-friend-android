@@ -8,7 +8,7 @@ data class Board (
     var author : User? = null,
     var member : List<User>? = null,
     var currentNumberOfPeople: Int? = null,
-    var totalNumberOfPeople: Int? = null,
+    var totalNumberOfPeople: String? = null,
     var full: Boolean? = null,
     var restaurantName: String? = "",
     var restaurantAddress: String? = "",
