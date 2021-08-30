@@ -3,7 +3,6 @@ package com.example.bob_friend_android.viewmodel
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.media.session.MediaSession
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel

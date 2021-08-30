@@ -9,12 +9,14 @@ import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityJoinBinding
 import com.example.bob_friend_android.viewmodel.JoinViewModel
+import java.time.LocalDate
 
 class JoinActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityJoinBinding
     private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
     private lateinit var viewModel : JoinViewModel
+    lateinit var gender : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,17 +27,30 @@ class JoinActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
 
+        binding.registerGenderGroup.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId) {
+                R.id.male -> gender = "MALE"
+                R.id.female -> gender = "FEMALE"
+                R.id.third_gender -> gender = "THIRD"
+            }
+        }
+
         binding.joinBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("회원가입")
             builder.setMessage("이렇게 회원가입을 진행할까요?")
 
-            val email = binding.editTextEmail.text.toString().trim()
-            val username = binding.editTextUsername.text.toString().trim()
+            val userId = binding.editTextId.text.toString().trim()
+            val nickname = binding.editTextUsername.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
             val passwordCheck = binding.editTextPasswordCheck.text.toString().trim()
+            val email = binding.editTextEmail.text.toString().trim()
+            val dateBirth = binding.editTextDateBirth.text.toString().trim()
+
+            val date = "${dateBirth.substring(0,4)}-${dateBirth.substring(4,6)}-${dateBirth.substring(6)}"
+
             builder.setPositiveButton("예") { dialog, which ->
-                viewModel.join(email ,username, password, passwordCheck, this)
+                viewModel.join(userId, password, passwordCheck, nickname, email, date, gender, this)
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton

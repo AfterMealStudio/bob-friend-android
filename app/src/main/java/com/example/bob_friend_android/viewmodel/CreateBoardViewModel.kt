@@ -18,7 +18,7 @@ class CreateBoardViewModel(application: Application): AndroidViewModel(applicati
 
     val TAG = "CreateBoardViewModel"
 
-    fun CreateBoard(title : String, content: String, count:String, address: String, locationName: String, context: Context) {
+    fun CreateBoard(title : String, content: String, count:Int, address: String, locationName: String, context: Context) {
 
         val board = Board(title = title, content = content, totalNumberOfPeople = count, restaurantAddress = address, restaurantName = locationName)
         val token = App.prefs.getString("token", "no token")

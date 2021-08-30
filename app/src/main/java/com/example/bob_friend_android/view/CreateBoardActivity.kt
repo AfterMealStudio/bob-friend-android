@@ -28,8 +28,8 @@ class CreateBoardActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var mapViewContainer: RelativeLayout
 
-    var address: String = "null"
-    var name: String = "null"
+    var address: String = ""
+    var name: String = ""
     var y: Double? = 0.0
     var x: Double? = 0.0
 
@@ -69,7 +69,7 @@ class CreateBoardActivity : AppCompatActivity() {
         binding.writeOkBtn.setOnClickListener {
             val title = binding.editCreateTitle.text.toString().trim()
             val boardContent = binding.editCreateContent.text.toString().trim()
-            val count = binding.editPeopleCount.text.toString().trim()
+            val count = binding.editPeopleCount.text.toString().toInt()
             val location = binding.writeLocation.text.toString().trim()
             val gender = binding.editCreateTitle.text.toString().trim()
             val age = binding.editCreateContent.text.toString().trim()
@@ -82,9 +82,12 @@ class CreateBoardActivity : AppCompatActivity() {
         }
 
         mapView = MapView(this)
+        mapView.removeAllPOIItems()
+
         mapViewContainer = binding.writeMapView
         mapViewContainer.addView(mapView)
         Log.d(TAG, "onCreate: $mapView")
+
 
         getLocationResultText = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {

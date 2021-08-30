@@ -13,6 +13,7 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.CommentAdapter
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding
+import com.example.bob_friend_android.model.BoardItem
 import com.example.bob_friend_android.viewmodel.DetailBoardViewModel
 import net.daum.mf.map.api.MapView
 import java.util.*
@@ -45,34 +46,24 @@ class DetailBoardActivity : AppCompatActivity() {
         mapViewContainer.addView(mapView)
         Log.d(TAG, "onCreate: $mapView")
 
-        val id = intent.getIntExtra("id", 0)
-        val title = intent.getStringExtra("title")
-        val content = intent.getStringExtra("content")
-        val username = intent.getStringExtra("username")
-        val createAt = intent.getStringExtra("createdAt")
-        val currentNumberOfPeople = intent.getStringExtra("currentNumberOfPeople")
-        val totalNumberOfPeople = intent.getStringExtra("totalNumberOfPeople")
-        val location = intent.getStringExtra("location")
-
-        binding.detailTitle.text = title
-        binding.detailContent.text = content
-        binding.detailWriter.text = username
-        binding.detailWriteTime.text = createAt
-        binding.detailCurrentMember.text = currentNumberOfPeople
-        binding.detailTotalMember.text = totalNumberOfPeople
-        binding.detailAppointmentPlaceName.text = location
-
-        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
-        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
-        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
-        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
-        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
-        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
-
+        if(intent.hasExtra("item")) {
+            val item = intent.getParcelableExtra<BoardItem>("item")
+            if(item != null) {
+                binding.detailTitle.text = item.title.toString()
+                binding.detailContent.text = item.content
+                binding.detailWriter.text = item.username
+                binding.detailWriteTime.text = item.createdAt
+                binding.detailCurrentMember.text = item.currentNumberOfPeople.toString()
+                binding.detailTotalMember.text = item.totalNumberOfPeople.toString()
+                binding.detailAppointmentPlaceName.text = item.location
+            }
+        }
 
 //        val adpater = CommentAdapter(commentList)
 //        binding.commentRecyclerview.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
 //        binding.commentRecyclerview.adapter = adpater
+//        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
+//        commentList.add(Comment(123123,1231231,null,"ddd","dddd", "2021-08-08",null,null, 0))
 
         binding.backBtn.setOnClickListener {
             onBackPressed()

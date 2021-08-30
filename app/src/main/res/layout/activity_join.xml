@@ -45,11 +45,11 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/email"
+                android:id="@+id/userId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/main_color1"
-                android:text="@string/userEmail" />
+                android:text="@string/userId" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,12 +57,12 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editText_email"
+                    android:id="@+id/editText_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="@string/userEmail2"
+                    android:hint="@string/userId2"
                     android:layout_marginRight="20dp"
                     android:inputType="textPersonName" />
 
@@ -120,19 +120,19 @@
                 android:inputType="textPersonName" />
 
             <TextView
-                android:id="@+id/phone_number"
+                android:id="@+id/join_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/main_color1"
-                android:text="@string/userPhoneNumber" />
+                android:text="@string/email" />
 
             <EditText
-                android:id="@+id/editText_phone_number"
+                android:id="@+id/editText_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/userPhoneNumber2"
-                android:inputType="phone" />
+                android:hint="@string/userEmail"
+                android:inputType="textEmailAddress" />
 
             <TextView
                 android:id="@+id/date_birth"
@@ -157,23 +157,31 @@
                 android:text="@string/gender" />
 
             <RadioGroup
+                android:id="@+id/register_gender_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/male" />
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/female" />
+
+                <RadioButton
+                    android:id="@+id/third_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/thirdGender" />
             </RadioGroup>
 
             <RadioGroup
