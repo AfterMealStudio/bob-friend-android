@@ -9,10 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.model.BoardItem
 import com.example.bob_friend_android.view.DetailBoardActivity
 import java.util.*
 
 class BoardAdapter(private val context: Context, private val boardList : ArrayList<Board>) : RecyclerView.Adapter<BoardAdapter.ViewHolder>() {
+
+    lateinit var boardItem: BoardItem
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.item_board,parent,false)
@@ -47,19 +50,16 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
             userName.text = item.author?.username
             currentNumberOfPeople.text = item.currentNumberOfPeople.toString()
             totalNumberOfPeople.text = item.totalNumberOfPeople.toString()
-//            currentNumberOfComments.text = item.currentNumberOfComments.toString()
             createdAt.text = item.createdAt.toString()
+
+            if(item.currentNumberOfPeople!=null && item.totalNumberOfPeople!=null) {
+                boardItem = BoardItem(item.title, item.content, item.author?.username,
+                    item.currentNumberOfPeople!!, item.totalNumberOfPeople!!, item.createdAt, item.restaurantName)
+            }
 
             itemView.setOnClickListener {
                 Intent(context, DetailBoardActivity::class.java).apply {
-                    putExtra("title", boardTitle.text)
-                    putExtra("content", item.content.toString())
-                    putExtra("username", item.author?.username.toString())
-                    putExtra("currentNumberOfPeople", currentNumberOfPeople.text)
-                    putExtra("totalNumberOfPeople", totalNumberOfPeople.text)
-                    putExtra("currentNumberOfComments", currentNumberOfComments.text)
-                    putExtra("createdAt", createdAt.text)
-                    putExtra("location", item.restaurantName.toString())
+                    putExtra("item", boardItem)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { context.startActivity(this) }
             }

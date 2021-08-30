@@ -55,7 +55,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_marginBottom="10dp"
                 android:ems="10"
-                android:hint="@string/userEmail"
+                android:hint="@string/userId"
                 android:inputType="textPersonName"
                 app:layout_constraintBottom_toTopOf="@+id/editTextTextPersonName2"
                 app:layout_constraintEnd_toEndOf="parent"

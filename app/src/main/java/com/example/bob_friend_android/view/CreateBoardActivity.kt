@@ -28,8 +28,8 @@ class CreateBoardActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var mapViewContainer: RelativeLayout
 
-    var address: String = "null"
-    var name: String = "null"
+    var address: String = ""
+    var name: String = ""
     var y: Double? = 0.0
     var x: Double? = 0.0
 
@@ -69,7 +69,7 @@ class CreateBoardActivity : AppCompatActivity() {
         binding.writeOkBtn.setOnClickListener {
             val title = binding.editCreateTitle.text.toString().trim()
             val boardContent = binding.editCreateContent.text.toString().trim()
-            val count = binding.editPeopleCount.text.toString().trim()
+            val count = binding.editPeopleCount.text.toString().toInt()
             val location = binding.writeLocation.text.toString().trim()
             val gender = binding.editCreateTitle.text.toString().trim()
             val age = binding.editCreateContent.text.toString().trim()
@@ -82,33 +82,38 @@ class CreateBoardActivity : AppCompatActivity() {
         }
 
         mapView = MapView(this)
+        mapView.removeAllPOIItems()
+
         mapViewContainer = binding.writeMapView
         mapViewContainer.addView(mapView)
         Log.d(TAG, "onCreate: $mapView")
+
 
         getLocationResultText = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
                 result: ActivityResult ->
                 if(result.resultCode == RESULT_OK) {
-                    address = result.data?.getStringExtra("location").toString()
-                    name = result.data?.getStringExtra("name").toString()
-                    y = result.data?.getDoubleExtra("y",0.0)
-                    x = result.data?.getDoubleExtra("x",0.0)
+                    if(result.data != null) {
+                        address = result.data?.getStringExtra("location").toString()
+                        name = result.data?.getStringExtra("name").toString()
+                        y = result.data?.getDoubleExtra("y",0.0)
+                        x = result.data?.getDoubleExtra("x",0.0)
 
-                    binding.writeLocation.text = name
-                    val marker = MapPOIItem()
-                    marker.apply {
-                        itemName = "내위치"
-                        mapPoint = MapPoint.mapPointWithGeoCoord(y!!, x!!)
-                        customImageResourceId = R.drawable.main_color1_marker
-                        customSelectedImageResourceId = R.drawable.main_color2_marker
-                        markerType = MapPOIItem.MarkerType.CustomImage
-                        selectedMarkerType = MapPOIItem.MarkerType.CustomImage
-                        isCustomImageAutoscale = false
-                        setCustomImageAnchor(0.5f, 1.0f)
-                        mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
+                        binding.writeLocation.text = name
+                        val marker = MapPOIItem()
+                        marker.apply {
+                            itemName = "내위치"
+                            mapPoint = MapPoint.mapPointWithGeoCoord(y!!, x!!)
+                            customImageResourceId = R.drawable.main_color1_marker
+                            customSelectedImageResourceId = R.drawable.main_color2_marker
+                            markerType = MapPOIItem.MarkerType.CustomImage
+                            selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+                            isCustomImageAutoscale = false
+                            setCustomImageAnchor(0.5f, 1.0f)
+                            mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
+                        }
+                        mapView.addPOIItem(marker)
                     }
-                    mapView.addPOIItem(marker)
                 }
             }
 

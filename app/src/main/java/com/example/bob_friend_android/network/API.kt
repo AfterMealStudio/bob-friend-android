@@ -21,8 +21,8 @@ interface API {
     fun getUserId(@Header("Authorization") token: String): Call<User>
 
     //회원탈퇴
-    @DELETE("api/user/{username}")
-    fun deleteUser(@Header("Authorization") token: String, @Path("username") id: Int): Call<Void>
+    @DELETE("api/user/{id}")
+    fun deleteUser(@Header("Authorization") token: String, @Path("id") id: Int): Call<Void>
 
     //약속잡기
     @POST("/recruitments")

@@ -3,12 +3,14 @@ package com.example.bob_friend_android.viewmodel
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.network.RetrofitBuilder
+import com.example.bob_friend_android.network.StatusCode
 import com.example.bob_friend_android.view.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,25 +21,32 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
 
     val TAG = "JoinViewModel"
 
-    fun join(email: String, username : String, password : String, passwordCheck: String, context: Context){
+    fun join(userId: String, password : String, passwordCheck: String, nickname : String, email: String, dateBirth:String, gender:String, context: Context){
 
-        if (validation(email, username, password, passwordCheck, context)) {
+        if (validation(userId, password, passwordCheck, nickname, email, dateBirth, gender, context)) {
             val user = HashMap<String, String>()
-            user["username"] = username
+            user["username"] = userId
             user["password"] = password
+//            user["nickname"] = nickname
             user["email"] = email
+            user["birth"] = dateBirth
+            user["sex"] = gender
+            Log.d(TAG, "!!!!!!!!!$user")
             RetrofitBuilder.api.getJoinResponse(user).enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     Log.d(TAG, "response :: $response")
                     if (response.errorBody() != null) {
-                        val error = response.errorBody()!!.string()
-                        if (error == "300") {
+                        val error = response.errorBody()!!.toString().toInt()
+                        if (error == StatusCode.Conflict.code) {
                             Toast.makeText(context, "이미 있는 이메일입니다.", Toast.LENGTH_SHORT).show()
                         }
                     } else {
+                        App.prefs.setString("userId", "")
                         App.prefs.setString("email", "")
-                        App.prefs.setString("username", "")
+                        App.prefs.setString("nickname", "")
                         App.prefs.setString("password", "")
+                        App.prefs.setString("dateBirth", "")
+                        App.prefs.setString("gender", "")
                         Toast.makeText(context, "회원가입 되었습니다.", Toast.LENGTH_SHORT).show()
                         val intent = Intent(context, LoginActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -58,9 +67,9 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
 
     }
 
-    private fun validation(email : String, username: String, password : String, passwordCheck: String, context: Context): Boolean {
+    private fun validation(userId : String, password : String, passwordCheck: String, username: String, email:String, dateBirth:String, gender:String, context: Context): Boolean {
 
-        if (email.length == 0 || password.length == 0 || passwordCheck.length == 0) {
+        if (userId.length == 0 || password.length == 0 || passwordCheck.length == 0) {
             Toast.makeText(context, "아이디와 비밀번호가 비어있습니다.", Toast.LENGTH_SHORT).show()
             return false
         }
@@ -75,9 +84,13 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
             return false
         }
 
-        if (checkType(email)) {
+        if (checkType(userId)) {
             Toast.makeText(context, "아이디는 영어 대문자, 소문자, 숫자로만 구성할 수 있습니다.", Toast.LENGTH_SHORT).show()
             return false
+        }
+
+        if(dateBirth.length != 10) {
+            Toast.makeText(context, "생년월일의 형식이 정확하지 않습니다.", Toast.LENGTH_SHORT).show()
         }
         return true
     }
