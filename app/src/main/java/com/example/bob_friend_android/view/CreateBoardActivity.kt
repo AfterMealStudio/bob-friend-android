@@ -93,25 +93,27 @@ class CreateBoardActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()) {
                 result: ActivityResult ->
                 if(result.resultCode == RESULT_OK) {
-                    address = result.data?.getStringExtra("location").toString()
-                    name = result.data?.getStringExtra("name").toString()
-                    y = result.data?.getDoubleExtra("y",0.0)
-                    x = result.data?.getDoubleExtra("x",0.0)
+                    if(result.data != null) {
+                        address = result.data?.getStringExtra("location").toString()
+                        name = result.data?.getStringExtra("name").toString()
+                        y = result.data?.getDoubleExtra("y",0.0)
+                        x = result.data?.getDoubleExtra("x",0.0)
 
-                    binding.writeLocation.text = name
-                    val marker = MapPOIItem()
-                    marker.apply {
-                        itemName = "내위치"
-                        mapPoint = MapPoint.mapPointWithGeoCoord(y!!, x!!)
-                        customImageResourceId = R.drawable.main_color1_marker
-                        customSelectedImageResourceId = R.drawable.main_color2_marker
-                        markerType = MapPOIItem.MarkerType.CustomImage
-                        selectedMarkerType = MapPOIItem.MarkerType.CustomImage
-                        isCustomImageAutoscale = false
-                        setCustomImageAnchor(0.5f, 1.0f)
-                        mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
+                        binding.writeLocation.text = name
+                        val marker = MapPOIItem()
+                        marker.apply {
+                            itemName = "내위치"
+                            mapPoint = MapPoint.mapPointWithGeoCoord(y!!, x!!)
+                            customImageResourceId = R.drawable.main_color1_marker
+                            customSelectedImageResourceId = R.drawable.main_color2_marker
+                            markerType = MapPOIItem.MarkerType.CustomImage
+                            selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+                            isCustomImageAutoscale = false
+                            setCustomImageAnchor(0.5f, 1.0f)
+                            mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
+                        }
+                        mapView.addPOIItem(marker)
                     }
-                    mapView.addPOIItem(marker)
                 }
             }
 
