@@ -126,13 +126,28 @@
                 android:textColor="@color/main_color1"
                 android:text="@string/email" />
 
-            <EditText
-                android:id="@+id/editText_email"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/userEmail"
-                android:inputType="textEmailAddress" />
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editText_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/userEmail"
+                    android:layout_marginRight="20dp"
+                    android:inputType="textEmailAddress" />
+
+                <Button
+                    android:id="@+id/email_check"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/main_color1"
+                    android:text="@string/userEmailBtn" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/date_birth"
@@ -184,35 +199,30 @@
                     android:text="@string/thirdGender" />
             </RadioGroup>
 
-            <RadioGroup
+            <CheckBox
+                android:id="@+id/agree_all"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"
+                android:text="@string/allAgree" />
 
-                <RadioButton
-                    android:id="@+id/radioButton6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/main_color1"
-                    android:text="@string/allAgree" />
+            <CheckBox
+                android:id="@+id/agree1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/termsAndConditionsAgree" />
 
-                <RadioButton
-                    android:id="@+id/radioButton3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/termsAndConditionsAgree" />
+            <CheckBox
+                android:id="@+id/agree2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/personalInformationAgree" />
 
-                <RadioButton
-                    android:id="@+id/radioButton4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/personalInformationAgree" />
-
-                <RadioButton
-                    android:id="@+id/radioButton5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/marketingAgree" />
-            </RadioGroup>
+            <CheckBox
+                android:id="@+id/agree3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/marketingAgree" />
 
             <Button
                 android:id="@+id/join_btn"

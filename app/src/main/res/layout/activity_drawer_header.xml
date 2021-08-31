@@ -14,7 +14,9 @@
         android:layout_height="100dp"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_launcher_background"/>
+        android:src="@drawable/meal"
+        android:padding="10dp"
+        android:background="@drawable/boarder_line"/>
 
     <TextView
         android:id="@+id/header_username"

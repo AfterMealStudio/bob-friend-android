@@ -47,13 +47,13 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
 
         fun bind(item: Board) {
             boardTitle.text = item.title
-            userName.text = item.author?.username
+            userName.text = item.author?.nickname
             currentNumberOfPeople.text = item.currentNumberOfPeople.toString()
             totalNumberOfPeople.text = item.totalNumberOfPeople.toString()
             createdAt.text = item.createdAt.toString()
 
-            if(item.currentNumberOfPeople!=null && item.totalNumberOfPeople!=null) {
-                boardItem = BoardItem(item.title, item.content, item.author?.username,
+            if(item.totalNumberOfPeople!=null) {
+                boardItem = BoardItem(item.title, item.content, item.author?.nickname,
                     item.currentNumberOfPeople!!, item.totalNumberOfPeople!!, item.createdAt, item.restaurantName)
             }
 

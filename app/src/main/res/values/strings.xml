@@ -100,5 +100,11 @@
     <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_second_fragment">Hello second fragment</string>
+
+    <!--메뉴-->
+    <string name="makeRecruitment">내가 잡은 약속</string>
+    <string name="myRecruitmentList">내 약속 목록</string>
+    <string name="logout">로그아웃/회원탈퇴</string>
+    <string name="about">개발자 정보</string>
 </resources>

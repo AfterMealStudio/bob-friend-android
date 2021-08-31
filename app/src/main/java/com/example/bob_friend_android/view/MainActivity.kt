@@ -27,7 +27,6 @@ import com.example.bob_friend_android.viewmodel.MainViewModel
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
-    private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
 
     private val PERMISSIONS_REQUEST_CODE = 100
     private var REQUIRED_PERMISSIONS = arrayOf<String>( Manifest.permission.ACCESS_FINE_LOCATION)
@@ -95,8 +94,6 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.mainWriteBtn.setOnClickListener {
-//            binding.frameLayout.removeView(fragmentMap.myView)
-
             val intent = Intent(this, CreateBoardActivity::class.java)
             startActivity(intent)
         }

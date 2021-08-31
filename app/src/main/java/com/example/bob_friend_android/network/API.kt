@@ -12,6 +12,14 @@ interface API {
     @POST("api/signup")
     fun getJoinResponse(@Body user: Map<String, String>): Call<User>
 
+    //아이디 중복확인
+    @GET("api/username/{username}")
+    fun getIdCheck(@Path("username") username : String): Call<Boolean>
+
+    //이메일 중복 확인
+    @GET("api/email/{email}")
+    fun getEmailCheck(@Path("email") email : String): Call<Boolean>
+
     //로그인
     @POST("api/signin")
     fun getLoginResponse(@Body user : Map<String, String>): Call<Token>
