@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/myBoard"
-        android:title="내가 쓴 글">
+        android:title="@string/makeRecruitment">
     </item>
     <item
         android:id="@+id/myAppointmentList"
-        android:title="내 약속 목록">
+        android:title="@string/myRecruitmentList">
     </item>
     <item
         android:id="@+id/blacklist"
-        android:title="블랙리스트">
+        android:title="@string/logout">
     </item>
     <item
         android:id="@+id/about"
-        android:title="about">
+        android:title="@string/about">
     </item>
 </menu>

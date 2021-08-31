@@ -27,17 +27,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val TAG = "MainViewModel"
 
     fun setUserInfo(headerUserName:TextView, headerEmail:TextView) {
-        var username: String
+        var nickname: String
         var email: String
         val token = App.prefs.getString("token", "")
         Log.d(TAG,"token: $token")
 
         RetrofitBuilder.api.getUserId(token).enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
-                username = response.body()?.username.toString()
+                nickname = response.body()?.nickname.toString()
                 email = response.body()?.email.toString()
-                Log.d(TAG,"responese: $response, username: $username, email: $email")
-                headerUserName.text = username
+                Log.d(TAG,"responese: $response, username: $nickname, email: $email")
+                headerUserName.text = nickname
                 headerEmail.text = email
             }
 

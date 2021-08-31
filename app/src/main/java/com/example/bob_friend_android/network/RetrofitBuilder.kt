@@ -14,11 +14,10 @@ object RetrofitBuilder {
 
     init {
         val retrofit = Retrofit.Builder()
-            .addConverterFactory(ScalarsConverterFactory.create() )
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .baseUrl("http://117.17.102.143:8080")
             .build()
-
         api = retrofit.create(API::class.java)
     }
 }
