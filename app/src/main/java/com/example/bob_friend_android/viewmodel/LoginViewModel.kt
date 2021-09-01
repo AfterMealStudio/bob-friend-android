@@ -19,7 +19,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
     val TAG = "LoginViewModel"
     val PREFERENCE = "bob_friend_android"
 
-    fun login(username: String, password: String, context: Context) {
+    fun login(username: String, password: String, checked: Boolean,context: Context) {
         if(validation(username, password, context)) {
             val user = HashMap<String, String>()
             user["username"] = username
@@ -36,6 +36,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                             val editor = pref.edit()
                             editor.putString("username", username)
                             editor.putString("token", response.body()?.token.toString())
+                            editor.putBoolean("checked", checked)
                             editor.apply()
                             val intent = Intent(context, MainActivity::class.java)
                             context.startActivity(intent)

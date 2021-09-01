@@ -2,6 +2,7 @@
     <!--로그인-->
     <string name="app_name">밥친구함</string>
     <string name="main_list">List</string>
+    <string name="main_auto_login">자동 로그인</string>
     <string name="main_map">Map</string>
     <string name="main_search">검색어를 입력하세요.</string>
     <string name="login">로그인</string>

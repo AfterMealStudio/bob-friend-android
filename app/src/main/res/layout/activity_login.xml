@@ -76,6 +76,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <CheckBox
+                android:id="@+id/checkBox_auto_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:text="@string/main_auto_login"/>
+
             <Button
                 android:id="@+id/login_btn"
                 android:layout_width="match_parent"
