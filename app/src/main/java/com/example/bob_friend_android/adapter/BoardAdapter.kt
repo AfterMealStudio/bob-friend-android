@@ -54,7 +54,7 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
 
             if(item.totalNumberOfPeople!=null) {
                 boardItem = BoardItem(item.title, item.content, item.author?.nickname,
-                    item.currentNumberOfPeople!!, item.totalNumberOfPeople!!, item.createdAt, item.restaurantName)
+                    item.currentNumberOfPeople, item.totalNumberOfPeople!!, item.createdAt, item.restaurantName)
             }
 
             itemView.setOnClickListener {

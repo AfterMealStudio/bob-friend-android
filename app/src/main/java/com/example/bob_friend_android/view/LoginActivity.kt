@@ -11,12 +11,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.SharedPref
 import com.example.bob_friend_android.databinding.ActivityLoginBinding
 import com.example.bob_friend_android.viewmodel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
 
     val TAG = "LOGIN"
+    val PREFERENCE = "bob_friend_android"
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
@@ -33,11 +35,13 @@ class LoginActivity : AppCompatActivity() {
         binding.login = this
         binding.lifecycleOwner = this
 
-        if (App.prefs.getString("username", "") != "") {
-            val id = App.prefs.getString("username", "")
-            val pw = App.prefs.getString("password", "")
+        SharedPref.openSharedPrep(this)
+        val pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE)
+        val token = pref.getString("token","")
 
-            viewModel.login(id, pw, this)
+        if (token != "") {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
 
         binding.loginBtn.setOnClickListener {

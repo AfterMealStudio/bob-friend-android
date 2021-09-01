@@ -32,19 +32,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val token = App.prefs.getString("token", "")
         Log.d(TAG,"token: $token")
 
-        RetrofitBuilder.api.getUserId(token).enqueue(object : Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                nickname = response.body()?.nickname.toString()
-                email = response.body()?.email.toString()
-                Log.d(TAG,"responese: $response, username: $nickname, email: $email")
-                headerUserName.text = nickname
-                headerEmail.text = email
-            }
+        if (token != null) {
+            RetrofitBuilder.api.getUserId(token).enqueue(object : Callback<User> {
+                override fun onResponse(call: Call<User>, response: Response<User>) {
+                    nickname = response.body()?.nickname.toString()
+                    email = response.body()?.email.toString()
+                    Log.d(TAG,"responese: $response, username: $nickname, email: $email")
+                    headerUserName.text = nickname
+                    headerEmail.text = email
+                }
 
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                Log.e(TAG, t.message.toString())
-            }
-        })
+                override fun onFailure(call: Call<User>, t: Throwable) {
+                    Log.e(TAG, t.message.toString())
+                }
+            })
+        }
     }
 
 
