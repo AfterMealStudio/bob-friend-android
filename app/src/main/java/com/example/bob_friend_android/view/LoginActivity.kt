@@ -36,9 +36,8 @@ class LoginActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         SharedPref.openSharedPrep(this)
-        val pref = getSharedPreferences(PREFERENCE, MODE_PRIVATE)
-        val token = pref.getString("token","")
-        val check = pref.getBoolean("checked",false)
+        val token = App.prefs.getString("token","")
+        val check = App.prefs.getBoolean("checked",false)
 
         Log.d(TAG, "tt: $token, $check")
         if (token != "" && check) {
@@ -50,7 +49,6 @@ class LoginActivity : AppCompatActivity() {
             val username = binding.editTextEmail.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
             val checked = binding.checkBoxAutoLogin.isChecked
-            Log.d(TAG, "username: $username")
 
             viewModel.login(username ,password, checked,this)
         }

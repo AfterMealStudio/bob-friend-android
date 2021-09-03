@@ -20,7 +20,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val TAG = "ListViewModel"
 
     fun setList(recyclerView: RecyclerView, context: Context) {
-        val token = App.prefs.getString("token", "no token")
+
+        val token = App.prefs.getString("token","")
         val list: ArrayList<Board> = arrayListOf()
         Log.d(TAG, "token = $token")
 
