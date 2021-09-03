@@ -3,7 +3,6 @@ package com.example.bob_friend_android.viewmodel
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.provider.ContactsContract
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
@@ -41,22 +40,15 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
             RetrofitBuilder.api.getJoinResponse(user).enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     Log.d(TAG, "response :: $response")
-                    if (response.errorBody() != null) {
-                        val error = response.errorBody()!!.toString().toInt()
-                        if (error == StatusCode.Conflict.code) {
-                            Toast.makeText(context, "이미 있는 이메일입니다.", Toast.LENGTH_SHORT).show()
+                    when (response.code()) {
+                        200 -> {
+                            Toast.makeText(context, "회원가입 성공", Toast.LENGTH_LONG).show()
+                            val intent = Intent(context, LoginActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            context.startActivity(intent)
                         }
-                    } else {
-                        App.prefs.setString("userId", userId)
-                        App.prefs.setString("email", email)
-                        App.prefs.setString("nickname", nickname)
-                        App.prefs.setString("password", password)
-                        App.prefs.setString("dateBirth", date)
-                        App.prefs.setString("gender", gender)
-                        Toast.makeText(context, "회원가입 되었습니다.", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(context, LoginActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        context.startActivity(intent)
+                        405 -> Toast.makeText(context, "회원가입 실패 : 아이디나 비번이 올바르지 않습니다", Toast.LENGTH_LONG).show()
+                        500 -> Toast.makeText(context, "회원가입 실패 : 서버 오류", Toast.LENGTH_LONG).show()
                     }
                 }
 
@@ -123,10 +115,11 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
         RetrofitBuilder.api.getIdCheck(userId).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "onResponse : $response")
-                if(response.body() != null){
-                    if(response.body() == true){
+                val body = response.body()
+                if(body != null){
+                    if(body == true){
                         Toast.makeText(context, "이미 있는 아이디입니다.", Toast.LENGTH_SHORT).show()
-                    } else if (response.body() == false){
+                    } else if (body == false){
                         Toast.makeText(context, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show()
                         idCheck = true
                     }
@@ -144,10 +137,12 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
         RetrofitBuilder.api.getIdCheck(email).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "onResponse : $response")
-                if(response.body() != null){
-                    if(response.body() == true){
+                val check = response.body()
+
+                if(check != null){
+                    if(check == true){
                         Toast.makeText(context, "이미 있는 이메일입니다.", Toast.LENGTH_SHORT).show()
-                    } else if (response.body() == false){
+                    } else if (check == false){
                         Toast.makeText(context, "사용 가능한 이메일 입니다.", Toast.LENGTH_SHORT).show()
                         emailCheck = true
                     }

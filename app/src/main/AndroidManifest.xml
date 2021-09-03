@@ -14,8 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bobfriendandroid"
         android:usesCleartextTraffic="true">
-
-
+        <activity android:name=".view.DrawerActivity"></activity>
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -24,7 +23,7 @@
         <activity android:name=".view.DetailBoardActivity" />
         <activity android:name=".view.CreateBoardActivity" />
         <activity android:name=".view.JoinActivity" />
-        <activity android:name=".view.BoardSearchActivity"/>
+        <activity android:name=".view.LocationSearchActivity" />
         <activity android:name=".view.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -13,13 +13,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.adapter.DrawerAdapter
 import com.example.bob_friend_android.databinding.ActivityMainBinding
 import com.example.bob_friend_android.viewmodel.MainViewModel
 
@@ -167,16 +170,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun hideKeyboard(){
+
+    private fun hideKeyboard(){
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.mainEditTextSearch.windowToken, 0)
     }
+
 
     override fun onResume() {
         supportFragmentManager.beginTransaction().commitNow()
         fragmentMap.mapView.visibility = View.VISIBLE
         super.onResume()
     }
+
 
     override fun onPause() {
         fragmentMap.mapView.visibility = View.INVISIBLE

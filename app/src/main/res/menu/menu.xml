@@ -9,8 +9,12 @@
         android:title="@string/myRecruitmentList">
     </item>
     <item
-        android:id="@+id/blacklist"
-        android:title="@string/logout">
+        android:id="@+id/userSetting"
+        android:title="@string/setting">
+    </item>
+    <item
+    android:id="@+id/blacklist"
+    android:title="@string/logout">
     </item>
     <item
         android:id="@+id/about"

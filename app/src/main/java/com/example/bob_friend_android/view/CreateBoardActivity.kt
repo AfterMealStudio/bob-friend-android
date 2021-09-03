@@ -118,7 +118,7 @@ class CreateBoardActivity : AppCompatActivity() {
             }
 
         binding.writeSearchBtn.setOnClickListener {
-            val intent = Intent(this, BoardSearchActivity::class.java)
+            val intent = Intent(this, LocationSearchActivity::class.java)
             getLocationResultText.launch(intent)
         }
     }

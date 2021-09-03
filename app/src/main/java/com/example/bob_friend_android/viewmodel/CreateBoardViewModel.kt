@@ -25,20 +25,22 @@ class CreateBoardViewModel(application: Application): AndroidViewModel(applicati
 
         Log.d(TAG, "!title=$title, content=$content")
 
-        RetrofitBuilder.api.addRecruitmens(token, board).enqueue(object : Callback<Board> {
-            override fun onResponse(call: Call<Board>, response: Response<Board>) {
-                val code = response.code()
-                if (code == 200) {
-                    Log.d(TAG, "!!title=$title, content=$content")
-                    Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
+        if (token != null) {
+            RetrofitBuilder.api.addRecruitmens(token, board).enqueue(object : Callback<Board> {
+                override fun onResponse(call: Call<Board>, response: Response<Board>) {
+                    val code = response.code()
+                    if (code == 200) {
+                        Log.d(TAG, "!!title=$title, content=$content")
+                        Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<Board>, t: Throwable) {
-                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
-                Log.e("AddViewModel!!!", t.message.toString())
-            }
+                override fun onFailure(call: Call<Board>, t: Throwable) {
+                    Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                    Log.e("AddViewModel!!!", t.message.toString())
+                }
 
-        })
+            })
+        }
     }
 }

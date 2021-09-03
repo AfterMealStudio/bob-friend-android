@@ -2,7 +2,6 @@ package com.example.bob_friend_android.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,7 +13,7 @@ import com.example.bob_friend_android.databinding.ActivityBoardSearchBinding
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.MainViewModel
 
-class BoardSearchActivity: AppCompatActivity() {
+class LocationSearchActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityBoardSearchBinding
     private lateinit var viewModel: MainViewModel
@@ -52,7 +51,7 @@ class BoardSearchActivity: AppCompatActivity() {
 
         searchAdapter.setItemClickListener(object: SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
-                val intent = Intent(this@BoardSearchActivity, CreateBoardActivity::class.java).apply {
+                val intent = Intent(this@LocationSearchActivity, CreateBoardActivity::class.java).apply {
                     putExtra("location", listItems[position].address)
                     putExtra("name", listItems[position].name)
                     putExtra("x", listItems[position].x)
