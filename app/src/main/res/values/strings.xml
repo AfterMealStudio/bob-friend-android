@@ -40,13 +40,14 @@
     <!--글쓰기-->
     <string name="write_board">약속 작성하기</string>
     <string name="write_board_search">장소 검색하기</string>
+    <string name="write_board_time">시간 선택하기</string>
     <string name="write_search">검색</string>
     <string name="write_board_search2">장소를 검색해주세요.</string>
     <string name="write">작성하기</string>
     <string name="write_title">제목</string>
     <string name="write_content">내용</string>
     <string name="write_member">약속 인원</string>
-    <string name="write_member2">ex) 4명</string>
+    <string name="write_member2">ex) 4</string>
     <string name="write_meeting_time">약속 시간</string>
     <string name="write_appointment_place">약속 장소</string>
     <string name="write_no">상관없음</string>
@@ -54,17 +55,17 @@
     <string name="onlyMale">남성만</string>
     <string name="onlyFemale">여성만</string>
     <string name="write_age">연령</string>
-    <string name="write_minAge">ex) 17</string>
-    <string name="write_maxAge">ex) 19</string>
+    <string name="write_minAge">0</string>
+    <string name="write_maxAge">000</string>
     <string name="write_ageFromTo">~</string>
     <string name="write_ageFrom">부터</string>
     <string name="write_ageTo">까지</string>
     <string name="write_time">시</string>
-    <string name="write_minute">분</string>
+    <string name="write_minute">00시 00분</string>
     <string name="write_time2">ex) 14</string>
     <string name="write_minute2">ex) 30</string>
     <string name="write_search2"> 세부내용 ex) 정문 앞에서 만나요.</string>
-    <string name="write_today">오늘</string>
+    <string name="write_today">0000년 00월 00일</string>
     <string name="write_notToday">오늘이 아님</string>
 
 

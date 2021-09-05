@@ -36,13 +36,11 @@ class LoginActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         SharedPref.openSharedPrep(this)
-        val token = App.prefs.getString("token","")
+        val token = App.prefs.getString("token","no token")
         val check = App.prefs.getBoolean("checked",false)
 
-        Log.d(TAG, "tt: $token, $check")
-        if (token != "" && check) {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+        if (check) {
+            viewModel.validateUser(token!!, this)
         }
 
         binding.loginBtn.setOnClickListener {

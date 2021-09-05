@@ -55,6 +55,25 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+    fun validateUser(token: String, context: Context) {
+        RetrofitBuilder.api.getToken(token).enqueue(object : Callback<Boolean> {
+            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+                Log.d(TAG, "validateUser: ${response.body()}")
+                if (response.body() != null){
+                    if(response.body()!!) {
+                        val intent = Intent(context, MainActivity::class.java)
+                        context.startActivity(intent)
+
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                Log.d(TAG, "ttt: $t")
+            }
+        })
+    }
+
     private fun validation(username : String, password: String, context: Context): Boolean {
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(context, "아이디와 비밀번호를 입력해주세요!", Toast.LENGTH_SHORT).show()
