@@ -18,37 +18,127 @@ import retrofit2.Response
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     val TAG = "ListViewModel"
+    val token = App.prefs.getString("token","")
 
     fun setList(recyclerView: RecyclerView, context: Context) {
-        val token = App.prefs.getString("token", "no token")
         val list: ArrayList<Board> = arrayListOf()
-        Log.d(TAG, "token = $token")
-
         if (token != null) {
             RetrofitBuilder.api.getRecruitmens(token).enqueue(object : Callback<List<Board>> {
                 override fun onResponse(call: Call<List<Board>>, response: Response<List<Board>>) {
-                    Log.d(TAG, "responese = ${response.body()}")
-                    for (document in response.body()!!) {
-                        val board = Board()
-                        board.id = document.id
-                        board.title = document.title
-                        board.content = document.content
-                        board.author = document.author
-                        board.totalNumberOfPeople = document.totalNumberOfPeople
-                        board.restaurantName = document.restaurantName
-                        board.restaurantAddress = document.restaurantAddress
-                        board.latitude = document.latitude
-                        board.longitude = document.longitude
-                        board.startAt = document.startAt
-                        board.endAt = document.endAt
-                        board.member = document.member
-                        board.currentNumberOfPeople = document.currentNumberOfPeople
-                        board.full = document.full
-                        board.createdAt = document.createdAt
-                        board.report = document.report
+                    Log.d(TAG, "responese = ${response}")
+                    if(response.body() != null) {
+                        for (document in response.body()!!) {
+                            val board = Board()
+                            board.id = document.id
+                            board.title = document.title
+                            board.content = document.content
+                            board.author = document.author
+                            board.totalNumberOfPeople = document.totalNumberOfPeople
+                            board.restaurantName = document.restaurantName
+                            board.restaurantAddress = document.restaurantAddress
+                            board.latitude = document.latitude
+                            board.longitude = document.longitude
+                            board.appointmentTime = document.appointmentTime
+                            board.member = document.member
+                            board.currentNumberOfPeople = document.currentNumberOfPeople
+                            board.full = document.full
+                            board.createdAt = document.createdAt
+                            board.report = document.report
 
-                        list.add(board)
+                            list.add(board)
+                        }
                     }
+                    val adapter = BoardAdapter(context, list)
+                    recyclerView.adapter = adapter
+                }
+
+                override fun onFailure(call: Call<List<Board>>, t: Throwable) {
+                    Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, t.message.toString())
+                }
+            })
+        }
+    }
+
+
+    fun setMyAppointment(recyclerView: RecyclerView, context: Context) {
+        val list: ArrayList<Board> = arrayListOf()
+        Log.d(TAG, "token = $token")
+        if (token != null) {
+            RetrofitBuilder.api.getJoinRecruitmens(token).enqueue(object : Callback<List<Board>> {
+                override fun onResponse(call: Call<List<Board>>, response: Response<List<Board>>) {
+                    Log.d(TAG, "responese = ${response.body()}")
+                    if(response.body() != null) {
+                        for (document in response.body()!!) {
+                            val board = Board()
+                            board.id = document.id
+                            board.title = document.title
+                            board.content = document.content
+                            board.author = document.author
+                            board.totalNumberOfPeople = document.totalNumberOfPeople
+                            board.restaurantName = document.restaurantName
+                            board.restaurantAddress = document.restaurantAddress
+                            board.latitude = document.latitude
+                            board.longitude = document.longitude
+                            board.appointmentTime = document.appointmentTime
+                            board.member = document.member
+                            board.currentNumberOfPeople = document.currentNumberOfPeople
+                            board.full = document.full
+                            board.createdAt = document.createdAt
+                            board.report = document.report
+
+                            list.add(board)
+                        }
+                    }
+                    else {
+                        Toast.makeText(context, "내가 참가하는 약속이 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    val adapter = BoardAdapter(context, list)
+                    recyclerView.adapter = adapter
+                }
+
+                override fun onFailure(call: Call<List<Board>>, t: Throwable) {
+                    Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, t.message.toString())
+                }
+            })
+        }
+    }
+
+
+    fun setMyBoard(recyclerView: RecyclerView, context: Context) {
+        val list: ArrayList<Board> = arrayListOf()
+        Log.d(TAG, "token = $token")
+        if (token != null) {
+            RetrofitBuilder.api.getMyRecruitmens(token).enqueue(object : Callback<List<Board>> {
+                override fun onResponse(call: Call<List<Board>>, response: Response<List<Board>>) {
+                    Log.d(TAG, "responese = ${response.body()}")
+                    if(response.body() != null) {
+                        for (document in response.body()!!) {
+                            val board = Board()
+                            board.id = document.id
+                            board.title = document.title
+                            board.content = document.content
+                            board.author = document.author
+                            board.totalNumberOfPeople = document.totalNumberOfPeople
+                            board.restaurantName = document.restaurantName
+                            board.restaurantAddress = document.restaurantAddress
+                            board.latitude = document.latitude
+                            board.longitude = document.longitude
+                            board.appointmentTime = document.appointmentTime
+                            board.member = document.member
+                            board.currentNumberOfPeople = document.currentNumberOfPeople
+                            board.full = document.full
+                            board.createdAt = document.createdAt
+                            board.report = document.report
+
+                            list.add(board)
+                        }
+                    }
+                    else {
+                        Toast.makeText(context, "내가 작성한 약속이 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+
                     val adapter = BoardAdapter(context, list)
                     recyclerView.adapter = adapter
                 }

@@ -14,13 +14,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class CreateBoardViewModel(application: Application): AndroidViewModel(application) {
+class BoardViewModel(application: Application): AndroidViewModel(application) {
 
     val TAG = "CreateBoardViewModel"
 
-    fun CreateBoard(title : String, content: String, count:Int, address: String, locationName: String, context: Context) {
+    fun CreateBoard(title : String, content: String, count:Int, address: String, locationName: String, x: Double?, y: Double?, time: String, context: Context) {
 
-        val board = Board(title = title, content = content, totalNumberOfPeople = count, restaurantAddress = address, restaurantName = locationName)
+        val board = Board(title = title, content = content, totalNumberOfPeople = count, restaurantAddress = address, restaurantName = locationName, longitude = y, latitude = x, appointmentTime = time)
         val token = App.prefs.getString("token", "no token")
 
         Log.d(TAG, "!title=$title, content=$content")
@@ -38,6 +38,28 @@ class CreateBoardViewModel(application: Application): AndroidViewModel(applicati
                 override fun onFailure(call: Call<Board>, t: Throwable) {
                     Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
                     Log.e("AddViewModel!!!", t.message.toString())
+                }
+
+            })
+        }
+    }
+
+
+    fun delete(context: Context, id : Int) {
+        val token = App.prefs.getString("token", "no token")
+
+        if (token != null) {
+            RetrofitBuilder.api.deleteRecruitmens(token, id).enqueue(object : Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    context.startActivity(intent)
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                    Log.e("DetailActivity!!!", t.message.toString())
                 }
 
             })

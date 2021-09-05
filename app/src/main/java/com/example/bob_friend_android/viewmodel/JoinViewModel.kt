@@ -102,6 +102,7 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
         if(!idCheck) {
             Toast.makeText(context, "아이디 중복확인을 해주세요.", Toast.LENGTH_SHORT).show()
         }
+
         return true
     }
 

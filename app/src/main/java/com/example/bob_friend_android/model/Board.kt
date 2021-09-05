@@ -13,8 +13,7 @@ data class Board (
     var restaurantAddress: String? = "",
     var latitude:Double? = 0.0,
     var longitude:Double? = 0.0,
-    var startAt: String? = null,
-    var endAt: String? = null,
+    var appointmentTime: String? = null,
     var createdAt: String? = null,
     var report: Long? = null
 )

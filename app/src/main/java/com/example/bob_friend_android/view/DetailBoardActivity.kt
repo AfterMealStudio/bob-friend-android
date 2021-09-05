@@ -7,21 +7,18 @@ import android.view.View
 import android.widget.RelativeLayout
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.adapter.CommentAdapter
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding
 import com.example.bob_friend_android.model.BoardItem
-import com.example.bob_friend_android.viewmodel.DetailBoardViewModel
+import com.example.bob_friend_android.viewmodel.BoardViewModel
 import net.daum.mf.map.api.MapView
 import java.util.*
 
 class DetailBoardActivity : AppCompatActivity() {
     private val TAG = "DetailBoardActivity"
     private lateinit var binding: ActivityDetailBoardBinding
-    private lateinit var viewModel: DetailBoardViewModel
+    private lateinit var viewModel: BoardViewModel
     private val commentList : ArrayList<Comment> = ArrayList()
     var backKeyPressedTime: Long = 0
 
@@ -37,7 +34,7 @@ class DetailBoardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_board)
-        viewModel = ViewModelProvider(this).get(DetailBoardViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
         binding.lifecycleOwner = this
         binding.detail = viewModel
 

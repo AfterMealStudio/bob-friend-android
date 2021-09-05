@@ -28,6 +28,10 @@ interface API {
     @GET("api/user")
     fun getUserId(@Header("Authorization") token: String): Call<User>
 
+    //토큰 가져오기
+    @GET("api/validate")
+    fun getToken(@Header("Authorization") token: String): Call<Boolean>
+
     //회원탈퇴
     @DELETE("api/user/{id}")
     fun deleteUser(@Header("Authorization") token: String, @Path("id") id: Int): Call<Void>
@@ -39,6 +43,14 @@ interface API {
     //약속조회
     @GET("/recruitments")
     fun getRecruitmens(@Header("Authorization") token: String): Call<List<Board>>
+
+    //내 참가약속조회
+    @GET("/recruitments/my/joined")
+    fun getJoinRecruitmens(@Header("Authorization") token: String): Call<List<Board>>
+
+    //내가 잡은 약속
+    @GET("/recruitments/my")
+    fun getMyRecruitmens(@Header("Authorization") token: String): Call<List<Board>>
 
     //약속삭제
     @DELETE("/recruitments/{id}")

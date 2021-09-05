@@ -7,6 +7,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import com.example.bob_friend_android.App
 import com.example.bob_friend_android.model.Token
 import com.example.bob_friend_android.network.RetrofitBuilder
 import com.example.bob_friend_android.view.MainActivity
@@ -32,8 +33,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     when (response.code()) {
                         200 -> {
                             Log.d(TAG, "response : ${response.body()?.token}")
-                            val pref = context.getSharedPreferences(PREFERENCE, MODE_PRIVATE)
-                            val editor = pref.edit()
+                            val editor = App.prefs.edit()
                             editor.putString("username", username)
                             editor.putString("token", response.body()?.token.toString())
                             editor.putBoolean("checked", checked)
@@ -43,6 +43,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                         }
                         405 -> Toast.makeText(context, "로그인 실패 : 아이디나 비번이 올바르지 않습니다", Toast.LENGTH_LONG).show()
                         500 -> Toast.makeText(context, "로그인 실패 : 서버 오류", Toast.LENGTH_LONG).show()
+                        else -> Toast.makeText(context, "로그인 실패 : 아이디나 비번이 올바르지 않습니다", Toast.LENGTH_LONG).show()
                     }
                 }
                 override fun onFailure(call: Call<Token>, t: Throwable) {
@@ -52,6 +53,25 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
 
             })
         }
+    }
+
+    fun validateUser(token: String, context: Context) {
+        RetrofitBuilder.api.getToken(token).enqueue(object : Callback<Boolean> {
+            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+                Log.d(TAG, "validateUser: ${response.body()}")
+                if (response.body() != null){
+                    if(response.body()!!) {
+                        val intent = Intent(context, MainActivity::class.java)
+                        context.startActivity(intent)
+
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                Log.d(TAG, "ttt: $t")
+            }
+        })
     }
 
     private fun validation(username : String, password: String, context: Context): Boolean {

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -13,21 +14,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.adapter.DrawerAdapter
 import com.example.bob_friend_android.databinding.ActivityMainBinding
 import com.example.bob_friend_android.viewmodel.MainViewModel
+import com.google.android.material.navigation.NavigationView
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
 
@@ -35,8 +33,14 @@ class MainActivity : AppCompatActivity() {
     private var REQUIRED_PERMISSIONS = arrayOf<String>( Manifest.permission.ACCESS_FINE_LOCATION)
 
     lateinit var fragmentMap: MapFragment
-    lateinit var fragmentList:ListFragment
-    var flag:Int = 1 //프레그먼트 교체
+    lateinit var fragmentList: ListFragment
+    lateinit var fragmentSetting: SettingFragment
+    lateinit var fragmentLogout: LogoutFragment
+    lateinit var fragmentAppointment: MyAppointmentFragment
+    lateinit var fragmentBoard: MyBoardFragment
+    lateinit var fragmentAbout: AboutFragment
+    var beforeFlag:Int = 1 //프레그먼트 이전
+    var flag:Int = 1
 
     var backKeyPressedTime: Long = 0
 
@@ -66,6 +70,11 @@ class MainActivity : AppCompatActivity() {
 
         fragmentMap = MapFragment()
         fragmentList = ListFragment()
+        fragmentSetting = SettingFragment()
+        fragmentAbout = AboutFragment()
+        fragmentAppointment = MyAppointmentFragment()
+        fragmentBoard = MyBoardFragment()
+        fragmentLogout = LogoutFragment()
 
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
@@ -89,6 +98,8 @@ class MainActivity : AppCompatActivity() {
             hideKeyboard()
             setFragment()
         }
+
+        binding.mainNavigationView.setNavigationItemSelectedListener(this)
 
         binding.menu.setOnClickListener {
             hideKeyboard()
@@ -144,6 +155,21 @@ class MainActivity : AppCompatActivity() {
                 transaction.replace(R.id.frameLayout, fragmentList)
                 flag = 1
             }
+            3 -> {
+                transaction.replace(R.id.frameLayout, fragmentBoard)
+            }
+            4 -> {
+                transaction.replace(R.id.frameLayout, fragmentAppointment)
+            }
+            5 -> {
+                transaction.replace(R.id.frameLayout, fragmentSetting)
+            }
+            6 -> {
+                transaction.replace(R.id.frameLayout, fragmentLogout)
+            }
+            7 -> {
+                transaction.replace(R.id.frameLayout, fragmentAbout)
+            }
         }
 
         transaction.addToBackStack(null)
@@ -187,5 +213,24 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         fragmentMap.mapView.visibility = View.INVISIBLE
         super.onPause()
+    }
+
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.myBoard -> setFragmentForUserInfo(flag, 3)
+            R.id.myAppointmentList -> setFragmentForUserInfo(flag, 4)
+            R.id.userSetting -> setFragmentForUserInfo(flag, 5)
+            R.id.logout -> setFragmentForUserInfo(flag, 6)
+            R.id.about -> setFragmentForUserInfo(flag, 7)
+        }
+        return true
+    }
+
+    fun setFragmentForUserInfo(beforeFlag: Int, afterFlag:Int) {
+        flag = afterFlag
+        setFragment()
+        flag = beforeFlag
+        binding.mainDrawerLayout.closeDrawer(GravityCompat.START)
     }
 }

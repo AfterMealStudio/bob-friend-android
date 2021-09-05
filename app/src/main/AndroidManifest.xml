@@ -14,8 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bobfriendandroid"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.DrawerActivity"></activity>
-
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="76ae2d3e91f458eca0e0cda68b199d93" />

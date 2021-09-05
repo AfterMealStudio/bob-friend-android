@@ -13,7 +13,7 @@
         android:title="@string/setting">
     </item>
     <item
-    android:id="@+id/blacklist"
+    android:id="@+id/logout"
     android:title="@string/logout">
     </item>
     <item
