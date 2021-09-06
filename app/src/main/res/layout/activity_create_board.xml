@@ -250,51 +250,53 @@
                         android:checked="true"/>
                 </RadioGroup>
 
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/range_seek_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:valueFrom="0"
+                    android:valueTo="100"
+                    app:values="@array/initial_slider_values"/>
+
                 <LinearLayout
-                    android:id="@+id/age_detail"
+                    android:id="@+id/ageFromTo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <EditText
-                        android:id="@+id/minAge"
-                        android:layout_width="40dp"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="@string/write_minAge"
-                        android:inputType="number" />
-
                     <TextView
-                        android:id="@+id/write_ageFrom"
+                        android:id="@+id/write_time_from"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/main_color1"
+                        android:text="@string/write_minAge" />
+
+                    <TextView
+                        android:id="@+id/write_time_from2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_color1"
                         android:text="@string/write_ageFrom"
-                        android:textColor="@color/main_color1" />
+                        android:layout_marginRight="5dp"/>
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/write_time_to"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginRight="25dp"
-                        android:text="@string/write_ageFromTo" />
-
-                    <EditText
-                        android:id="@+id/maxAge"
-                        android:layout_width="40dp"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="@string/write_maxAge"
-                        android:inputType="number" />
+                        android:textColor="@color/main_color1"
+                        android:layout_marginLeft="5dp"
+                        android:text="@string/write_maxAge" />
 
                     <TextView
-                        android:id="@+id/write_ageTo"
+                        android:id="@+id/write_time_to2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/write_ageTo"
-                        android:textColor="@color/main_color1" />
-
+                        android:textColor="@color/main_color1"
+                        android:text="@string/write_ageTo" />
                 </LinearLayout>
 
                 <Button
