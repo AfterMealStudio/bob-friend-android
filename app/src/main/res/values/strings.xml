@@ -55,8 +55,8 @@
     <string name="onlyMale">남성만</string>
     <string name="onlyFemale">여성만</string>
     <string name="write_age">연령</string>
-    <string name="write_minAge">0</string>
-    <string name="write_maxAge">000</string>
+    <string name="write_minAge">20</string>
+    <string name="write_maxAge">70</string>
     <string name="write_ageFromTo">~</string>
     <string name="write_ageFrom">부터</string>
     <string name="write_ageTo">까지</string>

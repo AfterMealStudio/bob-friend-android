@@ -11,9 +11,11 @@ import android.view.View
 import android.widget.DatePicker
 import android.widget.RelativeLayout
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +25,8 @@ import com.example.bob_friend_android.viewmodel.BoardViewModel
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.*
 
 class CreateBoardActivity : AppCompatActivity() {
@@ -33,6 +37,8 @@ class CreateBoardActivity : AppCompatActivity() {
 
     private lateinit var mapView: MapView
     private lateinit var mapViewContainer: RelativeLayout
+
+    private var backKeyPressedTime : Long = 0
 
     var address: String = ""
     var locationName: String = ""
@@ -53,16 +59,21 @@ class CreateBoardActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         binding.backBtn.setOnClickListener {
-            finish()
+            onBackPressed()
         }
 
-        binding.ageDetail.visibility = View.GONE
+        binding.rangeSeekBar.visibility = View.INVISIBLE
+        binding.ageFromTo.visibility = View.GONE
         binding.ageGroup.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
                 R.id.ageButton2 -> {
-                    binding.ageDetail.visibility = View.VISIBLE
+                    binding.rangeSeekBar.visibility = View.VISIBLE
+                    binding.ageFromTo.visibility = View.VISIBLE
                 }
-                R.id.ageButton1 -> binding.ageDetail.visibility = View.GONE
+                R.id.ageButton1 -> {
+                    binding.rangeSeekBar.visibility = View.INVISIBLE
+                    binding.ageFromTo.visibility = View.GONE
+                }
             }
         }
 
@@ -71,18 +82,42 @@ class CreateBoardActivity : AppCompatActivity() {
             date = setCalenderDay()
         }
 
+        binding.rangeSeekBar.setLabelFormatter { value: Float ->
+            val format = NumberFormat.getInstance(Locale.KOREAN)
+            format.maximumFractionDigits = 0
+            format.format(value.toDouble())
+        }
+
+        binding.rangeSeekBar.addOnChangeListener { slider, value, fromUser ->
+            val time = DecimalFormat("##0")
+            binding.writeTimeFrom.text = time.format(slider.values[0])
+            binding.writeTimeTo.text = time.format(slider.values[1])
+        }
+
         binding.writeOkBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("약속 작성하기")
+            builder.setMessage("이렇게 글 작성을 진행할까요?")
+
             val title = binding.editCreateTitle.text.toString().trim()
             val boardContent = binding.editCreateContent.text.toString().trim()
-            val count = binding.editPeopleCount.text.toString().toInt()
+            val count = binding.editPeopleCount.text.toString()
             val gender = binding.editCreateTitle.text.toString().trim()
             val age = binding.editCreateContent.text.toString().trim()
             val dateTime = "$date$time"
 
-            viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, this)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            builder.setPositiveButton("예") { dialog, which ->
+                if(viewModel.validation(title, boardContent, count, address, locationName, x, y, dateTime, this)){
+                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, this)
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+            builder.setNegativeButton("아니오") { dialog, which ->
+                return@setNegativeButton
+            }
+            builder.show()
         }
 
         mapView = MapView(this)
@@ -121,16 +156,12 @@ class CreateBoardActivity : AppCompatActivity() {
                 }
             }
 
+        binding.writeLocation.visibility = View.GONE
         binding.writeSearchBtn.setOnClickListener {
             val intent = Intent(this, LocationSearchActivity::class.java)
             getLocationResultText.launch(intent)
+            binding.writeLocation.visibility = View.VISIBLE
         }
-    }
-
-
-    override fun finish() {
-        binding.writeMapView.visibility = View.GONE
-        super.finish()
     }
 
 
@@ -160,7 +191,7 @@ class CreateBoardActivity : AppCompatActivity() {
             thisDay = "0$day"
         }
 
-        return "$year$thisMonth$thisDay"
+        return "$year-$thisMonth-$thisDay"
     }
 
     private fun setCalenderTime() : String {
@@ -187,6 +218,27 @@ class CreateBoardActivity : AppCompatActivity() {
             thisMinute = "0$minute"
         }
 
-        return "$thisHour$thisMinute"
+        return "T$thisHour:$thisMinute"
     }
+
+
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() > backKeyPressedTime + 4000) {
+            backKeyPressedTime = System.currentTimeMillis()
+            Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (System.currentTimeMillis() <= backKeyPressedTime + 4000) {
+            super.onBackPressed()
+        }
+    }
+
+
+    override fun finish() {
+        binding.writeMapView.visibility = View.GONE
+        super.finish()
+    }
+
+
 }

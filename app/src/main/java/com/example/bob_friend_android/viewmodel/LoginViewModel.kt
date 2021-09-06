@@ -63,7 +63,6 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     if(response.body()!!) {
                         val intent = Intent(context, MainActivity::class.java)
                         context.startActivity(intent)
-
                     }
                 }
             }
