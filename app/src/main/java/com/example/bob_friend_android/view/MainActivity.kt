@@ -21,6 +21,7 @@ import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityMainBinding
+import com.example.bob_friend_android.onBackPressedListener
 import com.example.bob_friend_android.viewmodel.MainViewModel
 import com.google.android.material.navigation.NavigationView
 

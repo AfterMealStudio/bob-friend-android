@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -37,6 +38,8 @@ class CreateBoardActivity : AppCompatActivity() {
     private lateinit var mapView: MapView
     private lateinit var mapViewContainer: RelativeLayout
 
+    private var backKeyPressedTime : Long = 0
+
     var address: String = ""
     var locationName: String = ""
     var y: Double? = 0.0
@@ -56,10 +59,10 @@ class CreateBoardActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         binding.backBtn.setOnClickListener {
-            finish()
+            onBackPressed()
         }
 
-        binding.rangeSeekBar.visibility = View.GONE
+        binding.rangeSeekBar.visibility = View.INVISIBLE
         binding.ageFromTo.visibility = View.GONE
         binding.ageGroup.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
@@ -68,7 +71,7 @@ class CreateBoardActivity : AppCompatActivity() {
                     binding.ageFromTo.visibility = View.VISIBLE
                 }
                 R.id.ageButton1 -> {
-                    binding.rangeSeekBar.visibility = View.GONE
+                    binding.rangeSeekBar.visibility = View.INVISIBLE
                     binding.ageFromTo.visibility = View.GONE
                 }
             }
@@ -92,17 +95,29 @@ class CreateBoardActivity : AppCompatActivity() {
         }
 
         binding.writeOkBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("약속 작성하기")
+            builder.setMessage("이렇게 글 작성을 진행할까요?")
+
             val title = binding.editCreateTitle.text.toString().trim()
             val boardContent = binding.editCreateContent.text.toString().trim()
-            val count = binding.editPeopleCount.text.toString().toInt()
+            val count = binding.editPeopleCount.text.toString()
             val gender = binding.editCreateTitle.text.toString().trim()
             val age = binding.editCreateContent.text.toString().trim()
             val dateTime = "$date$time"
 
-            viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, this)
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            builder.setPositiveButton("예") { dialog, which ->
+                if(viewModel.validation(title, boardContent, count, address, locationName, x, y, dateTime, this)){
+                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, this)
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
+            builder.setNegativeButton("아니오") { dialog, which ->
+                return@setNegativeButton
+            }
+            builder.show()
         }
 
         mapView = MapView(this)
@@ -141,16 +156,12 @@ class CreateBoardActivity : AppCompatActivity() {
                 }
             }
 
+        binding.writeLocation.visibility = View.GONE
         binding.writeSearchBtn.setOnClickListener {
             val intent = Intent(this, LocationSearchActivity::class.java)
             getLocationResultText.launch(intent)
+            binding.writeLocation.visibility = View.VISIBLE
         }
-    }
-
-
-    override fun finish() {
-        binding.writeMapView.visibility = View.GONE
-        super.finish()
     }
 
 
@@ -209,4 +220,25 @@ class CreateBoardActivity : AppCompatActivity() {
 
         return "T$thisHour:$thisMinute"
     }
+
+
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() > backKeyPressedTime + 4000) {
+            backKeyPressedTime = System.currentTimeMillis()
+            Toast.makeText(this, "뒤로가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (System.currentTimeMillis() <= backKeyPressedTime + 4000) {
+            super.onBackPressed()
+        }
+    }
+
+
+    override fun finish() {
+        binding.writeMapView.visibility = View.GONE
+        super.finish()
+    }
+
+
 }

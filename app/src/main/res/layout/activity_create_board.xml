@@ -27,21 +27,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                app:srcCompat="@drawable/delete"
-                app:tint="@color/white" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/back_btn"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:srcCompat="@drawable/delete"
+                    android:layout_gravity="center"
+                    app:tint="@color/white" />
 
-            <TextView
-                android:id="@+id/write_board"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/write_board"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/write_board"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:text="@string/write_board"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:id="@+id/write_ok_btn"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/check"
+                    android:layout_marginEnd="15dp"
+                    app:tint="@color/white"/>
+            </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
@@ -95,7 +112,9 @@
                     android:ems="10"
                     android:gravity="start"
                     android:inputType="textMultiLine"
-                    android:minHeight="150dp" />
+                    android:minHeight="150dp"
+                    android:maxHeight="300dp"
+                    android:layout_marginBottom="10dp"/>
 
                 <TextView
                     android:id="@+id/textView8"
@@ -110,6 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -165,13 +185,14 @@
                 <TextView
                     android:id="@+id/write_location"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_color1"/>
 
                 <TextView
                     android:id="@+id/write_people_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/write_member"
                     android:textColor="@color/main_color1" />
 
@@ -187,7 +208,7 @@
                     android:id="@+id/write_gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/gender"
                     android:textColor="@color/main_color1" />
 
@@ -224,7 +245,7 @@
                     android:id="@+id/write_age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/write_age"
                     android:textColor="@color/main_color1" />
 
@@ -264,7 +285,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="40dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -298,16 +319,6 @@
                         android:textColor="@color/main_color1"
                         android:text="@string/write_ageTo" />
                 </LinearLayout>
-
-                <Button
-                    android:id="@+id/write_ok_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="60dp"
-                    android:backgroundTint="@color/main_color1"
-                    android:text="@string/write"
-                    android:textStyle="bold" />
-
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
