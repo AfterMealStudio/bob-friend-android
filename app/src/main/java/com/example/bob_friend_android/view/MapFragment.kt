@@ -17,53 +17,76 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.databinding.FragmentListBinding
+import com.example.bob_friend_android.databinding.FragmentMapBinding
+import com.example.bob_friend_android.viewmodel.ListViewModel
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 
 
 class MapFragment : Fragment() {
+    private lateinit var binding: FragmentMapBinding
+    private lateinit var viewModel: ListViewModel
+
     private var x: Double? = null
     private var y: Double? = null
     private var placeName: String? = null
     private var click: Boolean? = false
 
-    lateinit var mapView:MapView
     private lateinit var kakaoMap: ConstraintLayout
     private lateinit var mapViewContainer: ViewGroup
-
-    lateinit var myView: View
+    lateinit var mapView: MapView
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?
+    ): View
     {
-        myView = inflater.inflate(R.layout.fragment_map, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false)
+        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
+        binding.lifecycleOwner = this
+        binding.map = viewModel
 
         x = arguments?.getDouble("x")
         y = arguments?.getDouble("y")
         placeName = arguments?.getString("placeName")
         click = arguments?.getBoolean("click")
 
-        kakaoMap = myView.findViewById(R.id.map_view)!!
-        mapView = MapView(requireActivity())
+        kakaoMap = binding.mapView
         mapViewContainer = kakaoMap
+        mapView = MapView(requireActivity())
         mapViewContainer.addView(mapView)
 
-        setMyLocation()
+        viewModel.setMarkers(requireContext(), this)
 
-        return myView
+        return binding.root
     }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.visibility = View.VISIBLE
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.visibility = View.INVISIBLE
+//        mapViewContainer.removeView(mapView)
+    }
+
 
 
     fun setPosition(y: Double, x: Double) {
         val mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
 
-        mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
+        mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel ?: 1, true)
+
     }
 
 
@@ -82,7 +105,7 @@ class MapFragment : Fragment() {
     }
 
 
-    private fun setMyLocation() {
+    fun setMyLocation() {
         //허가 받고 처음 페이지는 내위치에 띄움
         val permissionCheck = ContextCompat.checkSelfPermission(
                 requireActivity(),
@@ -98,18 +121,6 @@ class MapFragment : Fragment() {
                 val uLongitude = userNowLocation.longitude
                 val uNowPosition = MapPoint.mapPointWithGeoCoord(uLatitude, uLongitude)
                 mapView.setMapCenterPoint(uNowPosition, true)
-                val marker = MapPOIItem()
-                marker.apply {
-                    itemName = "내위치"
-                    mapPoint = MapPoint.mapPointWithGeoCoord(uLatitude, uLongitude)
-                    customImageResourceId = R.drawable.main_color1_marker
-                    customSelectedImageResourceId = R.drawable.main_color2_marker
-                    markerType = MapPOIItem.MarkerType.CustomImage
-                    selectedMarkerType = MapPOIItem.MarkerType.CustomImage
-                    isCustomImageAutoscale = false
-                    setCustomImageAnchor(0.5f, 1.0f)
-                }
-                mapView.addPOIItem(marker)
 
             }catch (e: NullPointerException){
                 Log.e("LOCATION_ERROR", e.toString())

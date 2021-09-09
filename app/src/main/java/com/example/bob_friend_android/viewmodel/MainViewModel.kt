@@ -29,24 +29,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun setUserInfo(headerUserName:TextView, headerEmail:TextView) {
         var nickname: String
         var email: String
-        val token = App.prefs.getString("token", "")
-        Log.d(TAG,"token: $token")
 
-        if (token != null) {
-            RetrofitBuilder.api.getUserId(token).enqueue(object : Callback<User> {
-                override fun onResponse(call: Call<User>, response: Response<User>) {
-                    nickname = response.body()?.nickname.toString()
-                    email = response.body()?.email.toString()
-                    Log.d(TAG,"responese: $response, username: $nickname, email: $email")
-                    headerUserName.text = nickname
-                    headerEmail.text = email
-                }
+        RetrofitBuilder.api.getUserId().enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                nickname = response.body()?.nickname.toString()
+                email = response.body()?.email.toString()
+                Log.d(TAG,"responese: $response, username: $nickname, email: $email")
+                headerUserName.text = nickname
+                headerEmail.text = email
+            }
 
-                override fun onFailure(call: Call<User>, t: Throwable) {
-                    Log.e(TAG, t.message.toString())
-                }
-            })
-        }
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                Log.e(TAG, t.message.toString())
+            }
+        })
     }
 
 

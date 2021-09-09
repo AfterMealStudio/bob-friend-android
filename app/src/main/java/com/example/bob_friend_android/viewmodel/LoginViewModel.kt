@@ -55,8 +55,8 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun validateUser(token: String, context: Context) {
-        RetrofitBuilder.api.getToken(token).enqueue(object : Callback<Boolean> {
+    fun validateUser(context: Context) {
+        RetrofitBuilder.api.getToken().enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "validateUser: ${response.body()}")
                 if (response.body() != null){

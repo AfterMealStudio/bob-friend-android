@@ -22,7 +22,10 @@ class JoinActivity : AppCompatActivity() {
     private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
     private lateinit var viewModel : JoinViewModel
     private lateinit var gender : String
-    var agree by Delegates.notNull<Boolean>()
+    var agreeAll by Delegates.notNull<Boolean>()
+    var agree1 by Delegates.notNull<Boolean>()
+    var agree2 by Delegates.notNull<Boolean>()
+    var agreeChoice by Delegates.notNull<Boolean>()
 
     private lateinit var userId: String
     private lateinit var nickname: String
@@ -30,6 +33,9 @@ class JoinActivity : AppCompatActivity() {
     private lateinit var passwordCheck: String
     private lateinit var email: String
     private lateinit var dateBirth: String
+
+    var emailCheck = false
+    var idCheck = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +83,6 @@ class JoinActivity : AppCompatActivity() {
         binding.agree2.setOnCheckedChangeListener(checkListener)
         binding.agree3.setOnCheckedChangeListener(checkListener)
 
-        agree = binding.agree3.isChecked
 
         binding.joinBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this)
@@ -90,9 +95,13 @@ class JoinActivity : AppCompatActivity() {
             passwordCheck = binding.editTextPasswordCheck.text.toString().trim()
             email = binding.editTextEmail.text.toString().trim()
             dateBirth = binding.editTextDateBirth.text.toString().trim()
+            agreeAll = binding.agreeAll.isChecked
+            agree1 = binding.agree1.isChecked
+            agree2 = binding.agree2.isChecked
+            agreeChoice = binding.agree3.isChecked
 
             builder.setPositiveButton("예") { dialog, which ->
-                viewModel.join(userId, password, passwordCheck, nickname, email, dateBirth, gender, agree, this)
+                viewModel.join(userId, password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, idCheck, emailCheck, this)
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton
@@ -104,12 +113,14 @@ class JoinActivity : AppCompatActivity() {
             userId = binding.editTextId.text.toString().trim()
             Log.d(TAG, "userId: $userId")
             viewModel.checkUserId(userId, this)
+            idCheck = true
         }
 
         binding.emailCheck.setOnClickListener {
             email = binding.editTextEmail.text.toString().trim()
             Log.d(TAG, "email: $email")
             viewModel.checkUserEmail(email, this)
+            emailCheck = true
         }
 
         keyboardVisibilityUtils = KeyboardVisibilityUtils(window,

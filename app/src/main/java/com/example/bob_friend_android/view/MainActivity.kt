@@ -35,11 +35,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     lateinit var fragmentMap: MapFragment
     lateinit var fragmentList: ListFragment
-    lateinit var fragmentSetting: SettingFragment
-    lateinit var fragmentLogout: LogoutFragment
-    lateinit var fragmentAppointment: MyAppointmentFragment
-    lateinit var fragmentBoard: MyBoardFragment
-    lateinit var fragmentAbout: AboutFragment
+//    lateinit var fragmentSetting: SettingFragment
+//    lateinit var fragmentLogout: LogoutFragment
+//    lateinit var fragmentAppointment: MyAppointmentFragment
+//    lateinit var fragmentBoard: MyBoardFragment
+//    lateinit var fragmentAbout: AboutFragment
+
     var beforeFlag:Int = 1 //프레그먼트 이전
     var flag:Int = 1
 
@@ -71,11 +72,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         fragmentMap = MapFragment()
         fragmentList = ListFragment()
-        fragmentSetting = SettingFragment()
-        fragmentAbout = AboutFragment()
-        fragmentAppointment = MyAppointmentFragment()
-        fragmentBoard = MyBoardFragment()
-        fragmentLogout = LogoutFragment()
+//        fragmentSetting = SettingFragment()
+//        fragmentAbout = AboutFragment()
+//        fragmentAppointment = MyAppointmentFragment()
+//        fragmentBoard = MyBoardFragment()
+//        fragmentLogout = LogoutFragment()
 
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
@@ -113,6 +114,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
 
+        binding.myLocation.setOnClickListener {
+            fragmentMap.setMyLocation()
+        }
+
         binding.mainEditTextSearch.visibility = View.INVISIBLE
         binding.search.setOnClickListener {
             binding.mainEditTextSearch.visibility = View.VISIBLE
@@ -132,9 +137,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onClick(v: View, position: Int) {
                 viewModel.setDataAtFragment(fragmentMap, listItems[position].name, listItems[position].y, listItems[position].x)
                 Log.d("MainActivity", "argument:${fragmentMap.arguments} x:${listItems[position].x}, y:${listItems[position].y}")
-
-                fragmentMap.addMarkers(listItems[position].name, listItems[position].y,
-                    listItems[position].x)
                 fragmentMap.setPosition(listItems[position].y, listItems[position].x)
             }
         })
@@ -149,31 +151,31 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val transaction = supportFragmentManager.beginTransaction()
         when(flag){
             1 -> {
+                binding.myLocation.visibility = View.VISIBLE
                 transaction.replace(R.id.frameLayout, fragmentMap)
                 flag = 2
             }
             2 -> {
+                binding.myLocation.visibility = View.INVISIBLE
                 transaction.replace(R.id.frameLayout, fragmentList)
                 flag = 1
             }
-            3 -> {
-                transaction.replace(R.id.frameLayout, fragmentBoard)
-            }
-            4 -> {
-                transaction.replace(R.id.frameLayout, fragmentAppointment)
-            }
-            5 -> {
-                transaction.replace(R.id.frameLayout, fragmentSetting)
-            }
-            6 -> {
-                transaction.replace(R.id.frameLayout, fragmentLogout)
-            }
-            7 -> {
-                transaction.replace(R.id.frameLayout, fragmentAbout)
-            }
+//            3 -> {
+//                transaction.replace(R.id.frameLayout, fragmentBoard)
+//            }
+//            4 -> {
+//                transaction.replace(R.id.frameLayout, fragmentAppointment)
+//            }
+//            5 -> {
+//                transaction.replace(R.id.frameLayout, fragmentSetting)
+//            }
+//            6 -> {
+//                transaction.replace(R.id.frameLayout, fragmentLogout)
+//            }
+//            7 -> {
+//                transaction.replace(R.id.frameLayout, fragmentAbout)
+//            }
         }
-
-        transaction.addToBackStack(null)
         transaction.commit()
     }
 
@@ -205,7 +207,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     override fun onResume() {
-        supportFragmentManager.beginTransaction().commitNow()
         fragmentMap.mapView.visibility = View.VISIBLE
         super.onResume()
     }
@@ -219,16 +220,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.myBoard -> setFragmentForUserInfo(flag, 3)
-            R.id.myAppointmentList -> setFragmentForUserInfo(flag, 4)
-            R.id.userSetting -> setFragmentForUserInfo(flag, 5)
-            R.id.logout -> setFragmentForUserInfo(flag, 6)
-            R.id.about -> setFragmentForUserInfo(flag, 7)
+            R.id.myBoard -> setFragmentUserInfo(flag, 3)
+            R.id.myAppointmentList -> setFragmentUserInfo(flag, 4)
+            R.id.userSetting -> setFragmentUserInfo(flag, 5)
+            R.id.logout -> setFragmentUserInfo(flag, 6)
+            R.id.about -> setFragmentUserInfo(flag, 7)
         }
         return true
     }
 
-    fun setFragmentForUserInfo(beforeFlag: Int, afterFlag:Int) {
+    fun setFragmentUserInfo(beforeFlag: Int, afterFlag:Int) {
         flag = afterFlag
         setFragment()
         flag = beforeFlag

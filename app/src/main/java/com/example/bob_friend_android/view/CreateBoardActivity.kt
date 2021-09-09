@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityCreateBoardBinding
 import com.example.bob_friend_android.viewmodel.BoardViewModel
@@ -39,6 +40,8 @@ class CreateBoardActivity : AppCompatActivity() {
     private lateinit var mapViewContainer: RelativeLayout
 
     private var backKeyPressedTime : Long = 0
+
+    private lateinit var gender : String
 
     var address: String = ""
     var locationName: String = ""
@@ -94,6 +97,15 @@ class CreateBoardActivity : AppCompatActivity() {
             binding.writeTimeTo.text = time.format(slider.values[1])
         }
 
+        binding.genderGroup.setOnCheckedChangeListener { group, checkedId ->
+            gender = when(checkedId) {
+                R.id.male -> "MALE"
+                R.id.female -> "FEMALE"
+                R.id.third_gender -> "NONE"
+                else -> ""
+            }
+        }
+
         binding.writeOkBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("약속 작성하기")
@@ -102,13 +114,11 @@ class CreateBoardActivity : AppCompatActivity() {
             val title = binding.editCreateTitle.text.toString().trim()
             val boardContent = binding.editCreateContent.text.toString().trim()
             val count = binding.editPeopleCount.text.toString()
-            val gender = binding.editCreateTitle.text.toString().trim()
-            val age = binding.editCreateContent.text.toString().trim()
             val dateTime = "$date$time"
 
             builder.setPositiveButton("예") { dialog, which ->
-                if(viewModel.validation(title, boardContent, count, address, locationName, x, y, dateTime, this)){
-                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, this)
+                if(viewModel.validation(title, boardContent, count, address, locationName, x, y, dateTime, gender, this)){
+                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, this)
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()

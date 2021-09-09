@@ -35,7 +35,19 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="100dp"
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <ImageView
+                        android:id="@+id/my_location"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_marginStart="5dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/menu"
+                        app:srcCompat="@drawable/my_locaiton"
+                        app:tint="@color/white" />
 
                     <ImageView
                         android:id="@+id/menu"
@@ -47,6 +59,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.100000024"
                         app:srcCompat="@drawable/menu"
                         app:tint="@color/white" />
 
@@ -57,11 +70,14 @@
                         android:ems="12"
                         android:hint="@string/main_search"
                         android:inputType="textPersonName"
-                        android:textColorHint="@color/white"
                         android:textColor="@color/white"
+                        android:textColorHint="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.9">
+
                         <requestFocus />
                     </EditText>
 
@@ -73,8 +89,22 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.8"
                         app:srcCompat="@drawable/ic_baseline_search_24"
                         app:tint="@color/white" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="밥친구함"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/main_editText_search"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.19999999" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
 

@@ -15,5 +15,6 @@ data class Board (
     var longitude:Double? = 0.0,
     var appointmentTime: String? = null,
     var createdAt: String? = null,
+    var sexRestriction: String = "",
     var report: Long? = null
 )

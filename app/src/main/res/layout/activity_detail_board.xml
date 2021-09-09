@@ -66,25 +66,13 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/register_title">
 
-
-                <LinearLayout
+                <TextView
+                    android:id="@+id/read_title"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/read_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textColor="@color/main_color1"
-                        android:text="@string/read_title" />
-                    <TextView
-                        android:id="@+id/detail_writer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/main_color1"
-                        android:text="@string/read_writer" />
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/main_color1"
+                    android:text="@string/read_title" />
 
                 <TextView
                     android:id="@+id/detail_title"
@@ -96,31 +84,31 @@
                     android:text="@string/write_member"/>
 
                 <TextView
-                    android:id="@+id/read_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/main_color1"
-                    android:layout_marginTop="5dp"
-                    android:text="@string/read_content" />
-
-                <TextView
                     android:id="@+id/detail_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minHeight="20dp"
+                    android:minHeight="30dp"
                     android:textSize="20sp"
                     android:textColor="@color/main_color1"
                     android:ems="10"
                     android:text="@string/read_content2"
                     android:gravity="start"/>
 
+<!--                <TextView-->
+<!--                    android:id="@+id/detail_write_time"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="right"-->
+<!--                    android:textColor="@color/main_color1"-->
+<!--                    android:text="@string/read_write_time" />-->
+
                 <TextView
-                    android:id="@+id/detail_write_time"
+                    android:id="@+id/detail_line"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:textColor="@color/main_color1"
-                    android:text="@string/read_write_time" />
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/main_color1"/>
 
                 <TextView
                     android:id="@+id/read_appointment_place"
@@ -128,153 +116,186 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/main_color1"
                     android:layout_weight="1"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/read_appointment_place" />
+                    android:text="@string/read_appointment_place_and_time" />
 
                 <RelativeLayout
                     android:id="@+id/detail_map_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:minHeight="200dp">
-                </RelativeLayout>
+                    android:layout_height="300dp"/>
 
-                <TextView
-                    android:id="@+id/detail_appointment_place_name"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
                     android:layout_weight="1"
-                    android:text="@string/read_appointment_place"
-                    android:textColor="@color/main_color1" />
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/read_meeting_place"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_color1"
+                        android:text="@string/read_meeting_place"
+                        android:textSize="17sp"
+                        android:layout_marginRight="10dp"/>
+                    <TextView
+                        android:id="@+id/detail_appointment_place_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:layout_weight="1"
+                        android:text="@string/read_appointment_place_and_time"
+                        android:textColor="@color/main_color1" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/read_meeting_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_color1"
+                        android:text="@string/read_meeting_time"
+                        android:textSize="17sp"
+                        android:layout_marginRight="10dp"/>
+                    <TextView
+                        android:id="@+id/read_meeting_time2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/read_meeting_time2"
+                        android:textSize="17sp"
+                        android:textColor="@color/main_color1"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/detail_line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/main_color1"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/read_member_writer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_color1"
+                        android:layout_marginRight="2dp"
+                        android:text="@string/read_member" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/read_member"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/read_member"
-                            android:textColor="@color/main_color1"
-                            android:gravity="start"/>
+                        android:layout_gravity="center"
+                        android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/detail_current_member"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/read_member2"
-                                android:textSize="20sp"
-                                android:textColor="@color/main_color1" />
-                            <TextView
-                                android:id="@+id/read_member3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/read_member3"
-                                android:textSize="20sp"
-                                android:textColor="@color/main_color1" />
-                            <TextView
-                                android:id="@+id/detail_total_member"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/read_member4"
-                                android:textSize="20sp"
-                                android:textColor="@color/main_color1" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
                         <TextView
-                            android:id="@+id/read_gender"
+                            android:id="@+id/read_member1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/main_color1"
-                            android:text="@string/read_gender"
-                            android:gravity="start"/>
+                            android:text="@string/read_member1"
+                            android:textColor="@color/main_color1" />
                         <TextView
-                            android:id="@+id/read_gender2"
+                            android:id="@+id/detail_current_member"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/read_gender2"
-                            android:textSize="20sp"
-                            android:textColor="@color/main_color1"
-                            android:gravity="start"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                            android:text="@string/read_member2"
+                            android:textColor="@color/main_color1" />
                         <TextView
-                            android:id="@+id/read_age"
+                            android:id="@+id/read_member11"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/main_color1"
-                            android:text="@string/read_age"
-                            android:gravity="start"/>
+                            android:text="@string/read_member11"
+                            android:textColor="@color/main_color1" />
                         <TextView
-                            android:id="@+id/read_age2"
+                            android:id="@+id/detail_total_member"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/read_age2"
-                            android:textSize="20sp"
-                            android:textColor="@color/main_color1"
-                            android:gravity="start"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                            android:text="@string/read_member4"
+                            android:textColor="@color/main_color1" />
                         <TextView
-                            android:id="@+id/read_meeting_time"
+                            android:id="@+id/read_member111"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/main_color1"
-                            android:text="@string/read_meeting_time"
-                            android:gravity="start"/>
-                        <TextView
-                            android:id="@+id/read_meeting_time2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/read_meeting_time2"
-                            android:textSize="20sp"
-                            android:textColor="@color/main_color1"
-                            android:gravity="start"/>
+                            android:text="@string/read_member111"
+                            android:textColor="@color/main_color1" />
                     </LinearLayout>
                 </LinearLayout>
 
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/comment_recyclerview"-->
+<!--                <LinearLayout-->
 <!--                    android:layout_width="match_parent"-->
 <!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_marginTop="10dp"-->
-<!--                    tools:listitem="@layout/item_board_comments"/>-->
+<!--                    android:orientation="horizontal">-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:orientation="vertical">-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/read_gender"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:gravity="start"-->
+<!--                            android:text="@string/read_gender"-->
+<!--                            android:textColor="@color/main_color1" />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/read_gender2"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:gravity="start"-->
+<!--                            android:text="@string/read_gender2"-->
+<!--                            android:textColor="@color/main_color1"-->
+<!--                            android:textSize="20sp" />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:orientation="vertical">-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/read_age"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:gravity="start"-->
+<!--                            android:text="@string/read_age"-->
+<!--                            android:textColor="@color/main_color1" />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/read_age2"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:gravity="start"-->
+<!--                            android:text="@string/read_age2"-->
+<!--                            android:textColor="@color/main_color1"-->
+<!--                            android:textSize="20sp" />-->
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
+
+                <TextView
+                    android:id="@+id/detail_line3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/main_color1"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/comment_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    tools:listitem="@layout/item_board_comments"/>
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

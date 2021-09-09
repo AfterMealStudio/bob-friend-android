@@ -4,7 +4,7 @@
     <string name="main_list">List</string>
     <string name="main_auto_login">자동 로그인</string>
     <string name="main_map">Map</string>
-    <string name="main_search">검색어를 입력하세요.</string>
+    <string name="main_search">장소를 검색하세요.</string>
     <string name="login">로그인</string>
     <string name="register">회원가입</string>
     <string name="registerBtn">이메일 회원가입</string>
@@ -32,8 +32,9 @@
     <string name="userDateOfBirth2">Ex)20001212</string>
 
     <string name="allAgree">모두 동의합니다.</string>
-    <string name="termsAndConditionsAgree">이용약관 동의</string>
-    <string name="personalInformationAgree">개인정보 취급방침 동의</string>
+    <string name="termsAndConditionsAgree">서비스 이용약관 동의</string>
+    <string name="personalInformationAgree">개인정보 수집 및 이용 동의</string>
+    <string name="locationInformationAgree">위치정보 서비스 이용약관 동의</string>
     <string name="marketingAgree">마케팅 정보 수신 동의(선택)</string>
 
 
@@ -71,25 +72,29 @@
 
     <!--게시글 보기-->
     <string name="read">약속 내용</string>
-    <string name="read_title">제목</string>
+    <string name="read_title">약속 제목 및 내용</string>
     <string name="read_content">내용</string>
     <string name="read_age">나이</string>
-    <string name="read_member">인원</string>
+    <string name="read_member">약속 인원</string>
     <string name="read_gender">성별</string>
-    <string name="read_gender2">성별</string>
-    <string name="read_meeting_time">약속 시간</string>
-    <string name="read_appointment_place">약속 장소</string>
-    <string name="read_writer">글쓴이</string>
+    <string name="read_gender2">상관없음</string>
+    <string name="read_meeting_time">시간</string>
+    <string name="read_meeting_place">장소</string>
+    <string name="read_appointment_place_and_time">약속 장소 및 시간</string>
     <string name="read_write_time">작성시간</string>
     <string name="read_title2">오늘</string>
     <string name="read_content2">오늘</string>
-    <string name="read_age2">오늘</string>
+    <string name="read_comment">댓글</string>
+    <string name="read_age2">상관없음</string>
     <string name="read_member2">현재</string>
-    <string name="read_member3">/</string>
+    <string name="read_member1">(</string>
+    <string name="read_member11">/</string>
+    <string name="read_member111">)</string>
     <string name="read_member4">전체</string>
-    <string name="read_meeting_time2">오늘</string>
+    <string name="read_meeting_time2">2021-10-08, 10:30</string>
     <string name="read_appointment_place2">오늘</string>
     <string name="read_writer2">오늘</string>
+    <string name="read_report">신고하기</string>
 
 
     <!--댓글-->

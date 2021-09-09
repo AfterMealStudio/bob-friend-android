@@ -52,18 +52,17 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
             totalNumberOfPeople.text = item.totalNumberOfPeople.toString()
             createdAt.text = item.createdAt.toString()
 
-            if(item.totalNumberOfPeople!=null) {
-                boardItem = BoardItem(item.title, item.content, item.author,
-                    item.currentNumberOfPeople, item.totalNumberOfPeople!!, item.createdAt, item.restaurantName)
-            }
+            val pos = absoluteAdapterPosition
 
             itemView.setOnClickListener {
+                listener?.onItemClick(itemView, item, pos)
                 Intent(context, DetailBoardActivity::class.java).apply {
+                    boardItem = BoardItem(item.title, item.content, item.author,
+                        item.currentNumberOfPeople, item.totalNumberOfPeople!!, item.createdAt, item.restaurantName, item.latitude!!, item.longitude!!)
                     putExtra("item", boardItem)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { context.startActivity(this) }
             }
-
         }
     }
 }
