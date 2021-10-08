@@ -6,7 +6,7 @@
     <data>
         <variable
             name="boardsearch"
-            type="com.example.bob_friend_android.viewmodel.MainViewModel" />
+            type="com.example.bob_friend_android.viewmodel.ListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

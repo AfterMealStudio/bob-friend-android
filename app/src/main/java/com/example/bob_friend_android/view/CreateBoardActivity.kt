@@ -249,6 +249,4 @@ class CreateBoardActivity : AppCompatActivity() {
         binding.writeMapView.visibility = View.GONE
         super.finish()
     }
-
-
 }

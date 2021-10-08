@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/setMap"
+        android:title="@string/set_map"
+        android:icon="@drawable/map">
+    </item>
+    <item
+        android:id="@+id/setList"
+        android:title="@string/set_list"
+        android:icon="@drawable/list">
+    </item>
+    <item
+        android:id="@+id/addBoard"
+        android:title="@string/add_board"
+        android:icon="@drawable/add">
+    </item>
+    <item
+        android:id="@+id/userSetting"
+        android:title="@string/user_info"
+        android:icon="@drawable/user">
+    </item>
+</menu>

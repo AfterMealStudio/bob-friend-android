@@ -47,7 +47,7 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
 
         fun bind(item: Board) {
             boardTitle.text = item.title
-            userName.text = item.author
+            userName.text = item.author?.nickname
             currentNumberOfPeople.text = item.currentNumberOfPeople.toString()
             totalNumberOfPeople.text = item.totalNumberOfPeople.toString()
             createdAt.text = item.createdAt.toString()
@@ -57,7 +57,7 @@ class BoardAdapter(private val context: Context, private val boardList : ArrayLi
             itemView.setOnClickListener {
                 listener?.onItemClick(itemView, item, pos)
                 Intent(context, DetailBoardActivity::class.java).apply {
-                    boardItem = BoardItem(item.title, item.content, item.author,
+                    boardItem = BoardItem(item.title, item.content, item.author?.nickname,
                         item.currentNumberOfPeople, item.totalNumberOfPeople!!, item.createdAt, item.restaurantName, item.latitude!!, item.longitude!!)
                     putExtra("item", boardItem)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

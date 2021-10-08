@@ -45,7 +45,7 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/userId"
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/main_color1"
@@ -57,22 +57,27 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editText_id"
+                    android:id="@+id/editText_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/userId2"
                     android:layout_marginRight="20dp"
-                    android:inputType="textPersonName" />
+                    android:inputType="textEmailAddress" />
 
                 <Button
-                    android:id="@+id/id_check"
+                    android:id="@+id/email_check"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/main_color1"
                     android:text="@string/userEmailBtn" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/email_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"/>
 
             <TextView
                 android:id="@+id/password"
@@ -87,7 +92,13 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/userPassword2"
-                android:inputType="textPersonName" />
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/password_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"/>
 
             <TextView
                 android:id="@+id/password_check"
@@ -102,29 +113,20 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/userPasswordCheck2"
-                android:inputType="textPersonName" />
+                android:inputType="textPassword" />
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/password_check_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1" />
+
+            <TextView
+                android:id="@+id/nickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/main_color1"
                 android:text="@string/userName" />
-
-            <EditText
-                android:id="@+id/editText_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="@string/userName2"
-                android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/join_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/main_color1"
-                android:text="@string/email" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -132,7 +134,7 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editText_email"
+                    android:id="@+id/editText_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -142,12 +144,18 @@
                     android:inputType="textEmailAddress" />
 
                 <Button
-                    android:id="@+id/email_check"
+                    android:id="@+id/nickname_check"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/main_color1"
                     android:text="@string/userEmailBtn" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/nickname_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"/>
 
             <TextView
                 android:id="@+id/date_birth"
@@ -163,6 +171,12 @@
                 android:ems="10"
                 android:hint="@string/userDateOfBirth2"
                 android:inputType="date"/>
+
+            <TextView
+                android:id="@+id/date_birth_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"/>
 
             <TextView
                 android:id="@+id/gender"

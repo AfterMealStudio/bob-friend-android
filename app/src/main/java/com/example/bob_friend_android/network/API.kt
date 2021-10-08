@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.network
 
 import com.example.bob_friend_android.model.Board
+import com.example.bob_friend_android.model.Locations
 import com.example.bob_friend_android.model.Token
 import com.example.bob_friend_android.model.User
 import retrofit2.Call
@@ -12,9 +13,9 @@ interface API {
     @POST("api/signup")
     fun getJoinResponse(@Body user: Map<String, String>): Call<User>
 
-    //아이디 중복확인
-    @GET("api/username/{username}")
-    fun getIdCheck(@Path("username") username : String): Call<Boolean>
+    //닉네임 중복확인
+    @GET("api/nickname/{nickname}")
+    fun getNicknameCheck(@Path("nickname") username : String): Call<Boolean>
 
     //이메일 중복 확인
     @GET("api/email/{email}")
@@ -43,6 +44,10 @@ interface API {
     //약속조회
     @GET("/recruitments")
     fun getRecruitmens(): Call<List<Board>>
+
+    //약속위치조회
+    @GET("/recruitments/locations")
+    fun getRecruitmensLocations(): Call<List<Locations>>
 
     //내 참가약속조회
     @GET("/recruitments/my/joined")

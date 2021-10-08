@@ -40,11 +40,11 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.loginBtn.setOnClickListener {
-            val username = binding.editTextEmail.text.toString().trim()
+            val email = binding.editTextEmail.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
             val checked = binding.checkBoxAutoLogin.isChecked
 
-            viewModel.login(username ,password, checked,this)
+            viewModel.login(email ,password, checked,this)
         }
 
         binding.registerBtn.setOnClickListener {
