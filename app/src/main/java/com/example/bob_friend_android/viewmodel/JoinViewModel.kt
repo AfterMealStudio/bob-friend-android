@@ -17,29 +17,27 @@ import retrofit2.Response
 import java.util.regex.Pattern
 
 class JoinViewModel(application: Application): AndroidViewModel(application) {
-    var idCheck = false
-    var emailCheck = false
 
     val TAG = "JoinViewModel"
 
-    fun join(userId: String, password : String, passwordCheck: String, nickname : String, email: String, dateBirth:String, gender:String, agree:Boolean, context: Context){
+    fun join(password : String, passwordCheck: String, nickname : String, email: String, dateBirth:String, gender:String, agree1:Boolean, agree2:Boolean, agreeChoice:Boolean, idCheck: Boolean, emailCheck: Boolean, context: Context){
 
-        if (validation(userId, password, passwordCheck, nickname, email, dateBirth, gender, agree, context)) {
+        if (validation(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, idCheck, emailCheck, context)) {
             val date = "${dateBirth.substring(0,4)}-${dateBirth.substring(4,6)}-${dateBirth.substring(6)}"
             val user = HashMap<String, String>()
 
-            user["username"] = userId
+            user["email"] = email
             user["password"] = password
             user["nickname"] = nickname
-            user["email"] = email
             user["birth"] = date
             user["sex"] = gender
-            user["agree"] = agree.toString()
+            user["agree"] = agreeChoice.toString()
             Log.d(TAG, "!!!!!!!!!$user")
 
             RetrofitBuilder.api.getJoinResponse(user).enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    Log.d(TAG, "response :: $response")
+                    Log.d(TAG, "response :: ${response.body()}")
+                    Log.d(TAG, "error = ${response.errorBody().toString()}")
                     when (response.code()) {
                         200 -> {
                             Toast.makeText(context, "회원가입 성공", Toast.LENGTH_LONG).show()
@@ -56,17 +54,16 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
                     Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
                     Log.e("JoinActivity!!!", t.message.toString())
                 }
-
             })
-        } else {
+        }
+        else {
             return
         }
-
-
     }
 
-    private fun validation(userId : String, password : String, passwordCheck: String, username: String, email:String, dateBirth:String, gender:String, agree: Boolean, context: Context): Boolean {
-        if (userId.isEmpty() || password.isEmpty() || passwordCheck.isEmpty()) {
+    private fun validation(password : String, passwordCheck: String, username: String, email:String,
+                           dateBirth:String, gender:String, agree1: Boolean, agree2: Boolean, agreeChoice: Boolean, idCheck: Boolean, emailCheck: Boolean, context: Context): Boolean {
+        if (email.isEmpty() || password.isEmpty() || passwordCheck.isEmpty()) {
             Toast.makeText(context, "아이디와 비밀번호가 비어있습니다.", Toast.LENGTH_SHORT).show()
             return false
         }
@@ -81,11 +78,6 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
             return false
         }
 
-        if (checkType(userId)) {
-            Toast.makeText(context, "아이디는 영어 대문자, 소문자, 숫자로만 구성할 수 있습니다.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
         if (username.isEmpty()) {
             Toast.makeText(context, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show()
             return false
@@ -93,40 +85,54 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
 
         if(dateBirth.length != 8) {
             Toast.makeText(context, "생년월일의 형식이 정확하지 않습니다.", Toast.LENGTH_SHORT).show()
+            return false
         }
 
         if(gender!="MALE" && gender!="FEMALE" && gender!="THIRD") {
             Toast.makeText(context, "성별을 지정해주세요.", Toast.LENGTH_SHORT).show()
+            return false
         }
 
         if(!idCheck) {
             Toast.makeText(context, "아이디 중복확인을 해주세요.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if(!emailCheck) {
+            Toast.makeText(context, "이메일 중복확인을 해주세요.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if(!agree1) {
+            Toast.makeText(context, "이용약관을 동의 해주세요.", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if(!agree2) {
+            Toast.makeText(context, "개인정보 취급방침을 동의 해주세요.", Toast.LENGTH_SHORT).show()
+            return false
         }
 
         return true
     }
 
 
-    private fun checkType(word : String) : Boolean {
-        return Pattern.matches("^[가-힣]*$", word)
-    }
-
-
-    fun checkUserId(userId: String, context: Context) {
-        RetrofitBuilder.api.getIdCheck(userId).enqueue(object : Callback<Boolean> {
+    fun checkUserNickname(userId: String, context: Context) {
+        RetrofitBuilder.api.getNicknameCheck(userId).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "onResponse : $response")
                 val body = response.body()
                 if(body != null){
                     if(body == true){
-                        Toast.makeText(context, "이미 있는 아이디입니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "이미 있는 닉네임입니다.", Toast.LENGTH_SHORT).show()
                     } else if (body == false){
-                        Toast.makeText(context, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show()
-                        idCheck = true
+                        Toast.makeText(context, "사용 가능한 닉네임입니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
+                else {
+                    Toast.makeText(context, "서버와 연결을 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
-
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
                 Log.d(TAG, "onFailure")
             }
@@ -135,18 +141,19 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
 
 
     fun checkUserEmail(email: String, context: Context) {
-        RetrofitBuilder.api.getIdCheck(email).enqueue(object : Callback<Boolean> {
+        RetrofitBuilder.api.getEmailCheck(email).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "onResponse : $response")
                 val check = response.body()
-
                 if(check != null){
                     if(check == true){
                         Toast.makeText(context, "이미 있는 이메일입니다.", Toast.LENGTH_SHORT).show()
                     } else if (check == false){
                         Toast.makeText(context, "사용 가능한 이메일 입니다.", Toast.LENGTH_SHORT).show()
-                        emailCheck = true
                     }
+                }
+                else {
+                    Toast.makeText(context, "서버와 연결을 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 

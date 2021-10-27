@@ -4,7 +4,7 @@
     <string name="main_list">List</string>
     <string name="main_auto_login">자동 로그인</string>
     <string name="main_map">Map</string>
-    <string name="main_search">검색어를 입력하세요.</string>
+    <string name="main_search">장소를 검색하세요.</string>
     <string name="login">로그인</string>
     <string name="register">회원가입</string>
     <string name="registerBtn">이메일 회원가입</string>
@@ -12,7 +12,7 @@
 
 
     <!--회원가입-->
-    <string name="userId">아이디</string>
+    <string name="userId">이메일(아이디)</string>
     <string name="userEmailBtn">중복확인</string>
     <string name="userPassword">비밀번호</string>
     <string name="userPasswordCheck">비밀번호 확인</string>
@@ -21,7 +21,7 @@
     <string name="gender">성별</string>
     <string name="male">남성</string>
     <string name="female">여성</string>
-    <string name="thirdGender">둘 다 아님</string>
+    <string name="thirdGender">그 외</string>
     <string name="userDateOfBirth">생년월일</string>
 
     <string name="userId2">아이디를 입력해주세요.</string>
@@ -32,8 +32,9 @@
     <string name="userDateOfBirth2">Ex)20001212</string>
 
     <string name="allAgree">모두 동의합니다.</string>
-    <string name="termsAndConditionsAgree">이용약관 동의</string>
-    <string name="personalInformationAgree">개인정보 취급방침 동의</string>
+    <string name="termsAndConditionsAgree">서비스 이용약관 동의</string>
+    <string name="personalInformationAgree">개인정보 수집 및 이용 동의</string>
+    <string name="locationInformationAgree">위치정보 서비스 이용약관 동의</string>
     <string name="marketingAgree">마케팅 정보 수신 동의(선택)</string>
 
 
@@ -58,8 +59,8 @@
     <string name="write_minAge">20</string>
     <string name="write_maxAge">70</string>
     <string name="write_ageFromTo">~</string>
-    <string name="write_ageFrom">부터</string>
-    <string name="write_ageTo">까지</string>
+    <string name="write_ageFrom">살부터</string>
+    <string name="write_ageTo">살까지</string>
     <string name="write_time">시</string>
     <string name="write_minute">00시 00분</string>
     <string name="write_time2">ex) 14</string>
@@ -71,36 +72,38 @@
 
     <!--게시글 보기-->
     <string name="read">약속 내용</string>
-    <string name="read_title">제목</string>
+    <string name="read_title">약속 제목 및 내용</string>
     <string name="read_content">내용</string>
     <string name="read_age">나이</string>
-    <string name="read_member">인원</string>
+    <string name="read_member">약속 인원</string>
     <string name="read_gender">성별</string>
-    <string name="read_gender2">성별</string>
-    <string name="read_meeting_time">약속 시간</string>
-    <string name="read_appointment_place">약속 장소</string>
-    <string name="read_writer">글쓴이</string>
+    <string name="read_gender2">상관없음</string>
+    <string name="read_meeting_time">시간</string>
+    <string name="read_meeting_place">장소</string>
+    <string name="read_appointment_place_and_time">약속 장소 및 시간</string>
     <string name="read_write_time">작성시간</string>
     <string name="read_title2">오늘</string>
     <string name="read_content2">오늘</string>
-    <string name="read_age2">오늘</string>
+    <string name="read_comment">댓글</string>
+    <string name="read_age2">상관없음</string>
     <string name="read_member2">현재</string>
-    <string name="read_member3">/</string>
+    <string name="read_member1">(</string>
+    <string name="read_member11">/</string>
+    <string name="read_member111">)</string>
     <string name="read_member4">전체</string>
-    <string name="read_meeting_time2">오늘</string>
+    <string name="read_meeting_time2">2021-10-08, 10:30</string>
     <string name="read_appointment_place2">오늘</string>
     <string name="read_writer2">오늘</string>
+    <string name="read_report">신고하기</string>
+    <string name="read_delete">삭제하기</string>
 
 
     <!--댓글-->
     <string name="comment_report">신고하기</string>
-    <string name="title_activity_board_search">BoardSearchActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
+
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment</string>
 
@@ -112,4 +115,12 @@
     <string name="logout_btn">로그아웃</string>
     <string name="del_user_btn">회원탈퇴</string>
     <string name="about">개발자 정보</string>
+
+    <!--바텀메뉴-->
+    <string name="set_list">리스트</string>
+    <string name="set_map">지도</string>
+    <string name="add_board">약속작성</string>
+    <string name="user_info">유저정보</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -3,7 +3,6 @@ package com.example.bob_friend_android.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -16,9 +15,7 @@ import com.example.bob_friend_android.databinding.ActivityLoginBinding
 import com.example.bob_friend_android.viewmodel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
-
     val TAG = "LOGIN"
-    val PREFERENCE = "bob_friend_android"
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
@@ -36,19 +33,18 @@ class LoginActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         SharedPref.openSharedPrep(this)
-        val token = App.prefs.getString("token","no token")
         val check = App.prefs.getBoolean("checked",false)
 
         if (check) {
-            viewModel.validateUser(token!!, this)
+            viewModel.validateUser(this)
         }
 
         binding.loginBtn.setOnClickListener {
-            val username = binding.editTextEmail.text.toString().trim()
+            val email = binding.editTextEmail.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
             val checked = binding.checkBoxAutoLogin.isChecked
 
-            viewModel.login(username ,password, checked,this)
+            viewModel.login(email ,password, checked,this)
         }
 
         binding.registerBtn.setOnClickListener {

@@ -3,19 +3,24 @@ package com.example.bob_friend_android.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class BoardItem(var title: String?, var content: String?, var username: String?, var currentNumberOfPeople: Int, var totalNumberOfPeople: Int, var createdAt: String?, var location: String?) : Parcelable {
+class BoardItem(var id : Int, var title: String?, var content: String?, var username: String?, var currentNumberOfPeople: Int,
+                var totalNumberOfPeople: Int, var createdAt: String?, var location: String?, var x: Double, var y: Double) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readInt(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readInt(),
         parcel.readInt(),
         parcel.readString(),
-        parcel.readString()
+        parcel.readString(),
+        parcel.readDouble(),
+        parcel.readDouble()
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
         parcel.writeString(title)
         parcel.writeString(content)
         parcel.writeString(username)
@@ -23,6 +28,8 @@ class BoardItem(var title: String?, var content: String?, var username: String?,
         parcel.writeInt(totalNumberOfPeople)
         parcel.writeString(createdAt)
         parcel.writeString(location)
+        parcel.writeDouble(x)
+        parcel.writeDouble(y)
     }
 
     override fun describeContents(): Int {
