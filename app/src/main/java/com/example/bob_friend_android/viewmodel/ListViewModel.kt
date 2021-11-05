@@ -28,10 +28,10 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     val TAG = "ListViewModel"
 
-    fun setList(recyclerView: RecyclerView, context: Context, listPage: Int, list: ArrayList<Board>) {
-        var adapter: BoardAdapter
+    fun setList(boardAdapter: BoardAdapter, context: Context, listPage: Int, list: ArrayList<Board>){
         var lastPage: Boolean
         var element: Int
+
         RetrofitBuilder.api.getRecruitmens(listPage).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                 if(response.body() != null) {
@@ -55,13 +55,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                             board.full = document.full
                             board.createdAt = document.createdAt
                             board.report = document.report
+                            board.amountOfComments = document.amountOfComments
 
                             list.add(board)
                         }
-                        Log.d(TAG, "리스트 페이지 값 $listPage")
-                        adapter = BoardAdapter(context, list)
-                        adapter.notifyItemRangeInserted(listPage * 20, 20)
-                        recyclerView.adapter = adapter
+                        boardAdapter.addItems(list)
                     }
                 }
             }
@@ -103,8 +101,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 else {
                     Toast.makeText(context, "내가 참가하는 약속이 없습니다.", Toast.LENGTH_SHORT).show()
                 }
-                val adapter = BoardAdapter(context, list)
-                recyclerView.adapter = adapter
+//                val adapter = BoardAdapter(context, list)
+//                recyclerView.adapter = adapter
             }
 
             override fun onFailure(call: Call<List<Board>>, t: Throwable) {
@@ -145,8 +143,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                     Toast.makeText(context, "내가 작성한 약속이 없습니다.", Toast.LENGTH_SHORT).show()
                 }
 
-                val adapter = BoardAdapter(context, list)
-                recyclerView.adapter = adapter
+//                val adapter = BoardAdapter(context, list)
+//                recyclerView.adapter = adapter
             }
 
             override fun onFailure(call: Call<List<Board>>, t: Throwable) {

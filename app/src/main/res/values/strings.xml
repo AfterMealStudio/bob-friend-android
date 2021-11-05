@@ -95,12 +95,14 @@
     <string name="read_appointment_place2">오늘</string>
     <string name="read_writer2">오늘</string>
     <string name="read_report">신고하기</string>
+    <string name="read_participate">참가하기</string>
+    <string name="read_cancel">취소하기</string>
     <string name="read_delete">삭제하기</string>
+
 
 
     <!--댓글-->
     <string name="comment_report">신고하기</string>
-
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>

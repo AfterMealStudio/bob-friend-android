@@ -49,10 +49,10 @@ class ListFragment : Fragment() {
         binding.searchList.visibility = View.GONE
 
         binding.recyclerview.layoutManager = LinearLayoutManager(requireActivity())
-        boardAdapter = BoardAdapter(requireActivity(), boardList)
+        boardAdapter = BoardAdapter(requireActivity())
         binding.recyclerview.adapter = boardAdapter
 
-        viewModel.setList(binding.recyclerview,requireContext(),listPage, boardList)
+        viewModel.setList(binding.recyclerview.adapter as BoardAdapter,requireContext(),listPage, boardList)
 
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(binding.mainToolbar)
@@ -79,7 +79,7 @@ class ListFragment : Fragment() {
                 // 스크롤이 끝에 도달했는지 확인
                 if (!binding.recyclerview.canScrollVertically(1)) {
                     listPage++
-                    viewModel.setList(binding.recyclerview, requireContext(), listPage, boardList)
+                    viewModel.setList(binding.recyclerview.adapter as BoardAdapter, requireContext(), listPage, boardList)
                 }
             }
         })

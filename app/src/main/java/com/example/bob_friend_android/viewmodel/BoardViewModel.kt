@@ -10,7 +10,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.AndroidViewModel
 import com.example.bob_friend_android.App
+import com.example.bob_friend_android.adapter.CommentAdapter
 import com.example.bob_friend_android.model.Board
+import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.network.RetrofitBuilder
 import com.example.bob_friend_android.view.ListFragment
 import com.example.bob_friend_android.view.MainActivity
@@ -70,7 +72,29 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-     fun validation(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String, gender: String, context: Context): Boolean {
+    fun setComments(commentAdapter: CommentAdapter, recruitmentId: Int, context: Context){
+        val list: ArrayList<Comment> = arrayListOf()
+        RetrofitBuilder.api.getComments(recruitmentId).enqueue(object : Callback<List<Comment>> {
+            override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
+                if(response.body() != null) {
+                    for (document in response.body()!!) {
+                        val comment = Comment(document.commentId, document.userName, document.content, document.recomment)
+
+                        list.add(comment)
+                    }
+                }
+                commentAdapter.addCommentItems(list)
+            }
+
+            override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
+                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, t.message.toString())
+            }
+        })
+    }
+
+
+    fun validation(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String, gender: String, context: Context): Boolean {
          if (title.isEmpty() || content.isEmpty()) {
              Toast.makeText(context, "약속 제목과 내용을 입력해주세요!", Toast.LENGTH_SHORT).show()
              return false
