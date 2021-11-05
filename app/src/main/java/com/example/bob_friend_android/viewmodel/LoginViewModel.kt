@@ -20,10 +20,10 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
     val TAG = "LoginViewModel"
     val PREFERENCE = "bob_friend_android"
 
-    fun login(username: String, password: String, checked: Boolean,context: Context) {
-        if(validation(username, password, context)) {
+    fun login(email: String, password: String, checked: Boolean,context: Context) {
+        if(validation(email, password, context)) {
             val user = HashMap<String, String>()
-            user["username"] = username
+            user["email"] = email
             user["password"] = password
 
             Log.d(TAG, user.toString())
@@ -34,9 +34,9 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                         200 -> {
                             Log.d(TAG, "response : ${response.body()?.token}")
                             val editor = App.prefs.edit()
-                            editor.putString("username", username)
-                            editor.putString("token", response.body()?.token.toString())
+                            editor.putString("email", email)
                             editor.putBoolean("checked", checked)
+                            editor.putString("token", response.body()?.token)
                             editor.apply()
                             val intent = Intent(context, MainActivity::class.java)
                             context.startActivity(intent)
@@ -47,7 +47,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     }
                 }
                 override fun onFailure(call: Call<Token>, t: Throwable) {
-                    Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     Log.e(TAG, t.message.toString())
                 }
 
@@ -55,8 +55,8 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun validateUser(token: String, context: Context) {
-        RetrofitBuilder.api.getToken(token).enqueue(object : Callback<Boolean> {
+    fun validateUser(context: Context) {
+        RetrofitBuilder.api.getToken().enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "validateUser: ${response.body()}")
                 if (response.body() != null){
@@ -66,7 +66,6 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     }
                 }
             }
-
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
                 Log.d(TAG, "ttt: $t")
             }

@@ -21,15 +21,21 @@ class JoinActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJoinBinding
     private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
     private lateinit var viewModel : JoinViewModel
-    private lateinit var gender : String
-    var agree by Delegates.notNull<Boolean>()
 
-    private lateinit var userId: String
-    private lateinit var nickname: String
+    var agreeAll by Delegates.notNull<Boolean>() //동의하기
+    var agree1 by Delegates.notNull<Boolean>()
+    var agree2 by Delegates.notNull<Boolean>()
+    var agreeChoice by Delegates.notNull<Boolean>()
+
+    private lateinit var nickname: String //입력 정보등
     private lateinit var password: String
     private lateinit var passwordCheck: String
     private lateinit var email: String
     private lateinit var dateBirth: String
+    private lateinit var gender : String
+
+    var emailCheck = false
+    var nicknameCheck = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,22 +83,24 @@ class JoinActivity : AppCompatActivity() {
         binding.agree2.setOnCheckedChangeListener(checkListener)
         binding.agree3.setOnCheckedChangeListener(checkListener)
 
-        agree = binding.agree3.isChecked
 
         binding.joinBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this)
             builder.setTitle("회원가입")
             builder.setMessage("이렇게 회원가입을 진행할까요?")
 
-            userId = binding.editTextId.text.toString().trim()
-            nickname = binding.editTextUsername.text.toString().trim()
+            nickname = binding.editTextNickname.text.toString().trim()
             password = binding.editTextPassword.text.toString().trim()
             passwordCheck = binding.editTextPasswordCheck.text.toString().trim()
             email = binding.editTextEmail.text.toString().trim()
             dateBirth = binding.editTextDateBirth.text.toString().trim()
+            agreeAll = binding.agreeAll.isChecked
+            agree1 = binding.agree1.isChecked
+            agree2 = binding.agree2.isChecked
+            agreeChoice = binding.agree3.isChecked
 
             builder.setPositiveButton("예") { dialog, which ->
-                viewModel.join(userId, password, passwordCheck, nickname, email, dateBirth, gender, agree, this)
+                viewModel.join(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, nicknameCheck, emailCheck, this)
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton
@@ -100,16 +108,18 @@ class JoinActivity : AppCompatActivity() {
             builder.show()
         }
 
-        binding.idCheck.setOnClickListener {
-            userId = binding.editTextId.text.toString().trim()
-            Log.d(TAG, "userId: $userId")
-            viewModel.checkUserId(userId, this)
-        }
-
         binding.emailCheck.setOnClickListener {
             email = binding.editTextEmail.text.toString().trim()
             Log.d(TAG, "email: $email")
             viewModel.checkUserEmail(email, this)
+            emailCheck = true
+        }
+
+        binding.nicknameCheck.setOnClickListener {
+            nickname = binding.editTextNickname.text.toString().trim()
+            Log.d(TAG, "nickname: $nickname")
+            viewModel.checkUserNickname(nickname, this)
+            nicknameCheck = true
         }
 
         keyboardVisibilityUtils = KeyboardVisibilityUtils(window,

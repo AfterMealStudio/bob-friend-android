@@ -7,10 +7,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.R
-import java.util.*
 import kotlin.collections.ArrayList
 
 class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+
+    private lateinit var itemClickListener : OnItemClickListener
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search, parent, false)
         return ViewHolder(view)
@@ -47,6 +49,4 @@ class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapt
     fun setItemClickListener(onItemClickListener: OnItemClickListener) {
         this.itemClickListener = onItemClickListener
     }
-
-    private lateinit var itemClickListener : OnItemClickListener
 }
