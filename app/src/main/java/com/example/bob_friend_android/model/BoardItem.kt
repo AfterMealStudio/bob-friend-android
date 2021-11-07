@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import java.util.ArrayList
 
+
 class BoardItem(
     var id: Int, var title: String?, var content: String?, var username: String?, var currentNumberOfPeople: Int,
     var totalNumberOfPeople: Int, var createdAt: String?, var location: String?, var x: Double, var y: Double, var accountOfComments: Int

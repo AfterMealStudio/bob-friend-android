@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.BoardAdapter
 import com.example.bob_friend_android.adapter.SearchAdapter
+import com.example.bob_friend_android.model.Board
+import com.example.bob_friend_android.model.Locations
+import com.example.bob_friend_android.model.SearchKeyword
+import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.model.*
 import com.example.bob_friend_android.network.KakaoAPI
 import com.example.bob_friend_android.network.RetrofitBuilder
@@ -101,6 +105,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 else {
                     Toast.makeText(context, "내가 참가하는 약속이 없습니다.", Toast.LENGTH_SHORT).show()
                 }
+
 //                val adapter = BoardAdapter(context, list)
 //                recyclerView.adapter = adapter
             }
@@ -117,6 +122,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         val list: ArrayList<Board> = arrayListOf()
         RetrofitBuilder.api.getMyRecruitmens().enqueue(object : Callback<List<Board>> {
             override fun onResponse(call: Call<List<Board>>, response: Response<List<Board>>) {
+
                 if(response.body() != null) {
                     for (document in response.body()!!) {
                         val board = Board()
@@ -154,11 +160,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-
     fun setMarkers(context: Context, fragment: MapFragment) {
         val list: ArrayList<Locations> = arrayListOf()
         RetrofitBuilder.api.getRecruitmensLocations().enqueue(object : Callback<List<Locations>> {
             override fun onResponse(call: Call<List<Locations>>, response: Response<List<Locations>>) {
+
                 if(response.body() != null) {
                     for (document in response.body()!!) {
                         val locations = Locations()
