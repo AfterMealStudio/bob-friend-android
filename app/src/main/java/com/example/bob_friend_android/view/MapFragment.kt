@@ -88,7 +88,8 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         mapView.visibility = View.INVISIBLE
 
         //커스텀 마커 추가하는 코드
-        mapView.setCalloutBalloonAdapter(CustomBalloonAdapter(layoutInflater))
+        val customBalloonAdapter = CustomBalloonAdapter(layoutInflater)
+        mapView.setCalloutBalloonAdapter(customBalloonAdapter)
 
         viewModel.setMarkers(requireContext(), this)
 

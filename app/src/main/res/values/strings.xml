@@ -21,7 +21,7 @@
     <string name="gender">성별</string>
     <string name="male">남성</string>
     <string name="female">여성</string>
-    <string name="thirdGender">둘 다 아님</string>
+    <string name="thirdGender">그 외</string>
     <string name="userDateOfBirth">생년월일</string>
 
     <string name="userId2">아이디를 입력해주세요.</string>
@@ -95,17 +95,16 @@
     <string name="read_appointment_place2">오늘</string>
     <string name="read_writer2">오늘</string>
     <string name="read_report">신고하기</string>
+    <string name="read_participate">참가하기</string>
+    <string name="read_cancel">취소하기</string>
+    <string name="read_delete">삭제하기</string>
 
 
     <!--댓글-->
     <string name="comment_report">신고하기</string>
-    <string name="title_activity_board_search">BoardSearchActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment</string>
 
@@ -123,6 +122,5 @@
     <string name="set_map">지도</string>
     <string name="add_board">약속작성</string>
     <string name="user_info">유저정보</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

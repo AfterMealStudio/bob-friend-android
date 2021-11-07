@@ -118,7 +118,9 @@ class CreateBoardActivity : AppCompatActivity() {
 
             builder.setPositiveButton("예") { dialog, which ->
                 if(viewModel.validation(title, boardContent, count, address, locationName, x, y, dateTime, gender, this)){
-                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, this)
+
+                    viewModel.createBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, this)
+
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     finish()

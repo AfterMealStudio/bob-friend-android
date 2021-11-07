@@ -28,7 +28,7 @@ class MyAppointmentFragment : Fragment(){
         binding.list = viewModel
 
         binding.recyclerviewAppointment.layoutManager = LinearLayoutManager(requireActivity())
-        binding.recyclerviewAppointment.adapter = BoardAdapter(requireActivity(), boardList)
+        binding.recyclerviewAppointment.adapter = BoardAdapter(requireActivity())
 
         viewModel.setMyAppointment(binding.recyclerviewAppointment,requireContext())
 

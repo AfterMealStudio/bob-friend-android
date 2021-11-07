@@ -2,10 +2,15 @@ package com.example.bob_friend_android.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.ArrayList
 
-class BoardItem(var title: String?, var content: String?, var username: String?, var currentNumberOfPeople: Int,
-                var totalNumberOfPeople: Int, var createdAt: String?, var location: String?, var x: Double, var y: Double) : Parcelable {
+
+class BoardItem(
+    var id: Int, var title: String?, var content: String?, var username: String?, var currentNumberOfPeople: Int,
+    var totalNumberOfPeople: Int, var createdAt: String?, var location: String?, var x: Double, var y: Double, var accountOfComments: Int
+) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readInt(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -14,11 +19,13 @@ class BoardItem(var title: String?, var content: String?, var username: String?,
         parcel.readString(),
         parcel.readString(),
         parcel.readDouble(),
-        parcel.readDouble()
+        parcel.readDouble(),
+        parcel.readInt()
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeInt(id)
         parcel.writeString(title)
         parcel.writeString(content)
         parcel.writeString(username)
@@ -28,6 +35,7 @@ class BoardItem(var title: String?, var content: String?, var username: String?,
         parcel.writeString(location)
         parcel.writeDouble(x)
         parcel.writeDouble(y)
+        parcel.writeInt(accountOfComments)
     }
 
     override fun describeContents(): Int {

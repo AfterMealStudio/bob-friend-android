@@ -1,9 +1,11 @@
 package com.example.bob_friend_android.network
 
+
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Locations
 import com.example.bob_friend_android.model.Token
 import com.example.bob_friend_android.model.User
+import com.example.bob_friend_android.model.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -41,9 +43,13 @@ interface API {
     @POST("/recruitments")
     fun addRecruitmens(@Body board: Board): Call<Board>
 
-    //약속조회
-    @GET("/recruitments")
-    fun getRecruitmens(): Call<List<Board>>
+    //약속들조회
+    @GET("/recruitments?")
+    fun getRecruitmens(@Query("page") id:Int): Call<BoardList>
+
+    //약속하나조회
+    @GET("/recruitments/{id}")
+    fun getRecruitmen(@Path("id") id : Int): Call<Board>
 
     //약속위치조회
     @GET("/recruitments/locations")
@@ -60,4 +66,10 @@ interface API {
     //약속삭제
     @DELETE("/recruitments/{id}")
     fun deleteRecruitmens(@Path("id") boardId: Int): Call<Void>
+
+    //댓글---------------------------
+
+    //댓글 조회
+    @GET("/recruitments/{recruitmentId}/comments")
+    fun getComments(@Path("recruitmentId") recruitmentId: Int): Call<List<Comment>>
 }
