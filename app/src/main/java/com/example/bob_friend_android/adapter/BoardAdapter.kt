@@ -35,7 +35,7 @@ class BoardAdapter(private val context: Context) : RecyclerView.Adapter<Recycler
                 listener?.onItemClick(itemView, item, pos)
                 Intent(context, DetailBoardActivity::class.java).apply {
                     boardItem = BoardItem(item.id, item.title, item.content, item.author?.nickname,
-                        item.currentNumberOfPeople, item.totalNumberOfPeople!!, item.createdAt, item.restaurantName, item.latitude!!, item.longitude!!, item.amountOfComments)
+                        item.currentNumberOfPeople, item.totalNumberOfPeople!!, item.appointmentTime, item.restaurantName, item.latitude!!, item.longitude!!, item.amountOfComments)
                     putExtra("item", boardItem)
 //                    putExtra("item", item.id)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -72,12 +72,18 @@ class DetailBoardActivity : AppCompatActivity() {
 
             binding.detailTitle.text = boarditem.title.toString()
             binding.detailContent.text = boarditem.content
-//                binding.detailWriter.text = boarditem.username
-//                binding.detailWriteTime.text = boarditem.createdAt
+            binding.readWriter.text = boarditem.username
+            var appointmentTime = ""
+            if (boarditem.appointmentTime != null) {
+                val createDay: String = boarditem.appointmentTime!!
+                val created = createDay.split("T")
+                appointmentTime = created[0] + ", " +created[1].substring(0,5)
+            }
+            binding.readMeetingTime2.text = appointmentTime
             binding.detailCurrentMember.text = boarditem.currentNumberOfPeople.toString()
             binding.detailTotalMember.text = boarditem.totalNumberOfPeople.toString()
             binding.detailAppointmentPlaceName.text = boarditem.location
-            binding.detailCurrentComment.text = boarditem.currentNumberOfPeople.toString()
+            binding.detailCurrentComment.text = boarditem.accountOfComments.toString()
 
             val marker = MapPOIItem()
             marker.apply {

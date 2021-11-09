@@ -78,9 +78,16 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
             override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                 if(response.body() != null) {
                     for (document in response.body()!!) {
-                        val comment = Comment(document.commentId, document.userName, document.content, document.recomment)
-
+                        Log.d("comments!!!!!!!!!!!!!!!!!!!!!!!!!", response.body().toString())
+                        val comment = Comment(commentId = document.commentId, author = document.author, content = document.content, replies = document.replies, typeFlag = 0, createdAt = document.createdAt)
                         list.add(comment)
+
+                        if(document.replies !== null) {
+                            for (recomments in document.replies!!){
+                                val recomment = Comment(recomments.commentId, recomments.author, recomments.content, recomments.replies, typeFlag = 1, createdAt = document.createdAt)
+                                list.add(recomment)
+                            }
+                        }
                     }
                 }
                 commentAdapter.addCommentItems(list)

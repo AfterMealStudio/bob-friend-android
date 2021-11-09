@@ -21,38 +21,37 @@
             android:id="@+id/comment_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="7.5dp"
-            android:text="userId"
+            android:text="@string/read_writer"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/comment_contents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="7.5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
             android:text="@string/read"/>
 
     </LinearLayout>
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/comment_timestamp"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/userDateOfBirth2" />
 
-        <TextView
-            android:id="@+id/comment_timestamp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="7.5dp"
-            android:text="@string/userDateOfBirth2" />
-        <TextView
-            android:id="@+id/comment_report"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="7.5dp"
-            android:layout_gravity="end"
-            android:text="@string/comment_report" />
-    </LinearLayout>
-
-
+    <TextView
+        android:id="@+id/comment_report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/comment_report" />
 </LinearLayout>
