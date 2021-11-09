@@ -47,7 +47,11 @@ class CreateBoardFragment : Fragment() {
 
     private var backKeyPressedTime : Long = 0
 
+
     private var gender : String = "NONE"
+
+//    private lateinit var gender : String
+
 
     var address: String = ""
     var locationName: String = ""
@@ -127,6 +131,8 @@ class CreateBoardFragment : Fragment() {
                     viewModel.createBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())
                     val ft: FragmentTransaction? = fragmentManager?.beginTransaction()
                     ft?.detach(this)?.attach(this)?.commit()
+
+//                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())
                 }
             }
             builder.setNegativeButton("아니오") { dialog, which ->
@@ -138,7 +144,8 @@ class CreateBoardFragment : Fragment() {
         mapView = MapView(requireContext())
         mapView.removeAllPOIItems()
 
-
+//        serfaceView = android.opengl.GLSurfaceView(requireContext())
+//        serfaceView.preserveEGLContextOnPause = true
         mapViewContainer = binding.createMapView
         mapViewContainer.addView(mapView)
         Log.d(TAG, "onCreate: $mapView")

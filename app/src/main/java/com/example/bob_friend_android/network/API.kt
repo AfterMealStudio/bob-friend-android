@@ -1,5 +1,10 @@
 package com.example.bob_friend_android.network
 
+
+import com.example.bob_friend_android.model.Board
+import com.example.bob_friend_android.model.Locations
+import com.example.bob_friend_android.model.Token
+import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.model.*
 import retrofit2.Call
 import retrofit2.http.*

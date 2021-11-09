@@ -94,6 +94,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
+
     fun validation(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String, gender: String, context: Context): Boolean {
          if (title.isEmpty() || content.isEmpty()) {
              Toast.makeText(context, "약속 제목과 내용을 입력해주세요!", Toast.LENGTH_SHORT).show()

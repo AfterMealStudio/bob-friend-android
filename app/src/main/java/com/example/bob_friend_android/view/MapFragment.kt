@@ -245,6 +245,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         override fun getCalloutBalloon(poiItem: MapPOIItem?): View {
             // 마커 클릭 시 나오는 말풍선
             name.text = poiItem?.itemName   // 해당 마커의 정보 이용 가능
+
             return mCalloutBalloon
         }
 
