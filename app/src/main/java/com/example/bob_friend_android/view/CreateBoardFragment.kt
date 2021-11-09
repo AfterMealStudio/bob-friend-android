@@ -20,6 +20,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityCreateBoardBinding
@@ -45,7 +47,11 @@ class CreateBoardFragment : Fragment() {
 
     private var backKeyPressedTime : Long = 0
 
-    private lateinit var gender : String
+
+    private var gender : String = "NONE"
+
+//    private lateinit var gender : String
+
 
     var address: String = ""
     var locationName: String = ""
@@ -53,8 +59,6 @@ class CreateBoardFragment : Fragment() {
     var x: Double? = 0.0
     var date: String = ""
     var time: String = ""
-
-//    var serfaceView: android.opengl.GLSurfaceView
 
 
     override fun onCreateView(
@@ -124,7 +128,11 @@ class CreateBoardFragment : Fragment() {
 
             builder.setPositiveButton("예") { dialog, which ->
                 if(viewModel.validation(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())){
-                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())
+                    viewModel.createBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())
+                    val ft: FragmentTransaction? = fragmentManager?.beginTransaction()
+                    ft?.detach(this)?.attach(this)?.commit()
+
+//                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())
                 }
             }
             builder.setNegativeButton("아니오") { dialog, which ->
@@ -138,7 +146,6 @@ class CreateBoardFragment : Fragment() {
 
 //        serfaceView = android.opengl.GLSurfaceView(requireContext())
 //        serfaceView.preserveEGLContextOnPause = true
-
         mapViewContainer = binding.createMapView
         mapViewContainer.addView(mapView)
         Log.d(TAG, "onCreate: $mapView")
@@ -214,13 +221,11 @@ class CreateBoardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-//        serfaceView.onResume()
         mapView.visibility = View.VISIBLE
     }
 
     override fun onPause() {
         super.onPause()
-//        serfaceView.onPause()
         mapView.visibility = View.GONE
 
     }
