@@ -17,7 +17,6 @@ import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.CommentAdapter
 import com.example.bob_friend_android.adapter.BoardAdapter
-import com.example.bob_friend_android.adapter.CommentAdapter
 import com.example.bob_friend_android.adapter.UserAdapter
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding

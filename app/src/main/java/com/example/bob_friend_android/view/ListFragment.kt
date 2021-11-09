@@ -38,11 +38,11 @@ class ListFragment : Fragment() {
     private var searchPage = 1      // 검색 페이지 번호
     private var keyword = ""        // 검색 키워드
 
-    //약속 검색 기능
-    private val listItems = arrayListOf<SearchLocation>()   // 리사이클러 뷰 아이템
-    private val searchAdapter = SearchAdapter(listItems)    // 리사이클러 뷰 어댑터
-    private var pageNumber = 1      // 검색 페이지 번호
-    private var keyword = ""        // 검색 키워드
+//    //약속 검색 기능
+//    private val listItems = arrayListOf<SearchLocation>()   // 리사이클러 뷰 아이템
+//    private val searchAdapter = SearchAdapter(listItems)    // 리사이클러 뷰 어댑터
+//    private var pageNumber = 1      // 검색 페이지 번호
+//    private var keyword = ""        // 검색 키워드
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -95,20 +95,20 @@ class ListFragment : Fragment() {
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.mainEditTextSearch.visibility = View.INVISIBLE
-        binding.search.setOnClickListener {
-            binding.mainEditTextSearch.visibility = View.VISIBLE
-
-            keyword = binding.mainEditTextSearch.text.toString()
-            pageNumber = 1
-
-//            if(keyword!="") {
-//                viewModel.searchKeyword(keyword, searchAdapter, requireContext())
-//                binding.rvList.visibility = View.VISIBLE
-//            }
-
-            hideKeyboard()
-        }
+//        binding.mainEditTextSearch.visibility = View.INVISIBLE
+//        binding.search.setOnClickListener {
+//            binding.mainEditTextSearch.visibility = View.VISIBLE
+//
+//            keyword = binding.mainEditTextSearch.text.toString()
+//            pageNumber = 1
+//
+////            if(keyword!="") {
+////                viewModel.searchKeyword(keyword, searchAdapter, requireContext())
+////                binding.rvList.visibility = View.VISIBLE
+////            }
+//
+//            hideKeyboard()
+//        }
 
         return binding.root
     }
