@@ -1,27 +1,17 @@
-package com.example.bob_friend_android.view
+package com.example.bob_friend_android.view.main
 
 import android.Manifest
-import android.content.Context
-import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.View.OnFocusChangeListener
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.ActivityMainBinding
-import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.MainViewModel
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
 
 
 class MainActivity : AppCompatActivity() {
@@ -58,6 +48,9 @@ class MainActivity : AppCompatActivity() {
         val fragmentA = MapFragment()
         supportFragmentManager.beginTransaction().add(R.id.nav_host_fragment, fragmentA).commit()
         initNavigationBar()
+
+        viewModel.setUserInfo()
+        Log.d("setUserInfo", "nickname = ${App.prefs.getString("nickname", "")}")
 
 //
 //        binding.menu.setOnClickListener {

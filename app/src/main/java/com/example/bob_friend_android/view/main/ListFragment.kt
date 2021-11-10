@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.view
+package com.example.bob_friend_android.view.main
 
 import android.content.Context
 import android.os.Bundle
@@ -45,6 +45,15 @@ class ListFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.list = viewModel
 
+
+        val swipe = binding.listSwipe
+        swipe.setOnRefreshListener {
+            listPage = 0
+            boardList.clear()
+            viewModel.setList(binding.recyclerview.adapter as BoardAdapter, requireContext(), listPage, boardList)
+            swipe.isRefreshing = false
+        }
+
         binding.searchList.adapter = searchAdapter
         binding.searchList.visibility = View.GONE
 
@@ -52,7 +61,7 @@ class ListFragment : Fragment() {
         boardAdapter = BoardAdapter(requireActivity())
         binding.recyclerview.adapter = boardAdapter
 
-        viewModel.setList(binding.recyclerview.adapter as BoardAdapter,requireContext(),listPage, boardList)
+        viewModel.setList(binding.recyclerview.adapter as BoardAdapter,requireContext(), listPage, boardList)
 
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(binding.mainToolbar)

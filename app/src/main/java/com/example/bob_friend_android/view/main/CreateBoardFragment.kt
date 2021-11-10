@@ -1,9 +1,8 @@
-package com.example.bob_friend_android.view
+package com.example.bob_friend_android.view.main
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
-import android.opengl.alt.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,21 +12,18 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.RelativeLayout
 import android.widget.TimePicker
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.ActivityCreateBoardBinding
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
+import com.example.bob_friend_android.view.LocationSearchActivity
 import com.example.bob_friend_android.viewmodel.BoardViewModel
-import com.example.bob_friend_android.viewmodel.ListViewModel
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView

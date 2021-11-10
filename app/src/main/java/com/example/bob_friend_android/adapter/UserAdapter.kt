@@ -46,4 +46,10 @@ class UserAdapter(private var list: MutableList<User>): RecyclerView.Adapter<Rec
             holder.bind(list[position], holder.itemView.context)
         }
     }
+
+    fun addCommentItems(item: List<User>) {
+        list.clear()
+        list.addAll(item)
+        notifyDataSetChanged()
+    }
 }

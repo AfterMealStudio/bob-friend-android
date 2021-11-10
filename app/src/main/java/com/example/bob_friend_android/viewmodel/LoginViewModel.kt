@@ -2,7 +2,6 @@ package com.example.bob_friend_android.viewmodel
 
 import android.app.Application
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
@@ -10,7 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.model.Token
 import com.example.bob_friend_android.network.RetrofitBuilder
-import com.example.bob_friend_android.view.MainActivity
+import com.example.bob_friend_android.view.main.MainActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

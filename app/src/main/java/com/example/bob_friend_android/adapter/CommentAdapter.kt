@@ -1,12 +1,15 @@
 package com.example.bob_friend_android.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.bob_friend_android.model.Comment
@@ -15,6 +18,8 @@ import com.example.bob_friend_android.databinding.ItemBoardBinding
 import com.example.bob_friend_android.databinding.ItemBoardCommentsBinding
 import com.example.bob_friend_android.databinding.ItemBoardRecommmentsBinding
 import com.example.bob_friend_android.model.Board
+import com.example.bob_friend_android.model.BoardItem
+import com.example.bob_friend_android.view.DetailBoardActivity
 
 class CommentAdapter(private var list: MutableList<Comment>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -30,11 +35,19 @@ class CommentAdapter(private var list: MutableList<Comment>): RecyclerView.Adapt
                 val createDay: String = data.createdAt!!
                 val created = createDay.split("T")
 
-                writeTime = created[0] + " " +created[1].substring(0,5)
+                writeTime = created[0] + " " + created[1].substring(0, 5)
             }
             binding.commentTimestamp.text = writeTime
 //            Glide.with(itemView).load(data.profileImg).into(profileImg)
             Log.d("CommentAdapter", data.toString())
+
+            val pos = absoluteAdapterPosition
+
+            itemView.setOnClickListener {
+                binding.commentMenuBtn.setOnClickListener {
+                    Toast.makeText(context, "${data.id}, $pos ", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -103,5 +116,15 @@ class CommentAdapter(private var list: MutableList<Comment>): RecyclerView.Adapt
         list.clear()
         list.addAll(item)
         notifyDataSetChanged()
+    }
+
+
+    interface OnItemClickListener{
+        fun onItemClick(v:View, data: Comment, pos : Int)
+    }
+
+    private var listener : OnItemClickListener? = null
+    fun setOnItemClickListener(listener : OnItemClickListener) {
+        this.listener = listener
     }
 }

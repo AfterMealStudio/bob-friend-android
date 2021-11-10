@@ -6,16 +6,8 @@
     android:layout_height="wrap_content"
     android:minHeight="70dp"
     android:orientation="horizontal"
-    android:background="@color/grey">
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="20dp"
-        android:layout_height="40dp"
-        app:srcCompat="@drawable/right_arrow"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_gravity="center"/>
+    android:background="@color/grey"
+    android:paddingLeft="30dp">
 
 <!--    <ImageView-->
 <!--        android:id="@+id/recomment_image_profile"-->
@@ -53,14 +45,13 @@
         android:layout_marginTop="10dp"
         android:text="@string/userDateOfBirth2" />
 
-    <TextView
-        android:id="@+id/recomment_report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+    <ImageView
+        android:id="@+id/recomment_menu_btn"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
-        android:text="@string/comment_report" />
-
-
+        android:layout_marginRight="5dp"
+        android:onClick="withRecommentItems"
+        app:srcCompat="@drawable/menu_btn" />
 </LinearLayout>

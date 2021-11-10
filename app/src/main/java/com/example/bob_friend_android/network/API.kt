@@ -41,15 +41,19 @@ interface API {
 
     //약속잡기
     @POST("/recruitments")
-    fun addRecruitmens(@Body board: Board): Call<Board>
+    fun addRecruitments(@Body board: Board): Call<Board>
+
+    //약속참가
+    @PATCH("/recruitments/{recruitmentId}")
+    fun participateBoard(@Path("recruitmentId") recruitmentId: Int): Call<Board>
 
     //약속들조회
     @GET("/recruitments?")
-    fun getRecruitmens(@Query("page") id:Int): Call<BoardList>
+    fun getRecruitments(@Query("page") id:Int): Call<BoardList>
 
     //약속하나조회
     @GET("/recruitments/{id}")
-    fun getRecruitmen(@Path("id") id : Int): Call<Board>
+    fun getRecruitment(@Path("id") id : Int): Call<Board>
 
     //약속위치조회
     @GET("/recruitments/locations")
@@ -72,4 +76,10 @@ interface API {
     //댓글 조회
     @GET("/recruitments/{recruitmentId}/comments")
     fun getComments(@Path("recruitmentId") recruitmentId: Int): Call<List<Comment>>
+
+    @POST("/recruitments/{recruitmentId}/comments")
+    fun addComment(@Path("recruitmentId") recruitmentId: Int, @Body comment: Map<String, String>): Call<Comment>
+
+    @PATCH("/recruitments/{recruitmentId}/comments/{commentsId}/report")
+    fun deleteComment(@Path("recruitmentId") recruitmentId: Int, @Path("commentsId") commentsId: Int): Call<Void>
 }

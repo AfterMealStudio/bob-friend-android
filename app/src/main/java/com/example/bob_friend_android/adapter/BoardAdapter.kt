@@ -32,7 +32,7 @@ class BoardAdapter(private val context: Context) : RecyclerView.Adapter<Recycler
             val pos = absoluteAdapterPosition
 
             itemView.setOnClickListener {
-                listener?.onItemClick(itemView, item, pos)
+//                listener?.onItemClick(itemView, item, pos)
                 Intent(context, DetailBoardActivity::class.java).apply {
                     boardItem = BoardItem(item.id, item.title, item.content, item.author?.nickname,
                         item.currentNumberOfPeople, item.totalNumberOfPeople!!, item.appointmentTime, item.restaurantName, item.latitude!!, item.longitude!!, item.amountOfComments)

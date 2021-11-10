@@ -33,7 +33,7 @@
             android:layout_height="60dp"
             app:itemTextColor="@drawable/bottom_icon_color"
             app:itemIconTint="@drawable/bottom_icon_color"
-            app:menu="@menu/menu_bottom"
+            app:menu="@menu/bottom_menu"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>

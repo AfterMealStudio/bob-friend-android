@@ -7,7 +7,7 @@ data class User(
     var birth: String,
     var sex: String,
     var reportCount: Int?,
-    var accumulatedReports: Boolean?,
+    var accumulatedReports: Int?,
     var agree: Boolean,
     var activated: Boolean
 )

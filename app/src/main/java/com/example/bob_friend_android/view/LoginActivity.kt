@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
         SharedPref.openSharedPrep(this)
         val check = App.prefs.getBoolean("checked",false)
+        val nickname = App.prefs.getString("nickname", "")
 
         if (check) {
             viewModel.validateUser(this)

@@ -1,7 +1,7 @@
 package com.example.bob_friend_android.model
 
 data class Comment (
-        var commentId: Long? = 0,
+        var id: Long? = 0,
 //        var boardId: Long,
 //        var profileImg: String? = "",
         var author: User?,
@@ -18,7 +18,7 @@ data class Comment (
     }
 
     override fun toString(): String {
-        return "Comment(commentId=$commentId," +
+        return "Comment(commentId=$id," +
 //                " boardId=$boardId," +
 //                " profileImg=$profileImg," +
 //                " userName=$userName" +

@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.BoardAdapter
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.model.Board
@@ -18,10 +17,8 @@ import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.model.*
 import com.example.bob_friend_android.network.KakaoAPI
 import com.example.bob_friend_android.network.RetrofitBuilder
-import com.example.bob_friend_android.view.MainActivity
-import com.example.bob_friend_android.view.MapFragment
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
+import com.example.bob_friend_android.view.main.MainActivity
+import com.example.bob_friend_android.view.main.MapFragment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,8 +32,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     fun setList(boardAdapter: BoardAdapter, context: Context, listPage: Int, list: ArrayList<Board>){
         var lastPage: Boolean
         var element: Int
-
-        RetrofitBuilder.api.getRecruitmens(listPage).enqueue(object : Callback<BoardList> {
+        RetrofitBuilder.api.getRecruitments(listPage).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                 if(response.body() != null) {
                     element = response.body()!!.element
@@ -47,7 +43,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                             board.id = document.id
                             board.title = document.title
                             board.content = document.content
-                            board.member = document.member
+                            board.members = document.members
                             board.author = document.author
                             board.totalNumberOfPeople = document.totalNumberOfPeople
                             board.restaurantName = document.restaurantName
@@ -93,7 +89,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                         board.latitude = document.latitude
                         board.longitude = document.longitude
                         board.appointmentTime = document.appointmentTime
-                        board.member = document.member
+                        board.members = document.members
                         board.currentNumberOfPeople = document.currentNumberOfPeople
                         board.full = document.full
                         board.createdAt = document.createdAt
@@ -136,7 +132,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                         board.latitude = document.latitude
                         board.longitude = document.longitude
                         board.appointmentTime = document.appointmentTime
-                        board.member = document.member
+                        board.members = document.members
                         board.currentNumberOfPeople = document.currentNumberOfPeople
                         board.full = document.full
                         board.createdAt = document.createdAt
