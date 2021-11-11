@@ -2,6 +2,7 @@ package com.example.bob_friend_android.view.main
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,7 +35,6 @@ class ListFragment : Fragment() {
     //약속 검색 기능
     private val searchItems = arrayListOf<SearchLocation>()   // 리사이클러 뷰 아이템
     private val searchAdapter = SearchAdapter(searchItems)    // 리사이클러 뷰 어댑터
-    private var searchPage = 1      // 검색 페이지 번호
     private var keyword = ""        // 검색 키워드
 
 
@@ -73,8 +73,8 @@ class ListFragment : Fragment() {
             binding.mainEditTextSearch.visibility = View.VISIBLE
 
             keyword = binding.mainEditTextSearch.text.toString()
-            searchPage = 1
-
+            Log.d("search1", "start")
+            viewModel.searchKeywordList(keyword, boardAdapter, requireContext(), boardList)
             hideKeyboard()
         }
 

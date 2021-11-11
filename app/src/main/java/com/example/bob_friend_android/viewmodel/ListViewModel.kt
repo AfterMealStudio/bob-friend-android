@@ -194,7 +194,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun searchKeyword(keyword: String, searchAdapter: SearchAdapter, context: Context) {
+    fun searchKeywordMap(keyword: String, searchAdapter: SearchAdapter, context: Context) {
         val retrofit = Retrofit.Builder()   // Retrofit 구성
             .baseUrl(MainActivity.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -214,6 +214,46 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
             override fun onFailure(call: Call<SearchKeyword>, t: Throwable) {
                 // 통신 실패
                 Log.w(TAG, "통신 실패: ${t.message}")
+            }
+        })
+    }
+
+
+    fun searchKeywordList(keyword: String, boardAdapter: BoardAdapter, context: Context, list: ArrayList<Board>) {
+        Log.d("search2", "ready")
+        var searchList : ArrayList<Board> = ArrayList()
+        RetrofitBuilder.api.searchList("title",keyword).enqueue(object : Callback<BoardList> {
+            override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
+                Log.d("search3", "${response.body().toString()}")
+                if (response.body() != null) {
+                    for (document in response.body()!!.boardList) {
+                        val board = Board()
+                        board.id = document.id
+                        board.title = document.title
+                        board.content = document.content
+                        board.members = document.members
+                        board.author = document.author
+                        board.totalNumberOfPeople = document.totalNumberOfPeople
+                        board.restaurantName = document.restaurantName
+                        board.restaurantAddress = document.restaurantAddress
+                        board.latitude = document.latitude
+                        board.longitude = document.longitude
+                        board.appointmentTime = document.appointmentTime
+                        board.currentNumberOfPeople = document.currentNumberOfPeople
+                        board.full = document.full
+                        board.createdAt = document.createdAt
+                        board.report = document.report
+                        board.amountOfComments = document.amountOfComments
+
+                        searchList.add(board)
+                    }
+                    boardAdapter.addItems(searchList)
+                }
+            }
+
+            override fun onFailure(call: Call<BoardList>, t: Throwable) {
+                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, t.message.toString())
             }
         })
     }

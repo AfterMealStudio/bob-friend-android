@@ -67,6 +67,10 @@ interface API {
     @GET("/recruitments/my")
     fun getMyRecruitmens(): Call<List<Board>>
 
+    //약속검색
+    @GET("/recruitments/search?")
+    fun searchList(@Query("category") category:String, @Query("keyword") keyword:String) :Call<BoardList>
+
     //약속삭제
     @DELETE("/recruitments/{id}")
     fun deleteRecruitmens(@Path("id") boardId: Int): Call<Void>

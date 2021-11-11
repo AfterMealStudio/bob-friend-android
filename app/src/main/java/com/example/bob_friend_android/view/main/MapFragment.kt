@@ -103,7 +103,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
             keyword = binding.mainEditTextSearch.text.toString()
             pageNumber = 1
             if(keyword!="") {
-                viewModel.searchKeyword(keyword, searchAdapter, requireContext())
+                viewModel.searchKeywordMap(keyword, searchAdapter, requireContext())
                 binding.rvList.visibility = View.VISIBLE
             }
 

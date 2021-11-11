@@ -45,7 +45,7 @@ class LocationSearchActivity: AppCompatActivity() {
             keyword = binding.editTextSearchLocation.text.toString()
             pageNumber = 1
             if(keyword!="") {
-                viewModel.searchKeyword(keyword, searchAdapter,this)
+                viewModel.searchKeywordMap(keyword, searchAdapter,this)
             }
         }
 

@@ -62,12 +62,6 @@ class DetailBoardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val swipe = binding.swipeLayout
-        swipe.setOnRefreshListener {
-            swipe.isRefreshing = false
-        }
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_board)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
         binding.lifecycleOwner = this
@@ -82,6 +76,11 @@ class DetailBoardActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         Log.d(TAG, "detail-map: $mapView")
+
+        val swipe = binding.swipeLayout
+        swipe.setOnRefreshListener {
+            swipe.isRefreshing = false
+        }
 
         if(intent.hasExtra("item")) {
             boarditem = intent.getParcelableExtra<BoardItem>("item")!!
