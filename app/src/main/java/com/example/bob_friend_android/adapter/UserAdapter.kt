@@ -10,12 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.databinding.ItemUserBinding
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.User
+import com.example.bob_friend_android.model.UserItem
 
-class UserAdapter(private var list: MutableList<User>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class UserAdapter(private var list: MutableList<UserItem>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class UserViewHolder(private val binding: ItemUserBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: User, context: Context) {
+        fun bind(data: UserItem, context: Context) {
             binding.userName.text = data.nickname
+            binding.userRating.rating = data.rating.toFloat()
 //            Glide.with(itemView).load(data.profileImg).into(profileImg)
             Log.d("UserAdapter", data.toString())
         }
@@ -47,7 +49,7 @@ class UserAdapter(private var list: MutableList<User>): RecyclerView.Adapter<Rec
         }
     }
 
-    fun addCommentItems(item: List<User>) {
+    fun addCommentItems(item: List<UserItem>) {
         list.clear()
         list.addAll(item)
         notifyDataSetChanged()

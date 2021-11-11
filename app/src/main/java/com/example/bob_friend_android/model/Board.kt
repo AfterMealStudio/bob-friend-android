@@ -5,7 +5,7 @@ data class Board (
     var title : String = "",
     var content : String = "",
     var author : User? = null,
-    var members : List<User>? = null,
+    var members : List<UserItem>? = null,
     var comment : List<Comment>? = null,
     var amountOfComments: Int = 0,
     var currentNumberOfPeople: Int = 1,

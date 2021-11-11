@@ -12,6 +12,7 @@ import com.example.bob_friend_android.adapter.UserAdapter
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.User
+import com.example.bob_friend_android.model.UserItem
 import com.example.bob_friend_android.network.RetrofitBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -105,15 +106,14 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun participateBoard(userAdapter: UserAdapter, context: Context, recruitmentId: Int){
-        Log.d("users!!!!!!!!!!!!!!!!!!!!!!!!!", "partici")
-        val list: ArrayList<User> = arrayListOf()
+        val list: ArrayList<UserItem> = arrayListOf()
         RetrofitBuilder.api.participateBoard(recruitmentId).enqueue(object : Callback<Board> {
             override fun onResponse(call: Call<Board>, response: Response<Board>) {
-                Log.d("users!!!!!!!!!!!!!!!!!!!!!!!!!", response.body().toString())
+                Log.d("users", response.body().toString())
                 if(response.body() != null) {
                     for (document in response.body()!!.members!!) {
                         Log.d("users!!!!!!!!!!!!!!!!!!!!!!!!!", response.body().toString())
-                        val user = User(nickname = document.nickname, id = 0, email = "test1", birth = "0716", sex = "None", activated = true, agree = true, reportCount = 0, accumulatedReports = 0)
+                        val user = UserItem(nickname = document.nickname, id = 0, rating = document.rating)
                         list.add(user)
                     }
                 }

@@ -13,6 +13,8 @@ import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat.canScrollVertically
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +28,7 @@ import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding
 import com.example.bob_friend_android.model.BoardItem
 import com.example.bob_friend_android.model.User
+import com.example.bob_friend_android.model.UserItem
 import com.example.bob_friend_android.viewmodel.BoardViewModel
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import net.daum.mf.map.api.MapPOIItem
@@ -40,7 +43,7 @@ class DetailBoardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBoardBinding
     private lateinit var viewModel: BoardViewModel
     private val commentList : ArrayList<Comment> = ArrayList()
-    private val userList : ArrayList<User> = ArrayList()
+    private val userList : ArrayList<UserItem> = ArrayList()
     var backKeyPressedTime: Long = 0
     lateinit var commentAdpater: CommentAdapter
 
@@ -60,13 +63,10 @@ class DetailBoardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        val swipe = binding.swipeLayout
-//        swipe.setOnRefreshListener {
-//
-//
-//
-//            swipe.isRefreshing = false
-//        }
+        val swipe = binding.swipeLayout
+        swipe.setOnRefreshListener {
+            swipe.isRefreshing = false
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_board)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
@@ -84,11 +84,7 @@ class DetailBoardActivity : AppCompatActivity() {
         Log.d(TAG, "detail-map: $mapView")
 
         if(intent.hasExtra("item")) {
-            val item = intent.getParcelableExtra<BoardItem>("item")
             boarditem = intent.getParcelableExtra<BoardItem>("item")!!
-//            boarditem = intent.getIntExtra("item", 0)
-
-//            viewModel.setBoard(this, boarditem)
 
             binding.detailTitle.text = boarditem.title.toString()
             binding.detailContent.text = boarditem.content
@@ -153,26 +149,41 @@ class DetailBoardActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-
         binding.detailMapView.removeView(mapView)
     }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
+
+        if (boarditem.username == App.prefs.getString("nickname", "")){
+            binding.detailButton.text = "마감하기"
+            menu?.add(Menu.NONE, Menu.FIRST + 1, Menu.NONE, "신고하기")
+        }
+        else {
+            menu?.add(Menu.NONE, Menu.FIRST + 2, Menu.NONE, "삭제하기")
+        }
         return true
     }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.report_board
-            -> Toast.makeText(this,"report board",Toast.LENGTH_SHORT).show()
-            R.id.delete_board
-            -> {
+//            R.id.report_board
+//            -> Toast.makeText(this,"report board",Toast.LENGTH_SHORT).show()
+//            R.id.delete_board
+//            -> {
+//                viewModel.deleteBoard(this, boarditem.id)
+//                Log.d(TAG, "board delete!!!!!!!!!!!!!!!!!!!!!!!!! ${boarditem.id}")
+//                finish()
+//            }
+            Menu.FIRST + 1 -> {
+                Toast.makeText(this,"report board",Toast.LENGTH_SHORT).show()
+            }
+            Menu.FIRST + 2 -> {
                 viewModel.deleteBoard(this, boarditem.id)
-                Log.d(TAG, "board delete!!!!!!!!!!!!!!!!!!!!!!!!! ${boarditem.id}")
-                finish()
+//                Log.d(TAG, "board delete!!!!!!!!!!!!!!!!!!!!!!!!! ${boarditem.id}")
+//                finish()
             }
         }
         return super.onOptionsItemSelected(item)

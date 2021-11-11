@@ -335,7 +335,6 @@
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             android:gravity="center"
-            app:menu="@menu/option_menu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
