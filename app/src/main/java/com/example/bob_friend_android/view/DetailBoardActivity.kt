@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat.canScrollVertically
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,18 +45,16 @@ class DetailBoardActivity : AppCompatActivity() {
     private lateinit var viewModel: BoardViewModel
     private val commentList : ArrayList<Comment> = ArrayList()
     private val userList : ArrayList<UserItem> = ArrayList()
-    var backKeyPressedTime: Long = 0
-    lateinit var commentAdpater: CommentAdapter
-
-    var boardId = 0
+    private lateinit var commentAdapter: CommentAdapter
+    private val userAdapter = UserAdapter(userList)
 
     lateinit var mapView: MapView
     lateinit var mapViewContainer: RelativeLayout
+    var appointmentTime = ""
 
     private lateinit var boarditem : BoardItem
-//    private lateinit var boarditem : Int
 
-    val positiveButtonClick = { dialog: DialogInterface, which: Int ->
+    private val positiveButtonClick = { dialog: DialogInterface, which: Int ->
         Toast.makeText(applicationContext,
             "취소", Toast.LENGTH_SHORT).show()
     }
@@ -75,35 +74,30 @@ class DetailBoardActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        Log.d(TAG, "detail-map: $mapView")
+        viewModel.result.observe(this, Observer { it ->
+            val boardId = it.id
+            binding.detailCurrentMember.text = it.currentNumberOfPeople.toString()
+            binding.detailCurrentComment.text = it.amountOfComments.toString()
+            binding.readWriter.text = it.author?.nickname
 
-        val swipe = binding.swipeLayout
-        swipe.setOnRefreshListener {
-            swipe.isRefreshing = false
-        }
-
-        if(intent.hasExtra("item")) {
-            boarditem = intent.getParcelableExtra<BoardItem>("item")!!
-
-            binding.detailTitle.text = boarditem.title.toString()
-            binding.detailContent.text = boarditem.content
-            binding.readWriter.text = boarditem.username
-            var appointmentTime = ""
-            if (boarditem.appointmentTime != null) {
-                val createDay: String = boarditem.appointmentTime!!
+            binding.detailTitle.text = it.title.toString()
+            binding.detailContent.text = it.content
+            binding.readWriter.text = it.author!!.nickname
+            if (it.appointmentTime != null) {
+                val createDay: String = it.appointmentTime!!
                 val created = createDay.split("T")
                 appointmentTime = created[0] + ", " +created[1].substring(0,5)
             }
             binding.readMeetingTime2.text = appointmentTime
-            binding.detailCurrentMember.text = boarditem.currentNumberOfPeople.toString()
-            binding.detailTotalMember.text = boarditem.totalNumberOfPeople.toString()
-            binding.detailAppointmentPlaceName.text = boarditem.location
-            binding.detailCurrentComment.text = boarditem.accountOfComments.toString()
+            binding.detailCurrentMember.text = it.currentNumberOfPeople.toString()
+            binding.detailTotalMember.text = it.totalNumberOfPeople.toString()
+            binding.detailAppointmentPlaceName.text = it.restaurantName
+            binding.detailCurrentComment.text = it.amountOfComments.toString()
 
             val marker = MapPOIItem()
             marker.apply {
-                itemName = boarditem.location
-                mapPoint = MapPoint.mapPointWithGeoCoord(boarditem.y, boarditem.x)
+                itemName = it.restaurantName
+                mapPoint = MapPoint.mapPointWithGeoCoord(it.latitude!!, it.longitude!!)
                 customImageResourceId = R.drawable.main_color1_marker
                 customSelectedImageResourceId = R.drawable.main_color2_marker
                 markerType = MapPOIItem.MarkerType.CustomImage
@@ -114,30 +108,53 @@ class DetailBoardActivity : AppCompatActivity() {
             }
             mapView.addPOIItem(marker)
 
-            commentAdpater = CommentAdapter(commentList)
-            binding.commentRecyclerview.adapter = commentAdpater
+            commentAdapter = CommentAdapter(commentList)
+            binding.commentRecyclerview.adapter = commentAdapter
             val commentLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
             binding.commentRecyclerview.layoutManager = commentLayoutManager
-            viewModel.setComments(commentAdpater, boarditem.id, this)
+            viewModel.setComments(commentAdapter, it.id, this)
 
             binding.postComment.setOnClickListener {
-                if (binding.editTextComment.text!=null){
-                    viewModel.addComment(commentAdpater, boarditem.id, binding.editTextComment.text.toString(),this)
+                if (binding.editTextComment.text != null && binding.editTextComment.text.toString() != "") {
+                    viewModel.addComment(
+                        commentAdapter,
+                        boardId,
+                        binding.editTextComment.text.toString(),
+                        this
+                    )
                 }
             }
-
-            val userAdapter = UserAdapter(userList)
             binding.detailMember.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
             binding.detailMember.adapter = userAdapter
 
-            if (boarditem.username == App.prefs.getString("nickname", "")){
+            if (it.author!!.nickname == App.prefs.getString("nickname", "")){
                 binding.detailButton.text = "마감하기"
             }
             else {
                 binding.detailButton.setOnClickListener {
-                    viewModel.participateBoard(userAdapter, this, boarditem.id)
+                    viewModel.participateBoard(userAdapter, this, it.id)
                 }
             }
+
+            userList.clear()
+            for (member in it.members!!) {
+                userList.add(member)
+            }
+            userAdapter.notifyDataSetChanged()
+        })
+
+        viewModel.init()
+
+        if(intent.hasExtra("item")) {
+            boarditem = intent.getParcelableExtra<BoardItem>("item")!!
+
+            val swipe = binding.swipeLayout
+            swipe.setOnRefreshListener {
+                viewModel.readBoard(this, boarditem.id)
+                swipe.isRefreshing = false
+            }
+
+            viewModel.readBoard(this, boarditem.id)
         }
 
         binding.backBtn.setOnClickListener {
@@ -157,10 +174,10 @@ class DetailBoardActivity : AppCompatActivity() {
 
         if (boarditem.username == App.prefs.getString("nickname", "")){
             binding.detailButton.text = "마감하기"
-            menu?.add(Menu.NONE, Menu.FIRST + 1, Menu.NONE, "신고하기")
+            menu?.add(Menu.NONE, Menu.FIRST + 1, Menu.NONE, "삭제하기")
         }
         else {
-            menu?.add(Menu.NONE, Menu.FIRST + 2, Menu.NONE, "삭제하기")
+            menu?.add(Menu.NONE, Menu.FIRST + 2, Menu.NONE, "신고하기")
         }
         return true
     }
@@ -181,8 +198,6 @@ class DetailBoardActivity : AppCompatActivity() {
             }
             Menu.FIRST + 2 -> {
                 viewModel.deleteBoard(this, boarditem.id)
-//                Log.d(TAG, "board delete!!!!!!!!!!!!!!!!!!!!!!!!! ${boarditem.id}")
-//                finish()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -198,7 +213,7 @@ class DetailBoardActivity : AppCompatActivity() {
                 when(items[which]) {
                     items[0] -> {
                         Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
-                        viewModel.addComment(commentAdpater, boarditem.id, binding.editTextComment.text.toString(),this@DetailBoardActivity)
+                        viewModel.addComment(commentAdapter, boarditem.id, binding.editTextComment.text.toString(),this@DetailBoardActivity)
                     }
                     items[1] -> {
 //                        viewModel.deleteComment()

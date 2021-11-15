@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.bob_friend_android.adapter.CommentAdapter
 import com.example.bob_friend_android.adapter.UserAdapter
 import com.example.bob_friend_android.model.Board
@@ -14,6 +15,8 @@ import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.model.UserItem
 import com.example.bob_friend_android.network.RetrofitBuilder
+import com.kakao.network.response.ResponseData
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,9 +25,34 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
 
     val TAG = "CreateBoardViewModel"
 
-    private val _isLoading = MutableLiveData<Boolean>(false)
-    val isLoading : LiveData<Boolean>
-        get() = _isLoading
+//    private val _isLoading = MutableLiveData<Boolean>(false)
+//    val isLoading : LiveData<Boolean>
+//        get() = _isLoading
+
+//    val currentName: MutableLiveData<String> by lazy {
+//        MutableLiveData<String>()
+//    }
+
+    private val _result = MutableLiveData<Board>()
+    val result : LiveData<Board>
+        get() = _result
+
+    private var count = 0
+    val countText: MutableLiveData<String> = MutableLiveData()
+
+    fun init() {
+        countText.value = "click count $count"
+    }
+
+    fun clickButton() {
+        countText.value = "click count : ${++count}"
+    }
+
+    override fun onCleared() {
+        Log.d(TAG, "## MainViewModel - onCleared() called!!")
+        Log.d(TAG, "## count = $count")
+        super.onCleared()
+    }
 
     fun createBoard(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String, gender: String, context: Context) {
         if(validation(title, content, count, address, locationName, x, y, time, gender, context)) {
@@ -46,6 +74,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
                     val code = response.code()
                     if (code == 200) {
+//                        _result.postValue(true)
                         Log.d(TAG, "!!title=$title, content=$content")
                         Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
                     }
@@ -75,34 +104,20 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
 
 
     fun readBoard(context: Context, recruitmentId: Int){
-        RetrofitBuilder.api.getRecruitment(recruitmentId).enqueue(object : Callback<Board> {
-            override fun onResponse(call: Call<Board>, response: Response<Board>) {
-                if(response.body() != null) {
-                    val board = Board()
-                    board.id = response.body()!!.id
-                    board.title = response.body()!!.title
-                    board.content = response.body()!!.content
-                    board.members = response.body()!!.members
-                    board.author = response.body()!!.author
-                    board.totalNumberOfPeople = response.body()!!.totalNumberOfPeople
-                    board.restaurantName = response.body()!!.restaurantName
-                    board.restaurantAddress = response.body()!!.restaurantAddress
-                    board.latitude = response.body()!!.latitude
-                    board.longitude = response.body()!!.longitude
-                    board.appointmentTime = response.body()!!.appointmentTime
-                    board.currentNumberOfPeople = response.body()!!.currentNumberOfPeople
-                    board.full = response.body()!!.full
-                    board.createdAt = response.body()!!.createdAt
-                    board.report = response.body()!!.report
-                    board.amountOfComments = response.body()!!.amountOfComments
+        viewModelScope.launch {
+            RetrofitBuilder.api.getRecruitment(recruitmentId).enqueue(object : Callback<Board> {
+                override fun onResponse(call: Call<Board>, response: Response<Board>) {
+                    if(response.body() != null) {
+                        _result.postValue(response.body())
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<Board>, t: Throwable) {
-                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
-                Log.e(TAG, t.message.toString())
-            }
-        })
+                override fun onFailure(call: Call<Board>, t: Throwable) {
+                    Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, t.message.toString())
+                }
+            })
+        }
     }
 
     fun participateBoard(userAdapter: UserAdapter, context: Context, recruitmentId: Int){
