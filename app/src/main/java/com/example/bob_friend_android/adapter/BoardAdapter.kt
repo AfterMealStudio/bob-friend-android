@@ -16,7 +16,6 @@ import java.util.*
 class BoardAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_ITEM = 0
-    lateinit var boardItem: BoardItem
 
     private val boardList = arrayListOf<Board>()
 
@@ -29,15 +28,10 @@ class BoardAdapter(private val context: Context) : RecyclerView.Adapter<Recycler
             binding.createDate.text = item.createdAt.toString()
             binding.currentNumberOfComments.text = item.amountOfComments.toString()
 
-            val pos = absoluteAdapterPosition
-
             itemView.setOnClickListener {
-//                listener?.onItemClick(itemView, item, pos)
                 Intent(context, DetailBoardActivity::class.java).apply {
-                    boardItem = BoardItem(item.id, item.title, item.content, item.author?.nickname,
-                        item.currentNumberOfPeople, item.totalNumberOfPeople!!, item.appointmentTime, item.restaurantName, item.latitude!!, item.longitude!!, item.amountOfComments)
-                    putExtra("item", boardItem)
-//                    putExtra("item", item.id)
+                    putExtra("boardId", item.id)
+                    putExtra("userId", item.author!!.id)
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.run { context.startActivity(this) }
             }

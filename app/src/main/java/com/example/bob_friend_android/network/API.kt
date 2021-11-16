@@ -47,6 +47,10 @@ interface API {
     @PATCH("/recruitments/{recruitmentId}")
     fun participateBoard(@Path("recruitmentId") recruitmentId: Int): Call<Board>
 
+    //약속참가
+    @PATCH("/recruitments/{recruitmentId}/report")
+    fun reportBoard(@Path("recruitmentId") recruitmentId: Int): Call<Void>
+
     //약속들조회
     @GET("/recruitments?")
     fun getRecruitments(@Query("page") id:Int): Call<BoardList>
@@ -57,15 +61,15 @@ interface API {
 
     //약속위치조회
     @GET("/recruitments/locations")
-    fun getRecruitmensLocations(): Call<List<Locations>>
+    fun getRecruitmentLocations(): Call<List<Locations>>
 
     //내 참가약속조회
     @GET("/recruitments/my/joined")
-    fun getJoinRecruitmens(): Call<List<Board>>
+    fun getJoinRecruitment(): Call<List<Board>>
 
     //내가 잡은 약속
     @GET("/recruitments/my")
-    fun getMyRecruitmens(): Call<List<Board>>
+    fun getMyRecruitment(): Call<List<Board>>
 
     //약속검색
     @GET("/recruitments/search?")
@@ -73,7 +77,7 @@ interface API {
 
     //약속삭제
     @DELETE("/recruitments/{id}")
-    fun deleteRecruitmens(@Path("id") boardId: Int): Call<Void>
+    fun deleteRecruitment(@Path("id") boardId: Int): Call<Void>
 
     //댓글---------------------------
 
@@ -84,6 +88,7 @@ interface API {
     @POST("/recruitments/{recruitmentId}/comments")
     fun addComment(@Path("recruitmentId") recruitmentId: Int, @Body comment: Map<String, String>): Call<Comment>
 
-    @PATCH("/recruitments/{recruitmentId}/comments/{commentsId}/report")
-    fun deleteComment(@Path("recruitmentId") recruitmentId: Int, @Path("commentsId") commentsId: Int): Call<Void>
+    //댓글 신고
+    @PATCH("/recruitments/{recruitmentId}/comments/{commentId}/report")
+    fun reportComment(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int): Call<Void>
 }

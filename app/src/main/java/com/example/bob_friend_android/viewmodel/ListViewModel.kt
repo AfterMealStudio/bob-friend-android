@@ -37,8 +37,9 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 if(response.body() != null) {
                     element = response.body()!!.element
                     lastPage = response.body()!!.last
-                    if((element == 20 && !lastPage)||(element != 0 && lastPage)){
+                    if(!lastPage||(element != 0 && lastPage)){
                         for (document in response.body()!!.boardList) {
+//                            Log.d(TAG, "list!!!!!!!!!!!! : ${response.body()!!.boardList}")
                             val board = Board()
                             board.id = document.id
                             board.title = document.title
@@ -74,7 +75,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setMyAppointment(recyclerView: RecyclerView, context: Context) {
         val list: ArrayList<Board> = arrayListOf()
-        RetrofitBuilder.api.getJoinRecruitmens().enqueue(object : Callback<List<Board>> {
+        RetrofitBuilder.api.getJoinRecruitment().enqueue(object : Callback<List<Board>> {
             override fun onResponse(call: Call<List<Board>>, response: Response<List<Board>>) {
                 if(response.body() != null) {
                     for (document in response.body()!!) {
@@ -116,7 +117,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setMyBoard(recyclerView: RecyclerView, context: Context) {
         val list: ArrayList<Board> = arrayListOf()
-        RetrofitBuilder.api.getMyRecruitmens().enqueue(object : Callback<List<Board>> {
+        RetrofitBuilder.api.getMyRecruitment().enqueue(object : Callback<List<Board>> {
             override fun onResponse(call: Call<List<Board>>, response: Response<List<Board>>) {
 
                 if(response.body() != null) {
@@ -158,7 +159,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setMarkers(context: Context, fragment: MapFragment) {
         val list: ArrayList<Locations> = arrayListOf()
-        RetrofitBuilder.api.getRecruitmensLocations().enqueue(object : Callback<List<Locations>> {
+        RetrofitBuilder.api.getRecruitmentLocations().enqueue(object : Callback<List<Locations>> {
             override fun onResponse(call: Call<List<Locations>>, response: Response<List<Locations>>) {
 
                 if(response.body() != null) {

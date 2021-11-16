@@ -45,14 +45,15 @@ class DetailBoardActivity : AppCompatActivity() {
     private lateinit var viewModel: BoardViewModel
     private val commentList : ArrayList<Comment> = ArrayList()
     private val userList : ArrayList<UserItem> = ArrayList()
-    private lateinit var commentAdapter: CommentAdapter
+    private var commentAdapter = CommentAdapter(commentList)
     private val userAdapter = UserAdapter(userList)
 
     lateinit var mapView: MapView
     lateinit var mapViewContainer: RelativeLayout
     var appointmentTime = ""
 
-    private lateinit var boarditem : BoardItem
+    private var boardId : Int = 0
+    private var userId: Int = 0
 
     private val positiveButtonClick = { dialog: DialogInterface, which: Int ->
         Toast.makeText(applicationContext,
@@ -74,30 +75,30 @@ class DetailBoardActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        viewModel.result.observe(this, Observer { it ->
-            val boardId = it.id
-            binding.detailCurrentMember.text = it.currentNumberOfPeople.toString()
-            binding.detailCurrentComment.text = it.amountOfComments.toString()
-            binding.readWriter.text = it.author?.nickname
+        viewModel.result.observe(this, Observer { board ->
+            boardId = board.id
+            binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
+            binding.detailCurrentComment.text = board.amountOfComments.toString()
+            binding.readWriter.text = board.author?.nickname
 
-            binding.detailTitle.text = it.title.toString()
-            binding.detailContent.text = it.content
-            binding.readWriter.text = it.author!!.nickname
-            if (it.appointmentTime != null) {
-                val createDay: String = it.appointmentTime!!
+            binding.detailTitle.text = board.title
+            binding.detailContent.text = board.content
+            binding.readWriter.text = board.author!!.nickname
+            if (board.appointmentTime != null) {
+                val createDay: String = board.appointmentTime!!
                 val created = createDay.split("T")
                 appointmentTime = created[0] + ", " +created[1].substring(0,5)
             }
             binding.readMeetingTime2.text = appointmentTime
-            binding.detailCurrentMember.text = it.currentNumberOfPeople.toString()
-            binding.detailTotalMember.text = it.totalNumberOfPeople.toString()
-            binding.detailAppointmentPlaceName.text = it.restaurantName
-            binding.detailCurrentComment.text = it.amountOfComments.toString()
+            binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
+            binding.detailTotalMember.text = board.totalNumberOfPeople.toString()
+            binding.detailAppointmentPlaceName.text = board.restaurantName
+            binding.detailCurrentComment.text = board.amountOfComments.toString()
 
             val marker = MapPOIItem()
             marker.apply {
-                itemName = it.restaurantName
-                mapPoint = MapPoint.mapPointWithGeoCoord(it.latitude!!, it.longitude!!)
+                itemName = board.restaurantName
+                mapPoint = MapPoint.mapPointWithGeoCoord(board.latitude!!, board.longitude!!)
                 customImageResourceId = R.drawable.main_color1_marker
                 customSelectedImageResourceId = R.drawable.main_color2_marker
                 markerType = MapPOIItem.MarkerType.CustomImage
@@ -108,16 +109,15 @@ class DetailBoardActivity : AppCompatActivity() {
             }
             mapView.addPOIItem(marker)
 
-            commentAdapter = CommentAdapter(commentList)
+//            commentAdapter = CommentAdapter(commentList)
             binding.commentRecyclerview.adapter = commentAdapter
             val commentLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
             binding.commentRecyclerview.layoutManager = commentLayoutManager
-            viewModel.setComments(commentAdapter, it.id, this)
+//            viewModel.setComments(commentAdapter, board.id, this)
 
             binding.postComment.setOnClickListener {
                 if (binding.editTextComment.text != null && binding.editTextComment.text.toString() != "") {
                     viewModel.addComment(
-                        commentAdapter,
                         boardId,
                         binding.editTextComment.text.toString(),
                         this
@@ -127,34 +127,53 @@ class DetailBoardActivity : AppCompatActivity() {
             binding.detailMember.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
             binding.detailMember.adapter = userAdapter
 
-            if (it.author!!.nickname == App.prefs.getString("nickname", "")){
+            if (board.author!!.id == App.prefs.getInt("id", -1)){
                 binding.detailButton.text = "마감하기"
             }
             else {
-                binding.detailButton.setOnClickListener {
-                    viewModel.participateBoard(userAdapter, this, it.id)
+                binding.detailButton.text = "참가하기"
+                for (member in board.members!!){
+                    if(member.id == App.prefs.getInt("id", -1)){
+                        binding.detailButton.text = "취소하기"
+                    }
+                }
+            }
+
+            commentList.clear()
+            if(board.comments != null) {
+                for (comment in board.comments!!) {
+                    commentList.add(comment)
+                    if(comment.replies !== null) {
+                        for (recomment in comment.replies!!){
+                            val reComment = Comment(recomment.id, recomment.author, recomment.content, recomment.replies, typeFlag = 1, createdAt = recomment.createdAt)
+                            commentList.add(reComment)
+                        }
+                    }
                 }
             }
 
             userList.clear()
-            for (member in it.members!!) {
+            for (member in board.members!!) {
                 userList.add(member)
             }
-            userAdapter.notifyDataSetChanged()
+//            userAdapter.notifyDataSetChanged()
         })
 
-        viewModel.init()
-
-        if(intent.hasExtra("item")) {
-            boarditem = intent.getParcelableExtra<BoardItem>("item")!!
+        if(intent.hasExtra("boardId")) {
+            boardId = intent.getIntExtra("boardId", 0)
+            userId = intent.getIntExtra("userId", 0)
 
             val swipe = binding.swipeLayout
             swipe.setOnRefreshListener {
-                viewModel.readBoard(this, boarditem.id)
+                viewModel.readBoard(this, boardId)
                 swipe.isRefreshing = false
             }
 
-            viewModel.readBoard(this, boarditem.id)
+            binding.detailButton.setOnClickListener {
+                viewModel.participateBoard(userAdapter, this, boardId)
+            }
+
+            viewModel.readBoard(this, boardId)
         }
 
         binding.backBtn.setOnClickListener {
@@ -171,12 +190,11 @@ class DetailBoardActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
-
-        if (boarditem.username == App.prefs.getString("nickname", "")){
-            binding.detailButton.text = "마감하기"
+        if (userId == App.prefs.getInt("id", 0)){
             menu?.add(Menu.NONE, Menu.FIRST + 1, Menu.NONE, "삭제하기")
         }
         else {
+            Log.d(TAG, "userId: $userId")
             menu?.add(Menu.NONE, Menu.FIRST + 2, Menu.NONE, "신고하기")
         }
         return true
@@ -185,19 +203,13 @@ class DetailBoardActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-//            R.id.report_board
-//            -> Toast.makeText(this,"report board",Toast.LENGTH_SHORT).show()
-//            R.id.delete_board
-//            -> {
-//                viewModel.deleteBoard(this, boarditem.id)
-//                Log.d(TAG, "board delete!!!!!!!!!!!!!!!!!!!!!!!!! ${boarditem.id}")
-//                finish()
-//            }
             Menu.FIRST + 1 -> {
-                Toast.makeText(this,"report board",Toast.LENGTH_SHORT).show()
+                viewModel.deleteBoard(this, boardId)
+                finish()
             }
             Menu.FIRST + 2 -> {
-                viewModel.deleteBoard(this, boarditem.id)
+                Log.d(TAG, "boardId: $boardId")
+                viewModel.reportBoard(this, boardId)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -213,16 +225,14 @@ class DetailBoardActivity : AppCompatActivity() {
                 when(items[which]) {
                     items[0] -> {
                         Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
-                        viewModel.addComment(commentAdapter, boarditem.id, binding.editTextComment.text.toString(),this@DetailBoardActivity)
+                        viewModel.addComment(boardId, binding.editTextComment.text.toString(),this@DetailBoardActivity)
                     }
                     items[1] -> {
-//                        viewModel.deleteComment()
+                        viewModel.reportComment(this@DetailBoardActivity, boardId, 309)
                         Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
                     }
                     items[2] -> {
-//                        viewModel.deleteComment()
                         Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
-//                        viewModel.deleteComment(boarditem.id, ,this@DetailBoardActivity)
                     }
                 }
             }
@@ -244,7 +254,6 @@ class DetailBoardActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
                     }
                     items[1] -> {
-//                        viewModel.deleteComment()
                         Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
                     }
                 }

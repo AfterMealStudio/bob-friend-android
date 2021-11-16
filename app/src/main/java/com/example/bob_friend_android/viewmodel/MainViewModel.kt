@@ -19,6 +19,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         var email: String
         var birth: String
         var sex: String
+        var id: Int
 
         RetrofitBuilder.api.getUserId().enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
@@ -26,10 +27,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 email = response.body()?.email.toString()
                 birth = response.body()?.birth.toString()
                 sex = response.body()?.sex.toString()
+                id = response.body()?.id!!
 
-                Log.d(TAG,"responese: $response, username: $nickname, email: $email")
+                Log.d(TAG,"responese: $response, username: $nickname, email: $email, id : $id")
 
                 val editor = App.prefs.edit()
+                editor.putInt("id", id)
                 editor.putString("email", email)
                 editor.putString("nickname", nickname)
                 editor.putString("birth", birth)
