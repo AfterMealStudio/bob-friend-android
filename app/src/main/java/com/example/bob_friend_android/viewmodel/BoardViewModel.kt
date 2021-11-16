@@ -79,6 +79,34 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
+    fun deleteComment(recruitmentId: Int, commentId : Int) {
+        RetrofitBuilder.api.deleteComment(recruitmentId,commentId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Log.d(TAG, "response : $response")
+//                Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+//                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
+    fun deleteReComment(recruitmentId: Int, commentId : Int, recommentId : Int) {
+        RetrofitBuilder.api.deleteReComment(recruitmentId,commentId,recommentId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Log.d(TAG, "response : $response")
+//                Toast.makeText(context, "삭제되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+//                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
     fun reportBoard(context: Context, id : Int) {
         RetrofitBuilder.api.reportBoard(id).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
@@ -92,14 +120,29 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-    fun reportComment(context: Context, recruitmentId : Int, commentId: Int) {
+    fun reportComment(recruitmentId : Int, commentId: Int) {
         RetrofitBuilder.api.reportComment(recruitmentId, commentId).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                Toast.makeText(context, "신고되었습니다.", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "신고되었습니다.", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "response : $response")
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
-                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
+    fun reportReComment(recruitmentId : Int, commentId: Int, recommentId: Int) {
+        RetrofitBuilder.api.reportReComment(recruitmentId, commentId, recommentId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+//                Toast.makeText(context, "신고되었습니다.", Toast.LENGTH_SHORT).show()
+                Log.d(TAG, "response : $response")
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+//                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -151,6 +194,27 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                 Log.d("addComment", "어 댓글 작성 성공??$code")
                 if (code == 200) {
                     Log.d("addComment", "!!content=$comment")
+                    Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
+                    readBoard(context, recruitmentId)
+                }
+            }
+
+            override fun onFailure(call: Call<Comment>, t: Throwable) {
+                Toast.makeText(context, "전송에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+
+    fun addReComment(recruitmentId: Int, commentId: Int, recomment: String, context: Context){
+        val commentData = HashMap<String, String>()
+        commentData["content"] = recomment
+
+        RetrofitBuilder.api.addReComment(recruitmentId,commentId, commentData).enqueue(object :Callback<Comment>{
+            override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
+                val code = response.code()
+                if (code == 200) {
+                    Log.d("addComment", "!!content=$recomment")
                     Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
                     readBoard(context, recruitmentId)
                 }

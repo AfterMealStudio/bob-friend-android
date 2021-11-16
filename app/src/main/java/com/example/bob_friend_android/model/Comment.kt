@@ -1,7 +1,7 @@
 package com.example.bob_friend_android.model
 
 data class Comment (
-        var id: Long? = 0,
+        var id: Int = 0,
 //        var boardId: Long,
 //        var profileImg: String? = "",
         var author: User?,

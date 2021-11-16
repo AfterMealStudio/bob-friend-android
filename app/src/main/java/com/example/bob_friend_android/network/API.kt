@@ -85,10 +85,27 @@ interface API {
     @GET("/recruitments/{recruitmentId}/comments")
     fun getComments(@Path("recruitmentId") recruitmentId: Int): Call<List<Comment>>
 
+    //댓글 작성
     @POST("/recruitments/{recruitmentId}/comments")
     fun addComment(@Path("recruitmentId") recruitmentId: Int, @Body comment: Map<String, String>): Call<Comment>
 
     //댓글 신고
     @PATCH("/recruitments/{recruitmentId}/comments/{commentId}/report")
     fun reportComment(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int): Call<Void>
+
+    //댓글 삭제
+    @DELETE("/recruitments/{recruitmentId}/comments/{commentId}")
+    fun deleteComment(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int): Call<Void>
+
+    //대댓글 작성
+    @POST("/recruitments/{recruitmentId}/comments/{commentId}/replies")
+    fun addReComment(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int, @Body recomment: Map<String, String>): Call<Comment>
+
+    //대댓글 신고
+    @PATCH("/recruitments/{recruitmentId}/comments/{commentId}/replies/{replies}/report")
+    fun reportReComment(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int, @Path("replies") recommentsId: Int): Call<Void>
+
+    //대댓글 삭제
+    @DELETE("/recruitments/{recruitmentId}/comments/{commentId}/replies/{replies}")
+    fun deleteReComment(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int, @Path("replies") recommentsId: Int): Call<Void>
 }

@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.bob_friend_android.model.Comment
@@ -20,12 +21,29 @@ import com.example.bob_friend_android.databinding.ItemBoardRecommmentsBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.BoardItem
 import com.example.bob_friend_android.view.DetailBoardActivity
+import com.example.bob_friend_android.view.DialogCommentFragment
+import com.example.bob_friend_android.viewmodel.BoardViewModel
+import kotlinx.android.synthetic.main.item_board_comments.view.*
+import kotlinx.android.synthetic.main.item_board_recommments.view.*
 
-class CommentAdapter(private var list: MutableList<Comment>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CommentAdapter(private var list: MutableList<Comment>, boardId: Int): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val COMMENT_TYPE = 0
     private val RECOMMENT_TYPE = 1
     var writeTime = ""
+    var board = boardId
+
+    interface CommentClick
+    {
+        fun onCommentClick(view: View, position: Int, comment: Comment)
+    }
+    var commentClick: CommentClick? = null
+
+    interface ReCommentClick
+    {
+        fun onReCommentClick(view: View, position: Int, commentId: Int, reComment: Comment)
+    }
+    var reCommentClick: ReCommentClick? = null
 
     inner class CommentsViewHolder(private val binding: ItemBoardCommentsBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Comment, context: Context) {
@@ -38,16 +56,6 @@ class CommentAdapter(private var list: MutableList<Comment>): RecyclerView.Adapt
                 writeTime = created[0] + " " + created[1].substring(0, 5)
             }
             binding.commentTimestamp.text = writeTime
-//            Glide.with(itemView).load(data.profileImg).into(profileImg)
-            Log.d("CommentAdapter", data.toString())
-
-            val pos = absoluteAdapterPosition
-
-            itemView.setOnClickListener {
-                binding.commentMenuBtn.setOnClickListener {
-                    Toast.makeText(context, "${data.id}, $pos ", Toast.LENGTH_SHORT).show()
-                }
-            }
         }
     }
 
@@ -62,8 +70,6 @@ class CommentAdapter(private var list: MutableList<Comment>): RecyclerView.Adapt
                 writeTime = created[0] + " " +created[1].substring(0,5)
             }
             binding.recommentTimestamp.text = writeTime
-//            Glide.with(itemView).load(data.profileImg).into(profileImg)
-            Log.d("CommentAdapter", data.toString())
         }
     }
 
@@ -88,26 +94,34 @@ class CommentAdapter(private var list: MutableList<Comment>): RecyclerView.Adapt
     }
 
     override fun getItemViewType(position: Int): Int {
-        when(list[position].typeFlag){
+        return when(list[position].typeFlag){
             0 -> {
-                return COMMENT_TYPE
+                COMMENT_TYPE
             }
             1 -> {
-                return RECOMMENT_TYPE
+                RECOMMENT_TYPE
             }
             else -> {
-                return COMMENT_TYPE
+                COMMENT_TYPE
             }
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        var commentId = 0
         when(holder){
             is CommentsViewHolder -> {
                 holder.bind(list[position], holder.itemView.context)
+                holder.itemView.comment_menu_btn.setOnClickListener {
+                    commentClick?.onCommentClick(it, position, list[position])
+                }
+                commentId = list[position].id
             }
             is RecommentsViewHolder -> {
                 holder.bind(list[position], holder.itemView.context)
+                holder.itemView.recomment_menu_btn.setOnClickListener {
+                    reCommentClick?.onReCommentClick(it, position, commentId, list[position])
+                }
             }
         }
     }

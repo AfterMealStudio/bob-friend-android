@@ -27,6 +27,7 @@ import com.example.bob_friend_android.adapter.BoardAdapter
 import com.example.bob_friend_android.adapter.UserAdapter
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding
+import com.example.bob_friend_android.databinding.DialogCommentBinding
 import com.example.bob_friend_android.model.BoardItem
 import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.model.UserItem
@@ -43,17 +44,18 @@ class DetailBoardActivity : AppCompatActivity() {
     private val TAG = "DetailBoardActivity"
     private lateinit var binding: ActivityDetailBoardBinding
     private lateinit var viewModel: BoardViewModel
+
+    private var boardId : Int = 0
+    private var userId: Int = 0
+
     private val commentList : ArrayList<Comment> = ArrayList()
     private val userList : ArrayList<UserItem> = ArrayList()
-    private var commentAdapter = CommentAdapter(commentList)
+    private var commentAdapter = CommentAdapter(commentList, boardId)
     private val userAdapter = UserAdapter(userList)
 
     lateinit var mapView: MapView
     lateinit var mapViewContainer: RelativeLayout
     var appointmentTime = ""
-
-    private var boardId : Int = 0
-    private var userId: Int = 0
 
     private val positiveButtonClick = { dialog: DialogInterface, which: Int ->
         Toast.makeText(applicationContext,
@@ -74,6 +76,20 @@ class DetailBoardActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        commentAdapter.commentClick = object : CommentAdapter.CommentClick {
+            override fun onCommentClick(view: View, position: Int, comment: Comment) {
+                Toast.makeText(this@DetailBoardActivity, comment.toString(), Toast.LENGTH_SHORT).show()
+                withCommentItems(comment.id, comment.author!!.id, true, null)
+            }
+        }
+
+        commentAdapter.reCommentClick = object : CommentAdapter.ReCommentClick {
+            override fun onReCommentClick(view: View, position: Int, commentId: Int, reComment: Comment) {
+                Toast.makeText(this@DetailBoardActivity, reComment.toString(), Toast.LENGTH_SHORT).show()
+                withCommentItems(commentId, reComment.author!!.id, false, reComment.id)
+            }
+        }
 
         viewModel.result.observe(this, Observer { board ->
             boardId = board.id
@@ -215,52 +231,44 @@ class DetailBoardActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun withCommentItems(view: View) {
-        val items = arrayOf("댓글쓰기", "신고하기", "삭제하기")
-        val builder = AlertDialog.Builder(this)
-        with(builder)
-        {
-            setTitle("댓글 메뉴")
-            setItems(items) { dialog, which ->
-                when(items[which]) {
-                    items[0] -> {
-                        Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
-                        viewModel.addComment(boardId, binding.editTextComment.text.toString(),this@DetailBoardActivity)
-                    }
-                    items[1] -> {
-                        viewModel.reportComment(this@DetailBoardActivity, boardId, 309)
-                        Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
-                    }
-                    items[2] -> {
-                        Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
+    fun withCommentItems(commentId: Int, commentWriterId: Int, Comment:Boolean, recommentId: Int?) {
+        var writer = false
+
+        if (commentWriterId == App.prefs.getInt("id", -1)){
+            writer = true
+        }
+
+        val dialog = DialogCommentFragment(writer, Comment)
+        // 버튼 클릭 이벤트 설정
+        dialog.setButtonClickListener(object: DialogCommentFragment.OnButtonClickListener{
+            override fun onAddReCommentClicked() {
+                viewModel.addReComment(boardId, commentId, binding.editTextComment.text.toString(),this@DetailBoardActivity)
+            }
+
+            override fun onReportCommentClicked() {
+                if (Comment){
+                    viewModel.reportComment(boardId, commentId)
+                }
+                else {
+                    if (recommentId != null) {
+                        viewModel.reportReComment(boardId, commentId, recommentId)
                     }
                 }
             }
 
-            setPositiveButton("취소", positiveButtonClick)
-            show()
-        }
-    }
-
-    fun withRecommentItems(view: View) {
-        val items = arrayOf("신고하기", "삭제하기")
-        val builder = AlertDialog.Builder(this)
-        with(builder)
-        {
-            setTitle("댓글 메뉴")
-            setItems(items) { dialog, which ->
-                when(items[which]) {
-                    items[0] -> {
-                        Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
-                    }
-                    items[1] -> {
-                        Toast.makeText(applicationContext, items[which] + " is clicked", Toast.LENGTH_SHORT).show()
+            override fun onDeleteCommentClicked() {
+                if (Comment){
+                    viewModel.deleteComment(boardId, commentId)
+                    viewModel.readBoard(this@DetailBoardActivity, boardId)
+                }
+                else {
+                    if (recommentId != null) {
+                        viewModel.deleteReComment(boardId, commentId, recommentId)
+                        viewModel.readBoard(this@DetailBoardActivity, boardId)
                     }
                 }
             }
-
-            setPositiveButton("취소", positiveButtonClick)
-            show()
-        }
+        })
+        dialog.show(supportFragmentManager, "CustomDialog")
     }
 }
