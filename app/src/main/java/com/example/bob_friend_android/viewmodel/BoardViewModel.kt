@@ -15,6 +15,7 @@ import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.model.UserItem
 import com.example.bob_friend_android.network.RetrofitBuilder
+import com.example.bob_friend_android.network.StatusCode
 import com.kakao.network.response.ResponseData
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -28,6 +29,10 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     private val _result = MutableLiveData<Board>()
     val result : LiveData<Board>
         get() = _result
+
+    private val _msg = MutableLiveData<String>()
+    val errorMsg : LiveData<String>
+        get() = _msg
 
     fun createBoard(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String, gender: String, context: Context) {
         if(validation(title, content, count, address, locationName, x, y, time, gender, context)) {
@@ -148,17 +153,23 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-    fun readBoard(context: Context, recruitmentId: Int){
+    fun readBoard(recruitmentId: Int){
         viewModelScope.launch {
             RetrofitBuilder.api.getRecruitment(recruitmentId).enqueue(object : Callback<Board> {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
                     if(response.body() != null) {
-                        _result.postValue(response.body())
+                        Log.d(TAG, "readboard : $response")
+                        if (response.code() == 200){
+                            _result.postValue(response.body())
+                        }
+                        else if(response.code() == 403){
+                            _msg.postValue("삭제되거나 마감된 글입니다.")
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<Board>, t: Throwable) {
-                    Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                    _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
                     Log.e(TAG, t.message.toString())
                 }
             })
@@ -209,7 +220,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                 if (code == 200) {
                     Log.d("addComment", "!!content=$comment")
                     Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
-                    readBoard(context, recruitmentId)
+                    readBoard(recruitmentId)
                 }
             }
 
@@ -230,7 +241,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                 if (code == 200) {
                     Log.d("addComment", "!!content=$recomment")
                     Toast.makeText(context, "저장되었습니다!", Toast.LENGTH_SHORT).show()
-                    readBoard(context, recruitmentId)
+                    readBoard(recruitmentId)
                 }
             }
 

@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.view.main
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -19,13 +23,18 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentListBinding
 import com.example.bob_friend_android.model.SearchLocation
+import com.example.bob_friend_android.view.DetailBoardActivity
 import com.example.bob_friend_android.viewmodel.ListViewModel
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
 import java.util.*
 
 
 class ListFragment : Fragment() {
     private lateinit var binding: FragmentListBinding
     private lateinit var viewModel: ListViewModel
+
+    private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var boardAdapter: BoardAdapter
     private var boardList : ArrayList<Board> = ArrayList()
@@ -78,6 +87,24 @@ class ListFragment : Fragment() {
 //            hideKeyboard()
 //        }
 
+        getListResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+                result: ActivityResult ->
+            if(result.resultCode == AppCompatActivity.RESULT_OK) {
+                if(result.data != null) {
+                    val callType = result.data?.getStringExtra("CallType")
+                    if (callType == "delete" || callType == "close"){
+                        listPage = 0
+                        boardList.clear()
+                        viewModel.setList(binding.recyclerview.adapter as BoardAdapter, requireContext(), listPage, boardList)
+                    }
+                    else if (callType == "report"){
+
+                    }
+                }
+            }
+        }
+
         binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -85,6 +112,17 @@ class ListFragment : Fragment() {
                 if (!binding.recyclerview.canScrollVertically(1)) {
                     listPage++
                     viewModel.setList(binding.recyclerview.adapter as BoardAdapter, requireContext(), listPage, boardList)
+                }
+            }
+        })
+
+        boardAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
+            override fun onItemClick(v: View, data: Board, pos: Int) {
+                activity?.let {
+                    val intent = Intent(context, DetailBoardActivity::class.java)
+                    intent.putExtra("boardId", data.id)
+                    intent.putExtra("userId", data.author!!.id)
+                    getListResultLauncher.launch(intent)
                 }
             }
         })

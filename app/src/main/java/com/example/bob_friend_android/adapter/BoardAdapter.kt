@@ -5,12 +5,19 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bob_friend_android.R
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.databinding.ItemBoardBinding
 import com.example.bob_friend_android.databinding.ItemLoadingBinding
 import com.example.bob_friend_android.model.BoardItem
 import com.example.bob_friend_android.view.DetailBoardActivity
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
 import java.util.*
 
 class BoardAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -28,13 +35,22 @@ class BoardAdapter(private val context: Context) : RecyclerView.Adapter<Recycler
             binding.createDate.text = item.createdAt.toString()
             binding.currentNumberOfComments.text = item.amountOfComments.toString()
 
-            itemView.setOnClickListener {
-                Intent(context, DetailBoardActivity::class.java).apply {
-                    putExtra("boardId", item.id)
-                    putExtra("userId", item.author!!.id)
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }.run { context.startActivity(this) }
+            val pos = absoluteAdapterPosition
+            if(pos!= RecyclerView.NO_POSITION)
+            {
+                itemView.setOnClickListener {
+                    listener?.onItemClick(itemView,item,pos)
+                }
             }
+
+//            itemView.setOnClickListener {
+//                Intent(context, DetailBoardActivity::class.java).apply {
+//                    putExtra("boardId", item.id)
+//                    putExtra("userId", item.author!!.id)
+//                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                }.run { context.startActivity(this) }
+//            }
+
         }
     }
 

@@ -52,7 +52,7 @@ class LocationSearchActivity: AppCompatActivity() {
 
         searchAdapter.setItemClickListener(object: SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
-                val intent = Intent(this@LocationSearchActivity, MainActivity::class.java).apply {
+                val intent = Intent().apply {
                     putExtra("location", listItems[position].address)
                     putExtra("name", listItems[position].name)
                     putExtra("x", listItems[position].x)

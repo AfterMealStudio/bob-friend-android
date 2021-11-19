@@ -2,6 +2,7 @@ package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -60,6 +61,8 @@ class DetailBoardActivity : AppCompatActivity() {
     var selectedId: Int? = null
     var flag: Boolean = false
 
+    var toast: Toast? = null
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +96,7 @@ class DetailBoardActivity : AppCompatActivity() {
                 withCommentItems(commentId, reComment.author!!.id, false, reComment.id, null)
             }
         }
+        observeData()
 
         viewModel.result.observe(this, Observer { board ->
             detailBoardId = board.id
@@ -207,21 +211,25 @@ class DetailBoardActivity : AppCompatActivity() {
 
             val swipe = binding.swipeLayout
             swipe.setOnRefreshListener {
-                viewModel.readBoard(this, detailBoardId)
+                viewModel.readBoard(detailBoardId)
                 swipe.isRefreshing = false
             }
 
             binding.detailButton.setOnClickListener {
                 if(binding.detailButton.text=="마감하기"){
                     viewModel.closeBoard(this, detailBoardId)
-                    finish()
+                    val intent = Intent().apply {
+                        putExtra("CallType", "close")
+                    }
+                    setResult(RESULT_OK, intent)
+                    if(!isFinishing) finish()
                 }
                 else {
                     viewModel.participateBoard(this, detailBoardId)
                 }
             }
 
-            viewModel.readBoard(this, detailBoardId)
+            viewModel.readBoard(detailBoardId)
         }
 
         binding.backBtn.setOnClickListener {
@@ -271,7 +279,11 @@ class DetailBoardActivity : AppCompatActivity() {
         when (item.itemId) {
             Menu.FIRST + 1 -> {
                 viewModel.deleteBoard(this, detailBoardId)
-                finish()
+                val intent = Intent().apply {
+                    putExtra("CallType", "delete")
+                }
+                setResult(RESULT_OK, intent)
+                if(!isFinishing) finish()
             }
             Menu.FIRST + 2 -> {
                 Log.d(TAG, "boardId: $detailBoardId")
@@ -324,11 +336,11 @@ class DetailBoardActivity : AppCompatActivity() {
             override fun onDeleteCommentClicked() {
                 if (Comment) {
                     viewModel.deleteComment(detailBoardId, commentId)
-                    viewModel.readBoard(this@DetailBoardActivity, detailBoardId)
+                    viewModel.readBoard(detailBoardId)
                 } else {
                     if (recommentId != null) {
                         viewModel.deleteReComment(detailBoardId, commentId, recommentId)
-                        viewModel.readBoard(this@DetailBoardActivity, detailBoardId)
+                        viewModel.readBoard(detailBoardId)
                     }
                 }
             }
@@ -349,12 +361,29 @@ class DetailBoardActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (flag) {
             Toast.makeText(this, "한번 더 클릭시 화면이 종료됩니다.", Toast.LENGTH_SHORT).show()
-            viewModel.readBoard(this@DetailBoardActivity, detailBoardId)
+            viewModel.readBoard(detailBoardId)
             flag = false
             return
         }
         else {
             super.onBackPressed()
         }
+    }
+
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(this@DetailBoardActivity) {
+                showToast(it)
+            }
+        }
+    }
+
+
+    protected fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
     }
 }
