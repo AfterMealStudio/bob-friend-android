@@ -21,7 +21,6 @@ class LocationSearchActivity: AppCompatActivity() {
 
     private val listItems = arrayListOf<SearchLocation>()
     private val searchAdapter = SearchAdapter(listItems)
-    private var pageNumber = 1
     private var keyword = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,9 +43,8 @@ class LocationSearchActivity: AppCompatActivity() {
 
         binding.searchBtn.setOnClickListener {
             keyword = binding.editTextSearchLocation.text.toString()
-            pageNumber = 1
             if(keyword!="") {
-                viewModel.searchKeywordMap(keyword, searchAdapter,this)
+                viewModel.searchKeywordMap(keyword)
             }
         }
 

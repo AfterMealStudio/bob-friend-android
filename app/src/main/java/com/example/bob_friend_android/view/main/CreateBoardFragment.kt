@@ -1,5 +1,7 @@
 package com.example.bob_friend_android.view.main
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
@@ -12,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.RelativeLayout
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,6 +25,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
+import com.example.bob_friend_android.view.DetailBoardActivity
 import com.example.bob_friend_android.view.LocationSearchActivity
 import com.example.bob_friend_android.viewmodel.BoardViewModel
 import net.daum.mf.map.api.MapPOIItem
@@ -41,13 +45,7 @@ class CreateBoardFragment : Fragment() {
     private lateinit var mapView: MapView
     private lateinit var mapViewContainer: RelativeLayout
 
-    private var backKeyPressedTime : Long = 0
-
-
     private var gender : String = "NONE"
-
-//    private lateinit var gender : String
-
 
     var address: String = ""
     var locationName: String = ""
@@ -55,6 +53,8 @@ class CreateBoardFragment : Fragment() {
     var x: Double? = 0.0
     var date: String = ""
     var time: String = ""
+
+    var toast: Toast? = null
 
 
     override fun onCreateView(
@@ -65,11 +65,6 @@ class CreateBoardFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
         binding.lifecycleOwner = this
         binding.board = this
-
-//        if(activity is AppCompatActivity){
-//            (activity as AppCompatActivity).setSupportActionBar(binding.createToolbar)
-//            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-//        }
 
         binding.createMapView.visibility = View.VISIBLE
 
@@ -123,29 +118,25 @@ class CreateBoardFragment : Fragment() {
             val dateTime = "$date$time"
 
             builder.setPositiveButton("예") { dialog, which ->
-                if(viewModel.validation(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())){
-                    viewModel.createBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())
+                if(viewModel.validation(title, boardContent, count, locationName, dateTime)){
+                    viewModel.createBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender)
                     val ft: FragmentTransaction? = fragmentManager?.beginTransaction()
                     ft?.detach(this)?.attach(this)?.commit()
-
-//                    viewModel.CreateBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender, requireContext())
                 }
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton
             }
             builder.show()
+
         }
 
         mapView = MapView(requireContext())
         mapView.removeAllPOIItems()
-
-//        serfaceView = android.opengl.GLSurfaceView(requireContext())
-//        serfaceView.preserveEGLContextOnPause = true
         mapViewContainer = binding.createMapView
         mapViewContainer.addView(mapView)
-        Log.d(TAG, "onCreate: $mapView")
 
+        observeData()
 
         getLocationResultText = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
@@ -187,6 +178,7 @@ class CreateBoardFragment : Fragment() {
         return binding.root
     }
 
+
     private fun setCalenderDay() : String {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -216,16 +208,19 @@ class CreateBoardFragment : Fragment() {
         return "$year-$thisMonth-$thisDay"
     }
 
+
     override fun onResume() {
         super.onResume()
         mapView.visibility = View.VISIBLE
     }
+
 
     override fun onPause() {
         super.onPause()
         mapView.visibility = View.GONE
 
     }
+
 
     private fun setCalenderTime() : String {
         val time = Calendar.getInstance()
@@ -252,5 +247,23 @@ class CreateBoardFragment : Fragment() {
         }
 
         return "T$thisHour:$thisMinute"
+    }
+
+
+    @SuppressLint("ShowToast")
+    private fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
+    }
+
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(viewLifecycleOwner) {
+                showToast(it)
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.view
 
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -12,6 +13,7 @@ import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.SharedPref
 import com.example.bob_friend_android.databinding.ActivityLoginBinding
+import com.example.bob_friend_android.view.main.MainActivity
 import com.example.bob_friend_android.viewmodel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -23,6 +25,8 @@ class LoginActivity : AppCompatActivity() {
 
     private var backKeyPressedTime : Long = 0
 
+    private var checked = false
+    var toast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,15 +41,15 @@ class LoginActivity : AppCompatActivity() {
         val nickname = App.prefs.getString("nickname", "")
 
         if (check) {
-            viewModel.validateUser(this)
+            viewModel.validateUser()
         }
 
         binding.loginBtn.setOnClickListener {
             val email = binding.editTextEmail.text.toString().trim()
             val password = binding.editTextPassword.text.toString().trim()
-            val checked = binding.checkBoxAutoLogin.isChecked
+            checked = binding.checkBoxAutoLogin.isChecked
 
-            viewModel.login(email ,password, checked,this)
+            viewModel.login(email ,password)
         }
 
         binding.registerBtn.setOnClickListener {
@@ -58,6 +62,8 @@ class LoginActivity : AppCompatActivity() {
                     smoothScrollTo(scrollX, scrollY + keyboardHeight)
                 }
         })
+
+        observeData()
     }
 
 
@@ -73,5 +79,36 @@ class LoginActivity : AppCompatActivity() {
             finish()
             android.os.Process.killProcess(android.os.Process.myPid())
         }
+    }
+
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(this@LoginActivity) {
+                showToast(it)
+                if (it == "유효한 사용자입니다."){
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+
+            token.observe(this@LoginActivity) {
+                val editor = App.prefs.edit()
+                editor.putString("token", it.token)
+                editor.putBoolean("checked", checked)
+                editor.apply()
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+
+    @SuppressLint("ShowToast")
+    private fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
     }
 }

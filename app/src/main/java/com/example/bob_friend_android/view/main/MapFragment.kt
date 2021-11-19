@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.view.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -26,8 +27,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentMapBinding
+import com.example.bob_friend_android.model.Locations
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
+import kotlinx.android.synthetic.main.fragment_list.*
 import net.daum.mf.map.api.CalloutBalloonAdapter
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
@@ -54,6 +57,8 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
     private val searchAdapter = SearchAdapter(listItems)    // 리사이클러 뷰 어댑터
     private var pageNumber = 1      // 검색 페이지 번호
     private var keyword = ""        // 검색 키워드
+
+    var toast: Toast? = null
 
 
     override fun onCreateView(
@@ -85,13 +90,12 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         mapView = MapView(requireActivity())
         mapView.setMapViewEventListener(this)
         mapViewContainer.addView(mapView)
-//        mapView.visibility = View.INVISIBLE
 
         //커스텀 마커 추가하는 코드
         val customBalloonAdapter = CustomBalloonAdapter(layoutInflater)
         mapView.setCalloutBalloonAdapter(customBalloonAdapter)
 
-        viewModel.setMarkers(requireContext(), this)
+        viewModel.setMarkers()
 
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(binding.mainToolbar)
@@ -104,7 +108,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
                     keyword = binding.mainEditTextSearch.text.toString()
                     pageNumber = 1
                     if(keyword!="") {
-                        viewModel.searchKeywordMap(keyword, searchAdapter, requireContext())
+                        viewModel.searchKeywordMap(keyword)
                         binding.rvList.visibility = View.VISIBLE
                     }
 
@@ -124,10 +128,6 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
                     listItems[position].y,
                     listItems[position].x
                 )
-                Log.d(
-                    "MainActivity",
-                    "argument:${arguments} x:${listItems[position].x}, y:${listItems[position].y}"
-                )
                 setPosition(listItems[position].y, listItems[position].x)
             }
         })
@@ -135,6 +135,9 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         binding.myLocation.setOnClickListener {
             setMyLocation()
         }
+
+        observeData()
+
         return binding.root
     }
 
@@ -155,11 +158,11 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
     }
 
 
-    fun addMarkers(name: String, y: Double, x: Double) {
+    fun addMarkers(item: Locations) {
         val point = MapPOIItem()
         point.apply {
-            itemName = name
-            mapPoint = MapPoint.mapPointWithGeoCoord(y, x)
+            itemName = item.address
+            mapPoint = MapPoint.mapPointWithGeoCoord(item.longitude, item.latitude)
             customImageResourceId = R.drawable.main_color1_marker
             customSelectedImageResourceId = R.drawable.main_color2_marker
             markerType = MapPOIItem.MarkerType.CustomImage
@@ -197,44 +200,6 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         }
     }
 
-    override fun onMapViewInitialized(p0: MapView?) {
-        Log.d(TAG, "onMapViewInitialized")
-    }
-
-    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
-
-    }
-
-    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
-
-    }
-
-    override fun onMapViewSingleTapped(mapView: MapView?, mapPoint: MapPoint?) {
-        binding.rvList.visibility = View.GONE
-        hideKeyboard()
-        Log.d(TAG, "onMapViewSingleTapped")
-    }
-
-    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {
-        Log.d(TAG, "onMapViewDoubleTapped")
-    }
-
-    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {
-        Log.d(TAG, "onMapViewLongPressed")
-    }
-
-    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {
-
-    }
-
-    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {
-
-    }
-
-    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
-
-    }
-
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -257,6 +222,72 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
             // 말풍선 클릭 시
             return mCalloutBalloon
         }
+    }
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(viewLifecycleOwner) {
+                showToast(it)
+            }
+
+            searchKeyword.observe(viewLifecycleOwner) {
+                if (!it?.documents.isNullOrEmpty()) {
+                    for(document in it.documents) {
+                        val item = SearchLocation(document.place_name,
+                            document.road_address_name,
+                            document.address_name,
+                            document.x.toDouble(),
+                            document.y.toDouble())
+
+                        listItems.add(item)
+                    }
+                    searchAdapter.addItems(listItems)
+                }
+            }
+
+            location.observe(viewLifecycleOwner) {
+                for (document in it) {
+                    addMarkers(document)
+                }
+            }
+        }
+    }
+
+
+    @SuppressLint("ShowToast")
+    private fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
+    }
+
+
+    override fun onMapViewInitialized(p0: MapView?) {
+    }
+
+    override fun onMapViewCenterPointMoved(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewZoomLevelChanged(p0: MapView?, p1: Int) {
+    }
+
+    override fun onMapViewSingleTapped(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewDoubleTapped(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewLongPressed(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewDragStarted(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewDragEnded(p0: MapView?, p1: MapPoint?) {
+    }
+
+    override fun onMapViewMoveFinished(p0: MapView?, p1: MapPoint?) {
     }
 }
 

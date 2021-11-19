@@ -1,16 +1,5 @@
 package com.example.bob_friend_android.model
 
-//data class SearchKeyword(
-//        var documents: List<Place>          // 검색 결과
-//)
-//
-//data class Place(
-//        var place_name: String,             // 장소명, 업체명
-//        var address_name: String,           // 전체 지번 주소
-//        var road_address_name: String,      // 전체 도로명 주소
-//        var x: String,                      // X 좌표값 혹은 longitude
-//        var y: String                      // Y 좌표값 혹은 latitude
-//)
 
 data class SearchKeyword(
     var meta: PlaceMeta,                // 장소 메타데이터

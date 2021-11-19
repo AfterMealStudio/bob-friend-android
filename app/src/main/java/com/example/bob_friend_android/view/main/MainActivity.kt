@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityMainBinding
+import com.example.bob_friend_android.view.DetailBoardActivity
 import com.example.bob_friend_android.viewmodel.MainViewModel
 
 
@@ -21,15 +22,12 @@ class MainActivity : AppCompatActivity() {
     private val PERMISSIONS_REQUEST_CODE = 100
     private var REQUIRED_PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION)
 
-//    lateinit var fragmentMap: MapFragment
-//    lateinit var fragmentList: ListFragment
-    var beforeFlag:Int = 1 //프레그먼트 이전
     var flag:String = "map"
+    var toast: Toast? = null
 
     var backKeyPressedTime: Long = 0
 
     companion object {
-        const val BASE_URL = "https://dapi.kakao.com/"
         const val API_KEY = "KakaoAK 81e4657cca25cf97b1cec85102769390"  // REST API 키
     }
 
@@ -50,19 +48,16 @@ class MainActivity : AppCompatActivity() {
         initNavigationBar()
 
         viewModel.setUserInfo()
-        Log.d("setUserInfo", "nickname = ${App.prefs.getString("nickname", "")}")
 
-//
-//        binding.menu.setOnClickListener {
-//            hideKeyboard()
-//            binding.mainDrawerLayout.openDrawer(GravityCompat.START)
-//        }
-
-
-//        binding.mainWriteBtn.setOnClickListener {
-//            val intent = Intent(this, CreateBoardActivity::class.java)
-//            startActivity(intent)
-//        }
+        viewModel.userInfo.observe(this, { user ->
+            val editor = App.prefs.edit()
+            editor.putInt("id", user.id)
+            editor.putString("email", user.email)
+            editor.putString("nickname", user.nickname)
+            editor.putString("birth", user.birth)
+            editor.putString("sex", user.sex)
+            editor.apply()
+        })
     }
 
     private fun initNavigationBar() {
@@ -105,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onBackPressed() {
         if (System.currentTimeMillis() > backKeyPressedTime + 4000) {
             backKeyPressedTime = System.currentTimeMillis()
@@ -115,5 +111,22 @@ class MainActivity : AppCompatActivity() {
         if (System.currentTimeMillis() <= backKeyPressedTime + 4000) {
             super.onBackPressed()
         }
+    }
+
+
+    private fun observeData(context: DetailBoardActivity) {
+        with(viewModel) {
+            errorMsg.observe(this@MainActivity) {
+                showToast(it)
+            }
+        }
+    }
+
+
+    private fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
     }
 }

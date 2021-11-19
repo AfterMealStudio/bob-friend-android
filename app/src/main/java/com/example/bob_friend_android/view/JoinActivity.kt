@@ -1,15 +1,19 @@
 package com.example.bob_friend_android.view
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityJoinBinding
+import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.JoinViewModel
 import java.time.LocalDate
 import kotlin.properties.Delegates
@@ -36,6 +40,8 @@ class JoinActivity : AppCompatActivity() {
 
     var emailCheck = false
     var nicknameCheck = false
+
+    var toast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +106,7 @@ class JoinActivity : AppCompatActivity() {
             agreeChoice = binding.agree3.isChecked
 
             builder.setPositiveButton("예") { dialog, which ->
-                viewModel.join(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, nicknameCheck, emailCheck, this)
+                viewModel.join(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, nicknameCheck, emailCheck)
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton
@@ -111,14 +117,14 @@ class JoinActivity : AppCompatActivity() {
         binding.emailCheck.setOnClickListener {
             email = binding.editTextEmail.text.toString().trim()
             Log.d(TAG, "email: $email")
-            viewModel.checkUserEmail(email, this)
+            viewModel.checkUserEmail(email)
             emailCheck = true
         }
 
         binding.nicknameCheck.setOnClickListener {
             nickname = binding.editTextNickname.text.toString().trim()
             Log.d(TAG, "nickname: $nickname")
-            viewModel.checkUserNickname(nickname, this)
+            viewModel.checkUserNickname(nickname)
             nicknameCheck = true
         }
 
@@ -129,5 +135,29 @@ class JoinActivity : AppCompatActivity() {
                 }
             })
 
+        observeData()
+    }
+
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(this@JoinActivity) {
+                showToast(it)
+                if (it == "회원가입에 성공했습니다."){
+                    val intent = Intent(this@JoinActivity, LoginActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(intent)
+                }
+            }
+        }
+    }
+
+
+    @SuppressLint("ShowToast")
+    private fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
     }
 }

@@ -31,9 +31,9 @@ class MyBoardFragment : Fragment() {
         binding.list = viewModel
 
         binding.recyclerviewBoard.layoutManager = LinearLayoutManager(requireActivity())
-        binding.recyclerviewBoard.adapter = BoardAdapter(requireActivity())
+        binding.recyclerviewBoard.adapter = BoardAdapter()
 
-        viewModel.setMyBoard(binding.recyclerviewBoard, requireContext())
+//        viewModel.setMyBoard(binding.recyclerviewBoard, requireContext())
 
         return binding.root
     }

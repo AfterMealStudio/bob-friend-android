@@ -6,6 +6,8 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.network.RetrofitBuilder
@@ -20,9 +22,14 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
 
     val TAG = "JoinViewModel"
 
-    fun join(password : String, passwordCheck: String, nickname : String, email: String, dateBirth:String, gender:String, agree1:Boolean, agree2:Boolean, agreeChoice:Boolean, idCheck: Boolean, emailCheck: Boolean, context: Context){
+    private val _msg = MutableLiveData<String>()
+    val errorMsg : LiveData<String>
+        get() = _msg
 
-        if (validation(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, idCheck, emailCheck, context)) {
+
+    fun join(password : String, passwordCheck: String, nickname : String, email: String, dateBirth:String, gender:String, agree1:Boolean, agree2:Boolean, agreeChoice:Boolean, idCheck: Boolean, emailCheck: Boolean) {
+
+        if (validation(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, idCheck, emailCheck)) {
             val date = "${dateBirth.substring(0,4)}-${dateBirth.substring(4,6)}-${dateBirth.substring(6)}"
             val user = HashMap<String, String>()
 
@@ -32,134 +39,126 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
             user["birth"] = date
             user["sex"] = gender
             user["agree"] = agreeChoice.toString()
-            Log.d(TAG, "!!!!!!!!!$user")
 
-            RetrofitBuilder.api.getJoinResponse(user).enqueue(object : Callback<User> {
+            RetrofitBuilder.apiBob.getJoinResponse(user).enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    Log.d(TAG, "response :: ${response.body()}")
-                    Log.d(TAG, "error = ${response.errorBody().toString()}")
+                    Log.d(TAG, "join : ${response.body()}")
                     when (response.code()) {
-                        200 -> {
-                            Toast.makeText(context, "회원가입 성공", Toast.LENGTH_LONG).show()
-                            val intent = Intent(context, LoginActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            context.startActivity(intent)
-                        }
-                        405 -> Toast.makeText(context, "회원가입 실패 : 아이디나 비번이 올바르지 않습니다", Toast.LENGTH_LONG).show()
-                        500 -> Toast.makeText(context, "회원가입 실패 : 서버 오류", Toast.LENGTH_LONG).show()
+                        200 -> _msg.postValue("회원가입에 성공했습니다.")
+                        405 -> _msg.postValue("회원가입 실패 : 아이디나 비번이 올바르지 않습니다.")
+                        500 -> _msg.postValue("회원가입 실패 : 서버 오류입니다.")
                     }
                 }
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
-                    Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+                    _msg.postValue("서버에 연결이 되지 않았습니다.")
                     Log.e("JoinActivity!!!", t.message.toString())
                 }
             })
         }
-        else {
-            return
-        }
-    }
-
-    private fun validation(password : String, passwordCheck: String, username: String, email:String,
-                           dateBirth:String, gender:String, agree1: Boolean, agree2: Boolean, agreeChoice: Boolean, idCheck: Boolean, emailCheck: Boolean, context: Context): Boolean {
-        if (email.isEmpty() || password.isEmpty() || passwordCheck.isEmpty()) {
-            Toast.makeText(context, "아이디와 비밀번호가 비어있습니다.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (password != passwordCheck) {
-            Toast.makeText(context, "비밀번호가 서로 다릅니다.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (password.length < 6) {
-            Toast.makeText(context, "비밀번호는 6자 이상으로 해주세요.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (username.isEmpty()) {
-            Toast.makeText(context, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(dateBirth.length != 8) {
-            Toast.makeText(context, "생년월일의 형식이 정확하지 않습니다.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(gender!="MALE" && gender!="FEMALE" && gender!="THIRD") {
-            Toast.makeText(context, "성별을 지정해주세요.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(!idCheck) {
-            Toast.makeText(context, "아이디 중복확인을 해주세요.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(!emailCheck) {
-            Toast.makeText(context, "이메일 중복확인을 해주세요.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(!agree1) {
-            Toast.makeText(context, "이용약관을 동의 해주세요.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if(!agree2) {
-            Toast.makeText(context, "개인정보 취급방침을 동의 해주세요.", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        return true
     }
 
 
-    fun checkUserNickname(userId: String, context: Context) {
-        RetrofitBuilder.api.getNicknameCheck(userId).enqueue(object : Callback<Boolean> {
+    fun checkUserNickname(userId: String) {
+        RetrofitBuilder.apiBob.getNicknameCheck(userId).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "onResponse : $response")
                 val body = response.body()
                 if(body != null){
                     if(body == true){
-                        Toast.makeText(context, "이미 있는 닉네임입니다.", Toast.LENGTH_SHORT).show()
+                        _msg.postValue("이미 있는 닉네임입니다.")
                     } else if (body == false){
-                        Toast.makeText(context, "사용 가능한 닉네임입니다.", Toast.LENGTH_SHORT).show()
+                        _msg.postValue("사용 가능한 닉네임입니다.")
                     }
                 }
                 else {
-                    Toast.makeText(context, "서버와 연결을 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    _msg.postValue("서버와 연결을 실패했습니다.")
                 }
             }
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                _msg.postValue("서버에 연결이 되지 않았습니다.")
                 Log.d(TAG, "onFailure")
             }
         })
     }
 
 
-    fun checkUserEmail(email: String, context: Context) {
-        RetrofitBuilder.api.getEmailCheck(email).enqueue(object : Callback<Boolean> {
+    fun checkUserEmail(email: String) {
+        RetrofitBuilder.apiBob.getEmailCheck(email).enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "onResponse : $response")
                 val check = response.body()
                 if(check != null){
                     if(check == true){
-                        Toast.makeText(context, "이미 있는 이메일입니다.", Toast.LENGTH_SHORT).show()
+                        _msg.postValue("이미 있는 이메일입니다.")
                     } else if (check == false){
-                        Toast.makeText(context, "사용 가능한 이메일 입니다.", Toast.LENGTH_SHORT).show()
+                        _msg.postValue("사용 가능한 이메일 입니다.")
                     }
                 }
                 else {
-                    Toast.makeText(context, "서버와 연결을 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    _msg.postValue("서버와 연결을 실패했습니다.")
                 }
             }
 
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                _msg.postValue("서버에 연결이 되지 않았습니다.")
                 Log.d(TAG, "onFailure")
             }
         })
+    }
+
+
+    private fun validation(password : String, passwordCheck: String, username: String, email:String,
+                           dateBirth:String, gender:String, agree1: Boolean, agree2: Boolean, agreeChoice: Boolean, idCheck: Boolean, emailCheck: Boolean): Boolean {
+        if (email.isEmpty() || password.isEmpty() || passwordCheck.isEmpty()) {
+            _msg.postValue("아이디와 비밀번호가 비어있습니다.")
+            return false
+        }
+
+        if (password != passwordCheck) {
+            _msg.postValue("비밀번호가 서로 다릅니다.")
+            return false
+        }
+
+        if (password.length < 6) {
+            _msg.postValue("비밀번호는 6자 이상으로 해주세요.")
+            return false
+        }
+
+        if (username.isEmpty()) {
+            _msg.postValue("닉네임을 입력해주세요.")
+            return false
+        }
+
+        if(dateBirth.length != 8) {
+            _msg.postValue("생년월일의 형식이 정확하지 않습니다.")
+            return false
+        }
+
+        if(gender!="MALE" && gender!="FEMALE" && gender!="THIRD") {
+            _msg.postValue("성별을 지정해주세요.")
+            return false
+        }
+
+        if(!idCheck) {
+            _msg.postValue("아이디 중복확인을 해주세요.")
+            return false
+        }
+
+        if(!emailCheck) {
+            _msg.postValue("이메일 중복확인을 해주세요.")
+            return false
+        }
+
+        if(!agree1) {
+            _msg.postValue("이용약관을 동의 해주세요.")
+            return false
+        }
+
+        if(!agree2) {
+            _msg.postValue("개인정보 취급방침을 동의 해주세요.")
+            return false
+        }
+        return true
     }
 }

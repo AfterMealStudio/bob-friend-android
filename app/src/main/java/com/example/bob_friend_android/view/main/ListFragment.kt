@@ -1,14 +1,13 @@
 package com.example.bob_friend_android.view.main
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -25,8 +24,6 @@ import com.example.bob_friend_android.databinding.FragmentListBinding
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.view.DetailBoardActivity
 import com.example.bob_friend_android.viewmodel.ListViewModel
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
 import java.util.*
 
 
@@ -37,14 +34,15 @@ class ListFragment : Fragment() {
     private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var boardAdapter: BoardAdapter
-    private var boardList : ArrayList<Board> = ArrayList()
+    private var boardArrayList : ArrayList<Board> = ArrayList()
     private var listPage = 0 // 현재 페이지
-    var count = 0 //스크롤 하단
 
     //약속 검색 기능
     private val searchItems = arrayListOf<SearchLocation>()   // 리사이클러 뷰 아이템
     private val searchAdapter = SearchAdapter(searchItems)    // 리사이클러 뷰 어댑터
     private var keyword = ""        // 검색 키워드
+
+    var toast: Toast? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -58,8 +56,8 @@ class ListFragment : Fragment() {
         val swipe = binding.listSwipe
         swipe.setOnRefreshListener {
             listPage = 0
-            boardList.clear()
-            viewModel.setList(binding.recyclerview.adapter as BoardAdapter, requireContext(), listPage, boardList)
+            boardArrayList.clear()
+            viewModel.setList(listPage)
             swipe.isRefreshing = false
         }
 
@@ -67,25 +65,15 @@ class ListFragment : Fragment() {
         binding.searchList.visibility = View.GONE
 
         binding.recyclerview.layoutManager = LinearLayoutManager(requireActivity())
-        boardAdapter = BoardAdapter(requireActivity())
+        boardAdapter = BoardAdapter()
         binding.recyclerview.adapter = boardAdapter
 
-        viewModel.setList(binding.recyclerview.adapter as BoardAdapter,requireContext(), listPage, boardList)
+        viewModel.setList(listPage)
 
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(binding.mainToolbar)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
-
-//        binding.mainEditTextSearch.visibility = View.INVISIBLE
-//        binding.search.setOnClickListener {
-//            binding.mainEditTextSearch.visibility = View.VISIBLE
-//
-//            keyword = binding.mainEditTextSearch.text.toString()
-//            Log.d("search1", "start")
-//            viewModel.searchKeywordList(keyword, boardAdapter, requireContext(), boardList)
-//            hideKeyboard()
-//        }
 
         getListResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
@@ -95,11 +83,8 @@ class ListFragment : Fragment() {
                     val callType = result.data?.getStringExtra("CallType")
                     if (callType == "delete" || callType == "close"){
                         listPage = 0
-                        boardList.clear()
-                        viewModel.setList(binding.recyclerview.adapter as BoardAdapter, requireContext(), listPage, boardList)
-                    }
-                    else if (callType == "report"){
-
+                        boardArrayList.clear()
+                        viewModel.setList(listPage)
                     }
                 }
             }
@@ -111,7 +96,7 @@ class ListFragment : Fragment() {
                 // 스크롤이 끝에 도달했는지 확인
                 if (!binding.recyclerview.canScrollVertically(1)) {
                     listPage++
-                    viewModel.setList(binding.recyclerview.adapter as BoardAdapter, requireContext(), listPage, boardList)
+                    viewModel.setList(listPage)
                 }
             }
         })
@@ -132,22 +117,44 @@ class ListFragment : Fragment() {
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
+        observeData()
 
         return binding.root
     }
-
-//    private fun hideKeyboard(){
-//        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//        imm.hideSoftInputFromWindow(binding.mainEditTextSearch.windowToken, 0)
-//    }
 
 
     private fun refreshAdapter() {
         binding.recyclerview.adapter?.notifyDataSetChanged()
     }
 
+
     override fun onResume() {
         super.onResume()
         refreshAdapter()
+    }
+
+
+    @SuppressLint("ShowToast")
+    private fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
+    }
+
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(viewLifecycleOwner) {
+                showToast(it)
+            }
+
+            boardList.observe(viewLifecycleOwner) {
+                for(document in it) {
+                    boardArrayList.add(document)
+                }
+                boardAdapter.addItems(boardArrayList)
+            }
+        }
     }
 }

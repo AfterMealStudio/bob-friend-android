@@ -6,6 +6,8 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.model.Token
 import com.example.bob_friend_android.network.RetrofitBuilder
@@ -17,36 +19,34 @@ import retrofit2.Response
 class LoginViewModel(application: Application): AndroidViewModel(application) {
 
     val TAG = "LoginViewModel"
-    val PREFERENCE = "bob_friend_android"
 
-    fun login(email: String, password: String, checked: Boolean,context: Context) {
-        if(validation(email, password, context)) {
+    private val _msg = MutableLiveData<String>()
+    val errorMsg : LiveData<String>
+        get() = _msg
+
+    private val _token = MutableLiveData<Token>()
+    val token : LiveData<Token>
+        get() = _token
+
+    fun login(email: String, password: String) {
+        if(validation(email, password)) {
             val user = HashMap<String, String>()
             user["email"] = email
             user["password"] = password
 
             Log.d(TAG, user.toString())
 
-            RetrofitBuilder.api.getLoginResponse(user).enqueue(object : Callback<Token> {
+            RetrofitBuilder.apiBob.getLoginResponse(user).enqueue(object : Callback<Token> {
                 override fun onResponse(call: Call<Token>, response: Response<Token>) {
                     when (response.code()) {
-                        200 -> {
-                            Log.d(TAG, "response : ${response.body()?.token}")
-                            val editor = App.prefs.edit()
-                            editor.putString("email", email)
-                            editor.putBoolean("checked", checked)
-                            editor.putString("token", response.body()?.token)
-                            editor.apply()
-                            val intent = Intent(context, MainActivity::class.java)
-                            context.startActivity(intent)
-                        }
-                        405 -> Toast.makeText(context, "로그인 실패 : 아이디나 비번이 올바르지 않습니다", Toast.LENGTH_LONG).show()
-                        500 -> Toast.makeText(context, "로그인 실패 : 서버 오류", Toast.LENGTH_LONG).show()
-                        else -> Toast.makeText(context, "로그인 실패 : 아이디나 비번이 올바르지 않습니다", Toast.LENGTH_LONG).show()
+                        200 -> _token.postValue(response.body())
+                        405 -> _msg.postValue("로그인 실패 : 아이디나 비번이 올바르지 않습니다!")
+                        500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
+                        else -> _msg.postValue("로그인에 실패했습니다.")
                     }
                 }
                 override fun onFailure(call: Call<Token>, t: Throwable) {
-                    Toast.makeText(context, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    _msg.postValue("서버에 연결이 되지 않았습니다.")
                     Log.e(TAG, t.message.toString())
                 }
 
@@ -54,26 +54,24 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun validateUser(context: Context) {
-        RetrofitBuilder.api.getToken().enqueue(object : Callback<Boolean> {
+    fun validateUser() {
+        RetrofitBuilder.apiBob.getToken().enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "validateUser: ${response.body()}")
                 if (response.body() != null){
-                    if(response.body()!!) {
-                        val intent = Intent(context, MainActivity::class.java)
-                        context.startActivity(intent)
-                    }
+                    _msg.postValue("유효한 사용자입니다.")
                 }
             }
             override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                _msg.postValue("서버에 연결이 되지 않았습니다.")
                 Log.d(TAG, "ttt: $t")
             }
         })
     }
 
-    private fun validation(username : String, password: String, context: Context): Boolean {
+    private fun validation(username : String, password: String): Boolean {
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(context, "아이디와 비밀번호를 입력해주세요!", Toast.LENGTH_SHORT).show()
+            _msg.postValue("아이디와 비밀번호를 입력해주세요!")
             return false
         }
         return true

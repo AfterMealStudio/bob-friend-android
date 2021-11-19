@@ -2,6 +2,7 @@ package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
@@ -55,7 +57,6 @@ class DetailBoardActivity : AppCompatActivity() {
     lateinit var mapViewContainer: RelativeLayout
     var appointmentTime = ""
 
-    private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
     var inputMethodManager: InputMethodManager? = null
 
     var selectedId: Int? = null
@@ -96,7 +97,7 @@ class DetailBoardActivity : AppCompatActivity() {
                 withCommentItems(commentId, reComment.author!!.id, false, reComment.id, null)
             }
         }
-        observeData()
+        observeData(this)
 
         viewModel.result.observe(this, Observer { board ->
             detailBoardId = board.id
@@ -146,16 +147,14 @@ class DetailBoardActivity : AppCompatActivity() {
                 if (binding.editTextComment.text.toString() != "" && !flag) {
                     viewModel.addComment(
                         detailBoardId,
-                        binding.editTextComment.text.toString(),
-                        this
+                        binding.editTextComment.text.toString()
                     )
                     binding.editTextComment.text = null
                 } else if (binding.editTextComment.text.toString() != "" && flag) {
                     viewModel.addReComment(
                         detailBoardId,
                         detailCommentId,
-                        binding.editTextComment.text.toString(),
-                        this@DetailBoardActivity
+                        binding.editTextComment.text.toString()
                     )
                     binding.editTextComment.text = null
                     flag = false
@@ -217,7 +216,7 @@ class DetailBoardActivity : AppCompatActivity() {
 
             binding.detailButton.setOnClickListener {
                 if(binding.detailButton.text=="마감하기"){
-                    viewModel.closeBoard(this, detailBoardId)
+                    viewModel.closeBoard(detailBoardId)
                     val intent = Intent().apply {
                         putExtra("CallType", "close")
                     }
@@ -225,7 +224,7 @@ class DetailBoardActivity : AppCompatActivity() {
                     if(!isFinishing) finish()
                 }
                 else {
-                    viewModel.participateBoard(this, detailBoardId)
+                    viewModel.participateBoard(detailBoardId)
                 }
             }
 
@@ -247,13 +246,6 @@ class DetailBoardActivity : AppCompatActivity() {
 
             handled
         }
-
-//        keyboardVisibilityUtils = KeyboardVisibilityUtils(window,
-//            onShowKeyboard = { keyboardHeight ->
-//                binding.scrollView2.run {
-//                    smoothScrollTo(scrollX, scrollY + keyboardHeight)
-//                }
-//            })
     }
 
     override fun onStop() {
@@ -278,7 +270,7 @@ class DetailBoardActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             Menu.FIRST + 1 -> {
-                viewModel.deleteBoard(this, detailBoardId)
+                viewModel.deleteBoard(detailBoardId)
                 val intent = Intent().apply {
                     putExtra("CallType", "delete")
                 }
@@ -287,7 +279,7 @@ class DetailBoardActivity : AppCompatActivity() {
             }
             Menu.FIRST + 2 -> {
                 Log.d(TAG, "boardId: $detailBoardId")
-                viewModel.reportBoard(this, detailBoardId)
+                viewModel.reportBoard(detailBoardId)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -371,16 +363,34 @@ class DetailBoardActivity : AppCompatActivity() {
     }
 
 
-    private fun observeData() {
+    private fun observeData(context: DetailBoardActivity) {
         with(viewModel) {
             errorMsg.observe(this@DetailBoardActivity) {
-                showToast(it)
+                if (errorMsg.value=="삭제되거나 마감된 글입니다."){
+                    setBoardDialog(context)
+                }
+                else {
+                    showToast(it)
+                }
             }
         }
     }
 
 
-    protected fun showToast(msg: String) {
+    private fun setBoardDialog(context: Context) {
+        AlertDialog.Builder(context).apply {
+            setTitle("접근할 수 없는 약속")
+            setMessage("마감되거나 삭제되어 접근 할 수 없는 약속입니다..")
+            setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                finish()
+            })
+            show()
+        }
+    }
+
+
+    @SuppressLint("ShowToast")
+    private fun showToast(msg: String) {
         if (toast == null) {
             toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
         } else toast?.setText(msg)

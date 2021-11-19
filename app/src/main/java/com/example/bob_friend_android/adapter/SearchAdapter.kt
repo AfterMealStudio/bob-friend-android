@@ -7,9 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.model.SearchKeyword
 import kotlin.collections.ArrayList
 
 class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+    val listItems =  ArrayList<SearchLocation>()
 
     private lateinit var itemClickListener : OnItemClickListener
 
@@ -48,5 +50,11 @@ class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapt
 
     fun setItemClickListener(onItemClickListener: OnItemClickListener) {
         this.itemClickListener = onItemClickListener
+    }
+
+    fun addItems(item: ArrayList<SearchLocation>) {
+        listItems.clear()
+        listItems.addAll(item)
+        notifyDataSetChanged()
     }
 }
