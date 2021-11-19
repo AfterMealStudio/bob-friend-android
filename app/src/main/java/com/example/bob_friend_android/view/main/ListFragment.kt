@@ -68,15 +68,15 @@ class ListFragment : Fragment() {
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.mainEditTextSearch.visibility = View.INVISIBLE
-        binding.search.setOnClickListener {
-            binding.mainEditTextSearch.visibility = View.VISIBLE
-
-            keyword = binding.mainEditTextSearch.text.toString()
-            Log.d("search1", "start")
-            viewModel.searchKeywordList(keyword, boardAdapter, requireContext(), boardList)
-            hideKeyboard()
-        }
+//        binding.mainEditTextSearch.visibility = View.INVISIBLE
+//        binding.search.setOnClickListener {
+//            binding.mainEditTextSearch.visibility = View.VISIBLE
+//
+//            keyword = binding.mainEditTextSearch.text.toString()
+//            Log.d("search1", "start")
+//            viewModel.searchKeywordList(keyword, boardAdapter, requireContext(), boardList)
+//            hideKeyboard()
+//        }
 
         binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -98,10 +98,10 @@ class ListFragment : Fragment() {
         return binding.root
     }
 
-    private fun hideKeyboard(){
-        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.mainEditTextSearch.windowToken, 0)
-    }
+//    private fun hideKeyboard(){
+//        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        imm.hideSoftInputFromWindow(binding.mainEditTextSearch.windowToken, 0)
+//    }
 
 
     private fun refreshAdapter() {

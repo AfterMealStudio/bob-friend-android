@@ -4,7 +4,8 @@
     <string name="main_list">List</string>
     <string name="main_auto_login">자동 로그인</string>
     <string name="main_map">Map</string>
-    <string name="main_search">장소를 검색하세요.</string>
+    <string name="list_search"> 약속 제목, 장소, 내용를 검색하세요.</string>
+    <string name="map_search">장소를 검색하세요.</string>
     <string name="login">로그인</string>
     <string name="register">회원가입</string>
     <string name="registerBtn">이메일 회원가입</string>
@@ -72,9 +73,9 @@
 
     <!--게시글 보기-->
     <string name="read">약속 내용</string>
-    <string name="read_title">약속 제목 및 내용</string>
+    <string name="read_title">약속 제목</string>
     <string name="read_writer">작성자 : </string>
-    <string name="read_content">내용</string>
+    <string name="read_content">약속 내용</string>
     <string name="read_age">나이</string>
     <string name="read_member">약속 인원</string>
     <string name="read_gender">성별</string>

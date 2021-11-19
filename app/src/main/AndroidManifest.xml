@@ -19,8 +19,8 @@
             android:name="com.kakao.sdk.AppKey"
             android:value="76ae2d3e91f458eca0e0cda68b199d93" />
 
-        <activity android:name=".view.DetailBoardActivity" />
-        <activity android:name=".view.CreateBoardActivity" />
+        <activity android:name=".view.DetailBoardActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".view.JoinActivity" />
         <activity android:name=".view.LocationSearchActivity" />
         <activity android:name=".view.LoginActivity">

@@ -64,7 +64,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:hint="@string/write_board_search2"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:background="@drawable/recomment_background"/>
 
                 <Button
                     android:id="@+id/search_btn"

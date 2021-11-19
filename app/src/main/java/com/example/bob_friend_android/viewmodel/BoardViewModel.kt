@@ -165,12 +165,12 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
-    fun participateBoard(userAdapter: UserAdapter, context: Context, recruitmentId: Int){
-        val list: ArrayList<UserItem> = arrayListOf()
+    fun participateBoard(context: Context, recruitmentId: Int){
         viewModelScope.launch {
             RetrofitBuilder.api.participateBoard(recruitmentId).enqueue(object : Callback<Board> {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
                     if(response.body() != null) {
+                        Log.d(TAG, "participate : $response")
                         _result.postValue(response.body())
                     }
                 }
@@ -181,6 +181,20 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                 }
             })
         }
+    }
+
+
+    fun closeBoard(context: Context, recruitmentId: Int){
+        RetrofitBuilder.api.closeBoard(recruitmentId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Log.d(TAG, "response : $response")
+                Toast.makeText(context, "마감되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Toast.makeText(context, "서버에 연결이 되지 않았습니다. 다시 시도해주세요!", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
 

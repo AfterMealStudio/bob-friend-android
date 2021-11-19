@@ -47,9 +47,13 @@ interface API {
     @PATCH("/recruitments/{recruitmentId}")
     fun participateBoard(@Path("recruitmentId") recruitmentId: Int): Call<Board>
 
-    //약속참가
+    //약속신고
     @PATCH("/recruitments/{recruitmentId}/report")
     fun reportBoard(@Path("recruitmentId") recruitmentId: Int): Call<Void>
+
+    //약속마감
+    @PATCH("/recruitments/{recruitmentId}/close")
+    fun closeBoard(@Path("recruitmentId") recruitmentId: Int): Call<Void>
 
     //약속들조회
     @GET("/recruitments?")

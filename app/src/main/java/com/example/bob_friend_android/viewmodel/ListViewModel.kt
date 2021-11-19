@@ -39,7 +39,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                     lastPage = response.body()!!.last
                     if(!lastPage||(element != 0 && lastPage)){
                         for (document in response.body()!!.boardList) {
-//                            Log.d(TAG, "list!!!!!!!!!!!! : ${response.body()!!.boardList}")
+                            Log.d(TAG, "list!!!!!!!!!!!! : ${response.body()!!.boardList}")
                             val board = Board()
                             board.id = document.id
                             board.title = document.title

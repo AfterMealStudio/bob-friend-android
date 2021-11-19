@@ -86,7 +86,15 @@
                         android:ems="10"
                         android:text="@string/write_member"
                         android:textColor="@color/main_color1"
-                        android:textSize="20sp" />
+                        android:textSize="20sp"
+                        android:layout_marginBottom="10dp"/>
+
+                    <TextView
+                        android:id="@+id/read_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/read_content"
+                        android:textColor="@color/main_color1" />
 
                     <TextView
                         android:id="@+id/detail_content"
@@ -97,15 +105,15 @@
                         android:minHeight="30dp"
                         android:text="@string/read_content2"
                         android:textColor="@color/main_color1"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
-                    <!--                <TextView-->
-                    <!--                    android:id="@+id/detail_write_time"-->
-                    <!--                    android:layout_width="match_parent"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:gravity="right"-->
-                    <!--                    android:textColor="@color/main_color1"-->
-                    <!--                    android:text="@string/read_write_time" />-->
+                    <TextView
+                        android:id="@+id/detail_write_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:textColor="@color/main_color1"
+                        android:text="@string/read_write_time" />
 
                     <TextView
                         android:id="@+id/detail_line"
@@ -127,21 +135,23 @@
                         android:id="@+id/detail_map_view"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:background="@drawable/boarder_line" />
+                        android:background="@drawable/border_line" />
 
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                        <TextView
+                        <ImageView
                             android:id="@+id/read_meeting_place"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/read_meeting_place"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/detail_place"
                             android:textColor="@color/main_color1"
                             android:textSize="17sp" />
 
@@ -152,21 +162,24 @@
                             android:layout_weight="1"
                             android:text="@string/read_appointment_place_and_time"
                             android:textColor="@color/main_color1"
-                            android:textSize="17sp" />
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_vertical">
 
-                        <TextView
+                        <ImageView
                             android:id="@+id/read_meeting_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/read_meeting_time"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/detail_clock"
                             android:textColor="@color/main_color1"
                             android:textSize="17sp" />
 
@@ -176,7 +189,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/read_meeting_time2"
                             android:textColor="@color/main_color1"
-                            android:textSize="17sp" />
+                            android:textSize="18sp" />
                     </LinearLayout>
 
                     <Button
@@ -187,6 +200,8 @@
                         android:layout_marginBottom="5dp"
                         android:layout_weight="1"
                         android:text="@string/read_participate"
+                        android:backgroundTint="@color/main_color1"
+                        android:background="@drawable/border_line"
                         android:textStyle="bold" />
 
                     <TextView
@@ -261,7 +276,8 @@
                         android:layout_marginBottom="20dp"
                         android:nestedScrollingEnabled="false"
                         tools:itemCount="10"
-                        tools:listitem="@layout/item_user" />
+                        tools:listitem="@layout/item_user"
+                        />
 
                     <TextView
                         android:id="@+id/detail_line3"
@@ -346,14 +362,14 @@
                 app:srcCompat="@drawable/delete"
                 app:tint="@color/white" />
 
-            <TextView
-                android:id="@+id/read"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                android:text="@string/read"
-                android:textSize="20sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/read"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:text="@string/read"-->
+<!--                android:textSize="20sp" />-->
         </androidx.appcompat.widget.Toolbar>
         <LinearLayout
             android:id="@+id/comment_write"
@@ -376,7 +392,10 @@
                 android:layout_margin="10dp"
                 android:maxHeight="180dp"
                 android:ems="10"
-                android:inputType="text|textMultiLine"/>
+                android:inputType="text|textMultiLine"
+                android:singleLine="true"
+                android:imeOptions="actionDone">
+            </EditText>
 
             <ImageView
                 android:id="@+id/post_comment"

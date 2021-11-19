@@ -18,7 +18,7 @@
             android:id="@+id/header_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:padding="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,51 +28,79 @@
                 android:id="@+id/header_icon"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/boarder_line"
-                android:padding="10dp"
-                android:src="@drawable/meal" />
+                android:layout_marginRight="10dp"
+                app:srcCompat="@drawable/rice"
+                android:background="@color/main_color1"
+                app:tint="@color/white" />
 
-            <TextView
-                android:id="@+id/header_username"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/userName"
-                android:textColor="#000000"
-                android:textSize="20dp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/header_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/read_write_time"
-                android:textColor="#EB554C4C"
-                android:textSize="15dp" />
+                <TextView
+                    android:id="@+id/header_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userName"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/header_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userEmail"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/header_birth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userName2"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <TextView
+                    android:id="@+id/header_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/userName2"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/logout_btn"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:backgroundTint="@color/main_color2"
             android:text="@string/logout_btn"
             android:textSize="16sp"
+            android:textColor="@color/black"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/recomment_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header_layout" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/delete_user_btn"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="40dp"
-            android:backgroundTint="@color/main_color2"
+            android:backgroundTint="@color/white"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="@drawable/recomment_background"
             android:text="@string/del_user_btn"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

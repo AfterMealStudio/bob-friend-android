@@ -59,33 +59,50 @@
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="3dp">
 
-                <EditText
-                    android:id="@+id/main_editText_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="12"
-                    android:hint="@string/main_search"
-                    android:inputType="textPersonName"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <requestFocus />
-                </EditText>
-
                 <ImageView
-                    android:id="@+id/search"
+                    android:id="@+id/rise"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginRight="13dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/rice"
+                    app:tint="@color/white" />
+
+                <EditText
+                    android:id="@+id/main_editText_search"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/search_border"
+                    android:ems="12"
+                    android:textSize="15sp"
+                    android:hint="@string/map_search"
+                    android:inputType="text"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/main_color1"
+                    android:textColorHint="@color/main_color1"
+                    android:imeOptions="actionSearch"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_baseline_search_24"
-                    app:tint="@color/white" />
+                    app:layout_constraintStart_toEndOf="@+id/rise"
+                    app:layout_constraintTop_toTopOf="parent">
+
+<!--                    <requestFocus />-->
+                </EditText>
+<!--                <ImageView-->
+<!--                    android:id="@+id/search"-->
+<!--                    android:layout_width="30dp"-->
+<!--                    android:layout_height="30dp"-->
+<!--                    android:layout_marginRight="13dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:srcCompat="@drawable/ic_baseline_search_24"-->
+<!--                    app:tint="@color/white" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 

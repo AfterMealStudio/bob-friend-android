@@ -8,17 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.bob_friend_android.databinding.DialogCommentBinding
+import com.example.bob_friend_android.databinding.FragmentDialogCommentBinding
 import com.example.bob_friend_android.viewmodel.BoardViewModel
-import kotlinx.android.synthetic.main.item_board_comments.*
 
 class DialogCommentFragment(private val isWriter: Boolean, private val isComment:Boolean): DialogFragment() {
-    private var _binding: DialogCommentBinding? = null
+    private var _binding: FragmentDialogCommentBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: BoardViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = DialogCommentBinding.inflate(inflater, container, false)
+        _binding = FragmentDialogCommentBinding.inflate(inflater, container, false)
         val view = binding.root
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
 

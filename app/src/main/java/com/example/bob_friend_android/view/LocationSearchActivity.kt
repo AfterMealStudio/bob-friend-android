@@ -11,6 +11,7 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.ActivityBoardSearchBinding
 import com.example.bob_friend_android.model.SearchLocation
+import com.example.bob_friend_android.view.main.MainActivity
 import com.example.bob_friend_android.viewmodel.ListViewModel
 
 class LocationSearchActivity: AppCompatActivity() {
@@ -51,7 +52,7 @@ class LocationSearchActivity: AppCompatActivity() {
 
         searchAdapter.setItemClickListener(object: SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
-                val intent = Intent(this@LocationSearchActivity, CreateBoardActivity::class.java).apply {
+                val intent = Intent(this@LocationSearchActivity, MainActivity::class.java).apply {
                     putExtra("location", listItems[position].address)
                     putExtra("name", listItems[position].name)
                     putExtra("x", listItems[position].x)

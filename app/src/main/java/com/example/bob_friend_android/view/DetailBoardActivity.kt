@@ -1,67 +1,66 @@
 package com.example.bob_friend_android.view
 
-import android.content.DialogInterface
-import android.content.Intent
+import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.View.OnTouchListener
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.view.ViewCompat.canScrollVertically
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
-import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.App
+import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.CommentAdapter
-import com.example.bob_friend_android.adapter.BoardAdapter
 import com.example.bob_friend_android.adapter.UserAdapter
-import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding
-import com.example.bob_friend_android.databinding.DialogCommentBinding
-import com.example.bob_friend_android.model.BoardItem
-import com.example.bob_friend_android.model.User
+import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.UserItem
 import com.example.bob_friend_android.viewmodel.BoardViewModel
-import com.example.bob_friend_android.viewmodel.ListViewModel
 import net.daum.mf.map.api.MapPOIItem
 import net.daum.mf.map.api.MapPoint
 import net.daum.mf.map.api.MapView
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.log
+
 
 class DetailBoardActivity : AppCompatActivity() {
     private val TAG = "DetailBoardActivity"
     private lateinit var binding: ActivityDetailBoardBinding
     private lateinit var viewModel: BoardViewModel
 
-    private var boardId : Int = 0
+    private var detailBoardId : Int = 0
+    private var detailCommentId : Int = 0
     private var userId: Int = 0
 
     private val commentList : ArrayList<Comment> = ArrayList()
     private val userList : ArrayList<UserItem> = ArrayList()
-    private var commentAdapter = CommentAdapter(commentList, boardId)
+    private var commentAdapter = CommentAdapter(commentList, detailBoardId)
     private val userAdapter = UserAdapter(userList)
 
     lateinit var mapView: MapView
     lateinit var mapViewContainer: RelativeLayout
     var appointmentTime = ""
 
-    private val positiveButtonClick = { dialog: DialogInterface, which: Int ->
-        Toast.makeText(applicationContext,
-            "취소", Toast.LENGTH_SHORT).show()
-    }
+    private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
+    var inputMethodManager: InputMethodManager? = null
 
+    var selectedId: Int? = null
+    var flag: Boolean = false
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_board)
@@ -72,30 +71,35 @@ class DetailBoardActivity : AppCompatActivity() {
         mapView = MapView(this)
         mapViewContainer = binding.detailMapView
         mapViewContainer.addView(mapView)
-        mapViewContainer.setBackgroundColor(Color.BLUE)
+
+        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         commentAdapter.commentClick = object : CommentAdapter.CommentClick {
             override fun onCommentClick(view: View, position: Int, comment: Comment) {
-                Toast.makeText(this@DetailBoardActivity, comment.toString(), Toast.LENGTH_SHORT).show()
-                withCommentItems(comment.id, comment.author!!.id, true, null)
+                withCommentItems(comment.id, comment.author!!.id, true, null, position)
             }
         }
 
         commentAdapter.reCommentClick = object : CommentAdapter.ReCommentClick {
-            override fun onReCommentClick(view: View, position: Int, commentId: Int, reComment: Comment) {
-                Toast.makeText(this@DetailBoardActivity, reComment.toString(), Toast.LENGTH_SHORT).show()
-                withCommentItems(commentId, reComment.author!!.id, false, reComment.id)
+            override fun onReCommentClick(
+                view: View,
+                position: Int,
+                commentId: Int,
+                reComment: Comment
+            ) {
+                withCommentItems(commentId, reComment.author!!.id, false, reComment.id, null)
             }
         }
 
         viewModel.result.observe(this, Observer { board ->
-            boardId = board.id
+            detailBoardId = board.id
             binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
             binding.detailCurrentComment.text = board.amountOfComments.toString()
             binding.readWriter.text = board.author?.nickname
+            binding.detailWriteTime.text = board.createdAt
 
             binding.detailTitle.text = board.title
             binding.detailContent.text = board.content
@@ -103,7 +107,7 @@ class DetailBoardActivity : AppCompatActivity() {
             if (board.appointmentTime != null) {
                 val createDay: String = board.appointmentTime!!
                 val created = createDay.split("T")
-                appointmentTime = created[0] + ", " +created[1].substring(0,5)
+                appointmentTime = created[0] + ", " + created[1].substring(0, 5)
             }
             binding.readMeetingTime2.text = appointmentTime
             binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
@@ -121,47 +125,70 @@ class DetailBoardActivity : AppCompatActivity() {
                 selectedMarkerType = MapPOIItem.MarkerType.CustomImage
                 isCustomImageAutoscale = false
                 setCustomImageAnchor(0.5f, 1.0f)
-                mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
+                mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, false)
             }
+            mapView.setZoomLevel(2, false)
+            mapView.zoomIn(false)
+            mapView.zoomOut(false)
+
+            mapView.setOnTouchListener(OnTouchListener { v, event -> true })
             mapView.addPOIItem(marker)
 
-//            commentAdapter = CommentAdapter(commentList)
             binding.commentRecyclerview.adapter = commentAdapter
             val commentLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
             binding.commentRecyclerview.layoutManager = commentLayoutManager
-//            viewModel.setComments(commentAdapter, board.id, this)
 
             binding.postComment.setOnClickListener {
-                if (binding.editTextComment.text != null && binding.editTextComment.text.toString() != "") {
+                if (binding.editTextComment.text.toString() != "" && !flag) {
                     viewModel.addComment(
-                        boardId,
+                        detailBoardId,
                         binding.editTextComment.text.toString(),
                         this
                     )
+                    binding.editTextComment.text = null
+                } else if (binding.editTextComment.text.toString() != "" && flag) {
+                    viewModel.addReComment(
+                        detailBoardId,
+                        detailCommentId,
+                        binding.editTextComment.text.toString(),
+                        this@DetailBoardActivity
+                    )
+                    binding.editTextComment.text = null
+                    flag = false
                 }
             }
-            binding.detailMember.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+            binding.detailMember.layoutManager = LinearLayoutManager(
+                this,
+                RecyclerView.VERTICAL,
+                false
+            )
             binding.detailMember.adapter = userAdapter
 
-            if (board.author!!.id == App.prefs.getInt("id", -1)){
+            if (board.author!!.id == App.prefs.getInt("id", -1)) {
                 binding.detailButton.text = "마감하기"
-            }
-            else {
+            } else {
                 binding.detailButton.text = "참가하기"
-                for (member in board.members!!){
-                    if(member.id == App.prefs.getInt("id", -1)){
+                for (member in board.members!!) {
+                    if (member.id == App.prefs.getInt("id", -1)) {
                         binding.detailButton.text = "취소하기"
                     }
                 }
             }
 
             commentList.clear()
-            if(board.comments != null) {
+            if (board.comments != null) {
                 for (comment in board.comments!!) {
                     commentList.add(comment)
-                    if(comment.replies !== null) {
-                        for (recomment in comment.replies!!){
-                            val reComment = Comment(recomment.id, recomment.author, recomment.content, recomment.replies, typeFlag = 1, createdAt = recomment.createdAt)
+                    if (comment.replies !== null) {
+                        for (recomment in comment.replies!!) {
+                            val reComment = Comment(
+                                recomment.id,
+                                recomment.author,
+                                recomment.content,
+                                recomment.replies,
+                                typeFlag = 1,
+                                createdAt = recomment.createdAt
+                            )
                             commentList.add(reComment)
                         }
                     }
@@ -172,31 +199,54 @@ class DetailBoardActivity : AppCompatActivity() {
             for (member in board.members!!) {
                 userList.add(member)
             }
-//            userAdapter.notifyDataSetChanged()
         })
 
         if(intent.hasExtra("boardId")) {
-            boardId = intent.getIntExtra("boardId", 0)
+            detailBoardId = intent.getIntExtra("boardId", 0)
             userId = intent.getIntExtra("userId", 0)
 
             val swipe = binding.swipeLayout
             swipe.setOnRefreshListener {
-                viewModel.readBoard(this, boardId)
+                viewModel.readBoard(this, detailBoardId)
                 swipe.isRefreshing = false
             }
 
             binding.detailButton.setOnClickListener {
-                viewModel.participateBoard(userAdapter, this, boardId)
+                if(binding.detailButton.text=="마감하기"){
+                    viewModel.closeBoard(this, detailBoardId)
+                    finish()
+                }
+                else {
+                    viewModel.participateBoard(this, detailBoardId)
+                }
             }
 
-            viewModel.readBoard(this, boardId)
+            viewModel.readBoard(this, detailBoardId)
         }
 
         binding.backBtn.setOnClickListener {
             onBackPressed()
         }
-    }
 
+        binding.editTextComment.setOnEditorActionListener{ textView, action, event ->
+            var handled = false
+
+            if (action == EditorInfo.IME_ACTION_DONE) {
+                // 키보드 내리기
+                inputMethodManager!!.hideSoftInputFromWindow(binding.editTextComment.windowToken, 0)
+                handled = true
+            }
+
+            handled
+        }
+
+//        keyboardVisibilityUtils = KeyboardVisibilityUtils(window,
+//            onShowKeyboard = { keyboardHeight ->
+//                binding.scrollView2.run {
+//                    smoothScrollTo(scrollX, scrollY + keyboardHeight)
+//                }
+//            })
+    }
 
     override fun onStop() {
         super.onStop()
@@ -220,18 +270,24 @@ class DetailBoardActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             Menu.FIRST + 1 -> {
-                viewModel.deleteBoard(this, boardId)
+                viewModel.deleteBoard(this, detailBoardId)
                 finish()
             }
             Menu.FIRST + 2 -> {
-                Log.d(TAG, "boardId: $boardId")
-                viewModel.reportBoard(this, boardId)
+                Log.d(TAG, "boardId: $detailBoardId")
+                viewModel.reportBoard(this, detailBoardId)
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    fun withCommentItems(commentId: Int, commentWriterId: Int, Comment:Boolean, recommentId: Int?) {
+    fun withCommentItems(
+        commentId: Int,
+        commentWriterId: Int,
+        Comment: Boolean,
+        recommentId: Int?,
+        position: Int?
+    ) {
         var writer = false
 
         if (commentWriterId == App.prefs.getInt("id", -1)){
@@ -240,35 +296,65 @@ class DetailBoardActivity : AppCompatActivity() {
 
         val dialog = DialogCommentFragment(writer, Comment)
         // 버튼 클릭 이벤트 설정
-        dialog.setButtonClickListener(object: DialogCommentFragment.OnButtonClickListener{
+        dialog.setButtonClickListener(object : DialogCommentFragment.OnButtonClickListener {
             override fun onAddReCommentClicked() {
-                viewModel.addReComment(boardId, commentId, binding.editTextComment.text.toString(),this@DetailBoardActivity)
+                if (position != null) {
+                    if (selectedId!=null) {
+                        binding.commentRecyclerview[selectedId!!].setBackgroundColor(Color.parseColor("#FFFFFF"))
+                    }
+                    selectedId = position
+                    binding.commentRecyclerview[position].setBackgroundColor(Color.parseColor("#DADAEC"))
+//                    binding.commentRecyclerview.setBackgroundColor(Color.WHITE)
+                    showSoftInput()
+                    detailCommentId = commentId
+                    flag = true
+                }
             }
 
             override fun onReportCommentClicked() {
-                if (Comment){
-                    viewModel.reportComment(boardId, commentId)
-                }
-                else {
+                if (Comment) {
+                    viewModel.reportComment(detailBoardId, commentId)
+                } else {
                     if (recommentId != null) {
-                        viewModel.reportReComment(boardId, commentId, recommentId)
+                        viewModel.reportReComment(detailBoardId, commentId, recommentId)
                     }
                 }
             }
 
             override fun onDeleteCommentClicked() {
-                if (Comment){
-                    viewModel.deleteComment(boardId, commentId)
-                    viewModel.readBoard(this@DetailBoardActivity, boardId)
-                }
-                else {
+                if (Comment) {
+                    viewModel.deleteComment(detailBoardId, commentId)
+                    viewModel.readBoard(this@DetailBoardActivity, detailBoardId)
+                } else {
                     if (recommentId != null) {
-                        viewModel.deleteReComment(boardId, commentId, recommentId)
-                        viewModel.readBoard(this@DetailBoardActivity, boardId)
+                        viewModel.deleteReComment(detailBoardId, commentId, recommentId)
+                        viewModel.readBoard(this@DetailBoardActivity, detailBoardId)
                     }
                 }
             }
         })
         dialog.show(supportFragmentManager, "CustomDialog")
+    }
+
+
+    fun showSoftInput() {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        binding.editTextComment.requestFocus()
+        binding.editTextComment.postDelayed({
+            inputMethodManager.showSoftInput(binding.editTextComment, 0)
+        }, 100)
+    }
+
+    override fun onBackPressed() {
+        if (flag) {
+            Toast.makeText(this, "한번 더 클릭시 화면이 종료됩니다.", Toast.LENGTH_SHORT).show()
+            viewModel.readBoard(this@DetailBoardActivity, detailBoardId)
+            flag = false
+            return
+        }
+        else {
+            super.onBackPressed()
+        }
     }
 }

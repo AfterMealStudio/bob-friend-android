@@ -7,9 +7,11 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
@@ -83,7 +85,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
         mapView = MapView(requireActivity())
         mapView.setMapViewEventListener(this)
         mapViewContainer.addView(mapView)
-        mapView.visibility = View.INVISIBLE
+//        mapView.visibility = View.INVISIBLE
 
         //커스텀 마커 추가하는 코드
         val customBalloonAdapter = CustomBalloonAdapter(layoutInflater)
@@ -96,19 +98,22 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.mainEditTextSearch.visibility = View.INVISIBLE
-        binding.search.setOnClickListener {
-            binding.mainEditTextSearch.visibility = View.VISIBLE
+        binding.mainEditTextSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    keyword = binding.mainEditTextSearch.text.toString()
+                    pageNumber = 1
+                    if(keyword!="") {
+                        viewModel.searchKeywordMap(keyword, searchAdapter, requireContext())
+                        binding.rvList.visibility = View.VISIBLE
+                    }
 
-            keyword = binding.mainEditTextSearch.text.toString()
-            pageNumber = 1
-            if(keyword!="") {
-                viewModel.searchKeywordMap(keyword, searchAdapter, requireContext())
-                binding.rvList.visibility = View.VISIBLE
+                    hideKeyboard()
+                    return true
+                }
+                return false
             }
-
-            hideKeyboard()
-        }
+        })
 
         // 리스트 아이템 클릭 시 해당 위치로 이동
         searchAdapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
@@ -181,6 +186,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
                 val uLongitude = userNowLocation.longitude
                 val uNowPosition = MapPoint.mapPointWithGeoCoord(uLatitude, uLongitude)
                 mapView.setMapCenterPoint(uNowPosition, true)
+                mapView.setZoomLevel(2, true)
 
             }catch (e: NullPointerException){
                 Log.e("LOCATION_ERROR", e.toString())

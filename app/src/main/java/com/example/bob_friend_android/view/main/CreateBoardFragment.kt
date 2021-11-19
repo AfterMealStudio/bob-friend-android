@@ -171,6 +171,7 @@ class CreateBoardFragment : Fragment() {
                         mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
                     }
                     mapView.addPOIItem(marker)
+                    mapView.setZoomLevel(2, true)
                 }
             }
         }
