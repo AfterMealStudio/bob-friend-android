@@ -25,27 +25,73 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/search_back_btn"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                app:srcCompat="@drawable/delete"
-                app:tint="@color/white" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="3dp">
 
-            <TextView
-                android:id="@+id/search_board"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/white"
-                android:text="@string/write_board_search"
-                android:textSize="20sp" />
+                <ImageView
+                    android:id="@+id/search_back_btn"
+                    android:layout_width="35dp"
+                    android:layout_height="50dp"
+                    android:paddingEnd="15dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/back"
+                    app:tint="@color/white" />
+
+                <EditText
+                    android:id="@+id/editText_search_board"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/search_border"
+                    android:gravity="center_vertical"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:inputType="text"
+                    android:hint="@string/list_search"
+                    android:textColorHint="@color/main_color1"
+                    android:textSize="15sp"
+                    android:imeOptions="actionSearch"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/search_setting_on_off_btn"
+                    app:layout_constraintStart_toEndOf="@+id/search_back_btn"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/search_setting_on_off_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:padding="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/up_arrow"
+                    app:tint="@color/white" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_board"
+            tools:listitem="@layout/item_board" />
+
         <LinearLayout
+            android:id="@+id/search_setting_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:background="@drawable/category_border"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,30 +102,130 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/editText_search_location"
+                <RadioGroup
+                    android:id="@+id/search_radio_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/category_border"
+                    android:padding="1dp"
+                    android:gravity="center">
+
+                    <RadioButton
+                        android:id="@+id/radioButton_all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_all"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:textColor="@color/white"
+                        android:button ="@drawable/radio_button_all"
+                        android:background="@drawable/radio_button_all"
+                        android:gravity="center"/>
+
+                    <RadioButton
+                        android:id="@+id/radioButton_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_title"
+                        android:button ="@drawable/radio_button_all"
+                        android:background="@drawable/radio_button_all"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                    <RadioButton
+                        android:id="@+id/radioButton_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_content"
+                        android:button ="@drawable/radio_button_all"
+                        android:background="@drawable/radio_button_all"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+
+                    <RadioButton
+                        android:id="@+id/radioButton_place"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_place"
+                        android:button ="@drawable/radio_button_all"
+                        android:background="@drawable/radio_button_all"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/search_checkBox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/search_time"/>
+
+                <LinearLayout
+                    android:id="@+id/set_period"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:visibility="invisible">
+
+                    <TextView
+                        android:id="@+id/start_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/write_today"
+                        android:textColor="@color/main_color1" />
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/write_middle"
+                        android:textColor="@color/main_color1"
+                        android:gravity="center"
+                        android:layout_margin="10dp"/>
+
+                    <TextView
+                        android:id="@+id/end_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/write_today"
+                        android:textColor="@color/main_color1"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/search_reset_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="@string/write_board_search2"
-                    android:inputType="textPersonName"
-                    android:background="@drawable/recomment_background"/>
+                    android:textSize="15sp"
+                    android:text="@string/search_reset"
+                    android:layout_margin="10dp" />
 
                 <Button
                     android:id="@+id/search_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/write_search" />
+                    android:layout_weight="1"
+                    android:textSize="15sp"
+                    android:text="@string/search"
+                    android:layout_margin="10dp"/>
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/search_recyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="20dp"
-                tools:listitem="@layout/item_search" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

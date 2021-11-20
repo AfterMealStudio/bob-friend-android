@@ -76,6 +76,36 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+    fun searchList(category: String, keyword: String) {
+        var lastPage: Boolean
+        var element: Int
+        RetrofitBuilder.apiBob.searchList(category, keyword).enqueue(object : Callback<BoardList> {
+            override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
+//                Log.d(TAG, "searchList : ${response.body()!!.boardList}, ${response.body()!!.element}, ${response.body()!!.last}")
+                if(response.body() != null) {
+                    element = response.body()!!.element
+                    lastPage = response.body()!!.last
+                    if(!lastPage||(element != 0 && lastPage)){
+                        for (document in response.body()!!.boardList) {
+                            Log.d(TAG, "searchList : ${response.body()!!.boardList}")
+
+                            _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                        }
+                    }
+                    else {
+                        _msg.postValue("검색 결과가 없습니다.")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<BoardList>, t: Throwable) {
+                _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
+                Log.e(TAG, t.message.toString())
+            }
+        })
+    }
+
+
     fun setMarkers() {
         RetrofitBuilder.apiBob.getRecruitmentLocations().enqueue(object : Callback<List<Locations>> {
             override fun onResponse(call: Call<List<Locations>>, response: Response<List<Locations>>) {

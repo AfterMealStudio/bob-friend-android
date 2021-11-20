@@ -38,11 +38,6 @@ class ListFragment : Fragment() {
     private var boardArrayList : ArrayList<Board> = ArrayList()
     private var listPage = 0 // 현재 페이지
 
-    //약속 검색 기능
-//    private val searchItems = arrayListOf<SearchLocation>()   // 리사이클러 뷰 아이템
-//    private val searchAdapter = SearchAdapter(searchItems)    // 리사이클러 뷰 어댑터
-//    private var keyword = ""        // 검색 키워드
-
     var toast: Toast? = null
 
 
@@ -61,9 +56,6 @@ class ListFragment : Fragment() {
             viewModel.setList(listPage)
             swipe.isRefreshing = false
         }
-
-//        binding.searchList.adapter = searchAdapter
-//        binding.searchList.visibility = View.GONE
 
         binding.recyclerview.layoutManager = LinearLayoutManager(requireActivity())
         boardAdapter = BoardAdapter()

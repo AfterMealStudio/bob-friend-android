@@ -67,7 +67,8 @@
     <string name="write_time2">ex) 14</string>
     <string name="write_minute2">ex) 30</string>
     <string name="write_search2"> 세부내용 ex) 정문 앞에서 만나요.</string>
-    <string name="write_today">0000년 00월 00일</string>
+    <string name="write_today">0000.00.00</string>
+    <string name="write_middle">~</string>
     <string name="write_notToday">오늘이 아님</string>
 
 
@@ -100,6 +101,16 @@
     <string name="read_participate">참가하기</string>
     <string name="read_cancel">취소하기</string>
     <string name="read_delete">삭제하기</string>
+
+    <!--검색-->
+    <string name="search_all">모두 검색</string>
+    <string name="search_title">제목 검색</string>
+    <string name="search_content">내용 검색</string>
+    <string name="search_place">장소 검색</string>
+    <string name="search_time">기간 제한 설정</string>
+    <string name="search_time_picker">검색 기간을 선택해주세요.</string>
+    <string name="search_reset">초기화</string>
+    <string name="search">검색하기</string>
 
 
     <!--댓글-->

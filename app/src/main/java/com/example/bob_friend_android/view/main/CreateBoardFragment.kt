@@ -191,8 +191,9 @@ class CreateBoardFragment : Fragment() {
             }
         }
 
-        val builder = DatePickerDialog(requireContext(), dateListener, year, month, day)
-        builder.show()
+        DatePickerDialog(requireContext(), dateListener, year, month, day).apply {
+            datePicker.minDate = System.currentTimeMillis()
+        }.show()
 
         var thisMonth = "${month+1}"
         var thisDay = "$day"

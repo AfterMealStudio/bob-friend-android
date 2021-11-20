@@ -358,8 +358,11 @@
 
             <ImageView
                 android:id="@+id/back_btn"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:paddingEnd="18dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
                 app:srcCompat="@drawable/delete"
                 app:tint="@color/white" />
 
