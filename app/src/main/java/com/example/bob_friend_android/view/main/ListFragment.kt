@@ -22,6 +22,7 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentListBinding
 import com.example.bob_friend_android.model.SearchLocation
+import com.example.bob_friend_android.view.BoardSearchActivity
 import com.example.bob_friend_android.view.DetailBoardActivity
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import java.util.*
@@ -38,9 +39,9 @@ class ListFragment : Fragment() {
     private var listPage = 0 // 현재 페이지
 
     //약속 검색 기능
-    private val searchItems = arrayListOf<SearchLocation>()   // 리사이클러 뷰 아이템
-    private val searchAdapter = SearchAdapter(searchItems)    // 리사이클러 뷰 어댑터
-    private var keyword = ""        // 검색 키워드
+//    private val searchItems = arrayListOf<SearchLocation>()   // 리사이클러 뷰 아이템
+//    private val searchAdapter = SearchAdapter(searchItems)    // 리사이클러 뷰 어댑터
+//    private var keyword = ""        // 검색 키워드
 
     var toast: Toast? = null
 
@@ -61,8 +62,8 @@ class ListFragment : Fragment() {
             swipe.isRefreshing = false
         }
 
-        binding.searchList.adapter = searchAdapter
-        binding.searchList.visibility = View.GONE
+//        binding.searchList.adapter = searchAdapter
+//        binding.searchList.visibility = View.GONE
 
         binding.recyclerview.layoutManager = LinearLayoutManager(requireActivity())
         boardAdapter = BoardAdapter()
@@ -86,6 +87,9 @@ class ListFragment : Fragment() {
                         boardArrayList.clear()
                         viewModel.setList(listPage)
                     }
+//                    else if (callType == "search"){
+//
+//                    }
                 }
             }
         }
@@ -112,9 +116,12 @@ class ListFragment : Fragment() {
             }
         })
 
-        if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.mainToolbar)
-            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.mainToolbar.setOnClickListener {
+            activity?.let {
+                val intent = Intent(context, BoardSearchActivity::class.java)
+                getListResultLauncher.launch(intent)
+            }
+
         }
 
         observeData()

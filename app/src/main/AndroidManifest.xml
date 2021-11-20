@@ -23,6 +23,7 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".view.JoinActivity" />
         <activity android:name=".view.LocationSearchActivity" />
+        <activity android:name=".view.BoardSearchActivity" />
         <activity android:name=".view.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

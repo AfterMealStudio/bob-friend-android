@@ -58,7 +58,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
         RetrofitBuilder.apiBob.getToken().enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 Log.d(TAG, "validateUser: ${response.body()}")
-                if (response.body() != null){
+                if (response.body() != null && response.body()!!){
                     _msg.postValue("유효한 사용자입니다.")
                 }
             }

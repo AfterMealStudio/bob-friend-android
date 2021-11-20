@@ -4,7 +4,7 @@
     <string name="main_list">List</string>
     <string name="main_auto_login">자동 로그인</string>
     <string name="main_map">Map</string>
-    <string name="list_search"> 약속 제목, 장소, 내용를 검색하세요.</string>
+    <string name="list_search">글 제목, 내용, 장소, 시간을 검색하세요.</string>
     <string name="map_search">장소를 검색하세요.</string>
     <string name="login">로그인</string>
     <string name="register">회원가입</string>

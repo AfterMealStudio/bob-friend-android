@@ -9,13 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.SearchAdapter
+import com.example.bob_friend_android.databinding.ActivityBoardSearchBinding
 import com.example.bob_friend_android.databinding.ActivityLocationSearchBinding
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
 
-class LocationSearchActivity: AppCompatActivity() {
+class BoardSearchActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLocationSearchBinding
+    private lateinit var binding: ActivityBoardSearchBinding
     private lateinit var viewModel: ListViewModel
 
     private val listItems = arrayListOf<SearchLocation>()
@@ -25,7 +26,7 @@ class LocationSearchActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_location_search)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_board_search)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.boardsearch = viewModel
