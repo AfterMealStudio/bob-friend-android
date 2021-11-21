@@ -136,7 +136,7 @@ class DetailBoardActivity : AppCompatActivity() {
             mapView.zoomIn(false)
             mapView.zoomOut(false)
 
-            mapView.setOnTouchListener(OnTouchListener { v, event -> true })
+            mapView.setOnTouchListener { _, _ -> true }
             mapView.addPOIItem(marker)
 
             binding.commentRecyclerview.adapter = commentAdapter

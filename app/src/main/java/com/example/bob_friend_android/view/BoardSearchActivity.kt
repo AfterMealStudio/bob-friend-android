@@ -40,7 +40,7 @@ class BoardSearchActivity : AppCompatActivity() {
     private var keyword = ""        // 검색 키워드
     private var listPage = 0 // 현재 페이지
 
-    var category = ""
+    var category = "all"
     var toast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,6 +90,7 @@ class BoardSearchActivity : AppCompatActivity() {
             if(keyword!="") {
                 viewModel.searchList(category,keyword)
                 binding.searchSettingView.visibility = View.GONE
+                binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
             }
             hideKeyboard()
         }
@@ -97,11 +98,11 @@ class BoardSearchActivity : AppCompatActivity() {
         binding.searchSettingOnOffBtn.setOnClickListener {
             if (binding.searchSettingView.visibility == View.GONE){
                 binding.searchSettingView.visibility = View.VISIBLE
-                binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
+                binding.searchSettingOnOffBtn.setImageResource(R.drawable.up_arrow)
             }
             else if(binding.searchSettingView.visibility == View.VISIBLE) {
                 binding.searchSettingView.visibility = View.GONE
-                binding.searchSettingOnOffBtn.setImageResource(R.drawable.up_arrow)
+                binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
             }
         }
 
@@ -122,7 +123,7 @@ class BoardSearchActivity : AppCompatActivity() {
                     binding.radioButtonTitle.setTextColor(Color.parseColor("#000000"))
                     binding.radioButtonContent.setTextColor(Color.parseColor("#000000"))
                     binding.radioButtonPlace.setTextColor(Color.parseColor("#000000"))
-                    category = ""
+                    category = "all"
 
                 }
                 R.id.radioButton_title -> {

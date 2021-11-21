@@ -57,6 +57,7 @@ class CreateBoardFragment : Fragment() {
     var toast: Toast? = null
 
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,8 +76,8 @@ class CreateBoardFragment : Fragment() {
                     binding.createAgeFromTo.visibility = View.VISIBLE
                 }
                 R.id.create_ageButton1 -> {
-                    binding.createRangeSeekBar.visibility = View.INVISIBLE
-                    binding.createAgeFromTo.visibility = View.INVISIBLE
+                    binding.createRangeSeekBar.visibility = View.GONE
+                    binding.createAgeFromTo.visibility = View.GONE
                 }
             }
         }
@@ -161,8 +162,12 @@ class CreateBoardFragment : Fragment() {
                         setCustomImageAnchor(0.5f, 1.0f)
                         mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
                     }
+                    mapView.setZoomLevel(2, false)
+                    mapView.zoomIn(false)
+                    mapView.zoomOut(false)
+
+                    mapView.setOnTouchListener { _, _ -> true }
                     mapView.addPOIItem(marker)
-                    mapView.setZoomLevel(2, true)
                 }
             }
         }

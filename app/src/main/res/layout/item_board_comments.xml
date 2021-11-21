@@ -2,9 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="70dp"
+    android:maxHeight="140dp"
     android:layout_marginBottom="3dp"
     android:background="@drawable/recomment_background"
     android:orientation="horizontal">
@@ -16,7 +18,7 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -34,13 +36,18 @@
         <TextView
             android:id="@+id/comment_contents"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:minHeight="20dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:textColor="@color/black"
-            android:text="@string/read"/>
+            android:ellipsize="none"
+            android:layout_weight="1"
+            android:scrollHorizontally="false"
+            android:breakStrategy="simple"
+            android:text="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggddddddddddddddddddddd"
+            tools:ignore="NestedWeights" />
 
     </LinearLayout>
 
