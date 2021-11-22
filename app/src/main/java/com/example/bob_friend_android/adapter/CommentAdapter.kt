@@ -61,7 +61,7 @@ class CommentAdapter(private var list: MutableList<Comment>, boardId: Int): Recy
 
     inner class RecommentsViewHolder(private val binding: ItemBoardRecommmentsBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Comment, context: Context) {
-            binding.recommentTextProfile.text = data.author?.nickname
+            binding.recommentUserName.text = data.author?.nickname
             binding.recommentContents.text = data.content
             if (data.createdAt != null) {
                 val createDay: String = data.createdAt!!

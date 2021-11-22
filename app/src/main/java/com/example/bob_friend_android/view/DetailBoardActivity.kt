@@ -328,11 +328,9 @@ class DetailBoardActivity : AppCompatActivity() {
             override fun onDeleteCommentClicked() {
                 if (Comment) {
                     viewModel.deleteComment(detailBoardId, commentId)
-                    viewModel.readBoard(detailBoardId)
                 } else {
                     if (recommentId != null) {
                         viewModel.deleteReComment(detailBoardId, commentId, recommentId)
-                        viewModel.readBoard(detailBoardId)
                     }
                 }
             }
@@ -368,6 +366,9 @@ class DetailBoardActivity : AppCompatActivity() {
             errorMsg.observe(this@DetailBoardActivity) {
                 if (errorMsg.value=="삭제되거나 마감된 글입니다."){
                     setBoardDialog(context)
+                }
+                else if (errorMsg.value=="댓글이 삭제되었습니다."){
+                    readBoard(detailBoardId)
                 }
                 else {
                     showToast(it)

@@ -145,15 +145,13 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch {
             RetrofitBuilder.apiBob.getRecruitment(recruitmentId).enqueue(object : Callback<Board> {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
-                    if(response.body() != null) {
-                        Log.d(TAG, "readBoard : $response")
+                        Log.d(TAG, "readBoard : ${response.code()}")
                         if (response.code() == 200){
                             _result.postValue(response.body())
                         }
                         else if(response.code() == 403){
                             _msg.postValue("삭제되거나 마감된 글입니다.")
                         }
-                    }
                 }
 
                 override fun onFailure(call: Call<Board>, t: Throwable) {

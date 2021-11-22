@@ -136,6 +136,7 @@ class CreateBoardFragment : Fragment() {
         mapView.removeAllPOIItems()
         mapViewContainer = binding.createMapView
         mapViewContainer.addView(mapView)
+        mapView.setOnTouchListener { _, _ -> true }
 
         observeData()
 
@@ -165,8 +166,6 @@ class CreateBoardFragment : Fragment() {
                     mapView.setZoomLevel(2, false)
                     mapView.zoomIn(false)
                     mapView.zoomOut(false)
-
-                    mapView.setOnTouchListener { _, _ -> true }
                     mapView.addPOIItem(marker)
                 }
             }

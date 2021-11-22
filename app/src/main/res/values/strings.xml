@@ -41,8 +41,8 @@
 
     <!--글쓰기-->
     <string name="write_board">약속 작성하기</string>
-    <string name="write_board_search">장소 검색하기</string>
-    <string name="write_board_time">시간 선택하기</string>
+    <string name="write_board_search">장소 검색</string>
+    <string name="write_board_time">시간 선택</string>
     <string name="write_search">검색</string>
     <string name="write_board_search2">장소를 검색해주세요.</string>
     <string name="write">작성하기</string>

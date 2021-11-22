@@ -1,55 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:minHeight="70dp"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:background="@drawable/recomment_background"
     android:backgroundTint="@color/grey"
     android:layout_marginBottom="3dp"
     android:paddingStart="30dp">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/recomment_text_profile"
+            android:id="@+id/recomment_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/read_writer"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:textColor="@color/black"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/recomment_contents"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/black"
-            android:text="@string/read"/>
+            android:gravity="end"
+            android:layout_gravity="end">
 
+            <TextView
+                android:id="@+id/recomment_timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                android:text="@string/userDateOfBirth2" />
+
+            <ImageView
+                android:id="@+id/recomment_menu_btn"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                app:srcCompat="@drawable/menu_btn"/>
+            <!--        android:onClick="withCommentItems"-->
+        </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/recomment_timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:layout_marginTop="10dp"
-        android:text="@string/userDateOfBirth2" />
 
-    <ImageView
-        android:id="@+id/recomment_menu_btn"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="5dp"
+    <TextView
+        android:id="@+id/recomment_contents"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:minHeight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        app:srcCompat="@drawable/menu_btn" />
+        android:textColor="@color/black"
+        android:ellipsize="none"
+        android:layout_weight="1"
+        android:scrollHorizontally="false"
+        android:breakStrategy="simple"
+        android:text="dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggddddddddddddddddddddd"
+        tools:ignore="NestedWeights" />
+
+
 </LinearLayout>
