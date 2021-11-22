@@ -1,10 +1,13 @@
 package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
+import android.app.TimePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -12,6 +15,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.RadioGroup
 import android.widget.TextView
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -26,7 +30,12 @@ import com.example.bob_friend_android.databinding.ActivityLocationSearchBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_KEYBOARD
+import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,6 +51,10 @@ class BoardSearchActivity : AppCompatActivity() {
 
     var category = "all"
     var toast: Toast? = null
+    var startDate = ""
+    var endDate = ""
+    var startTime : String? = null
+    var endTime : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,20 +178,63 @@ class BoardSearchActivity : AppCompatActivity() {
     }
 
 
-    fun showDateRangePicker(){
+    private fun showDateRangePicker(){
         val builder = MaterialDatePicker.Builder.dateRangePicker()
         val title = resources.getString(R.string.search_time_picker)
         builder.setTitleText(title)
+
+        val constraintsBuilder =
+            CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointForward.now())
+
+        builder.setCalendarConstraints(constraintsBuilder.build())
 
         val picker = builder.build()
         picker.show(supportFragmentManager, picker.toString())
         picker.addOnNegativeButtonClickListener{ picker.dismiss() }
         picker.addOnPositiveButtonClickListener {
-            val startDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.first)
-            val endDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.second)
+            startDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.first)
+            endDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.second)
             binding.startDate.text = startDate
             binding.endDate.text = endDate
             Log.d("test", "startDate: $startDate, endDate : $endDate")
+
+            setCalenderTime(false)
+        }
+    }
+
+
+    private fun setCalenderTime(end: Boolean){
+        val picker =
+            MaterialTimePicker.Builder()
+                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setHour(12)
+                .setMinute(10)
+                .build()
+        picker.show(supportFragmentManager, "tag");
+
+
+        picker.addOnPositiveButtonClickListener {
+            var hour = picker.hour.toString()
+            var minute = picker.minute.toString()
+
+            if(hour.length != 2){
+                hour = "0$hour"
+            }
+
+            if(minute.length != 2){
+                minute = "0$minute"
+            }
+
+            if (!end) {
+                startTime = "$hour:$minute"
+                binding.startTime.text = startTime
+                setCalenderTime(true)
+            }
+            else if (end) {
+                endTime = "$hour:$minute"
+                binding.endTime.text = endTime
+            }
         }
     }
 

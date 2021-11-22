@@ -120,6 +120,16 @@
                     android:text="@string/write_meeting_time"
                     android:textColor="@color/main_color1" />
 
+<!--                <DatePicker-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"/>-->
+
+<!--                <TimePicker-->
+<!--                    android:id="@+id/timePicker"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:timePickerMode="spinner"/>-->
+
                 <LinearLayout
                     android:id="@+id/create_meeting_time"
                     android:layout_width="match_parent"

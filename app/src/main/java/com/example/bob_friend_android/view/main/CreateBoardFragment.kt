@@ -1,13 +1,11 @@
 package com.example.bob_friend_android.view.main
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,11 +19,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
-import com.example.bob_friend_android.view.DetailBoardActivity
 import com.example.bob_friend_android.view.LocationSearchActivity
 import com.example.bob_friend_android.viewmodel.BoardViewModel
 import net.daum.mf.map.api.MapPOIItem
@@ -62,7 +60,12 @@ class CreateBoardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_create_board, container, false)
+        binding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_create_board,
+            container,
+            false
+        )
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
         binding.lifecycleOwner = this
         binding.board = this
@@ -83,7 +86,6 @@ class CreateBoardFragment : Fragment() {
         }
 
         binding.createChoiceTime.setOnClickListener {
-            time = setCalenderTime()
             date = setCalenderDay()
         }
 
@@ -120,7 +122,17 @@ class CreateBoardFragment : Fragment() {
 
             builder.setPositiveButton("예") { dialog, which ->
                 if(viewModel.validation(title, boardContent, count, locationName, dateTime)){
-                    viewModel.createBoard(title, boardContent, count, address, locationName, x, y, dateTime, gender)
+                    viewModel.createBoard(
+                        title,
+                        boardContent,
+                        count,
+                        address,
+                        locationName,
+                        x,
+                        y,
+                        dateTime,
+                        gender
+                    )
                     val ft: FragmentTransaction? = fragmentManager?.beginTransaction()
                     ft?.detach(this)?.attach(this)?.commit()
                 }
@@ -141,14 +153,14 @@ class CreateBoardFragment : Fragment() {
         observeData()
 
         getLocationResultText = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) {
-                result: ActivityResult ->
+            ActivityResultContracts.StartActivityForResult()
+        ) { result: ActivityResult ->
             if(result.resultCode == AppCompatActivity.RESULT_OK) {
                 if(result.data != null) {
                     address = result.data?.getStringExtra("location").toString()
                     locationName = result.data?.getStringExtra("name").toString()
-                    y = result.data?.getDoubleExtra("y",0.0)
-                    x = result.data?.getDoubleExtra("x",0.0)
+                    y = result.data?.getDoubleExtra("y", 0.0)
+                    x = result.data?.getDoubleExtra("x", 0.0)
 
                     binding.createLocation.text = locationName
                     val marker = MapPOIItem()
@@ -188,16 +200,36 @@ class CreateBoardFragment : Fragment() {
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
+        var isDataSet = false
 
-        val dateListener = object : DatePickerDialog.OnDateSetListener {
-            override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-                binding.createDate.text = "$year 년 ${month+1} 월 $dayOfMonth 일"
+        val mOnDismissListener = DialogInterface.OnDismissListener {
+            if (isDataSet) {
+                time = setCalenderTime()
             }
         }
 
-        DatePickerDialog(requireContext(), dateListener, year, month, day).apply {
-            datePicker.minDate = System.currentTimeMillis()
-        }.show()
+        val dateListener = object : DatePickerDialog.OnDateSetListener {
+            @SuppressLint("SetTextI18n")
+            override fun onDateSet(
+                view: DatePicker?,
+                yearDate: Int,
+                monthDate: Int,
+                dayOfMonth: Int
+            ) {
+                isDataSet = true
+                binding.createDate.text = "${yearDate}년 ${monthDate+1} 월 ${dayOfMonth}일"
+            }
+        }
+
+        val datePicker = DatePickerDialog(requireContext(), dateListener, year, month, day)
+            .apply {
+                datePicker.minDate = System.currentTimeMillis()
+        }
+
+        datePicker.setOnDismissListener(mOnDismissListener)
+        datePicker.show()
+
+
 
         var thisMonth = "${month+1}"
         var thisDay = "$day"
@@ -233,8 +265,9 @@ class CreateBoardFragment : Fragment() {
         val minute = time.get(Calendar.MINUTE)
 
         val timeListener = object : TimePickerDialog.OnTimeSetListener{
+            @SuppressLint("SetTextI18n")
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                binding.createTime.text = "$hourOfDay 시 $minute 분"
+                binding.createTime.text = "${hourOfDay}시 ${minute}분"
             }
         }
         val builder = TimePickerDialog(requireContext(), timeListener, hour, minute, false)
