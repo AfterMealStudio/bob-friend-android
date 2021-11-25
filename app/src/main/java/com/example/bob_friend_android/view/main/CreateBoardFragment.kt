@@ -49,8 +49,14 @@ class CreateBoardFragment : Fragment() {
     var locationName: String = ""
     var y: Double? = 0.0
     var x: Double? = 0.0
-    var date: String = ""
-    var time: String = ""
+    var appointmentDate: String = ""
+    var appointmentTime: String = ""
+
+    var thisYear =""
+    var thisMonth = ""
+    var thisDay = ""
+    var thisHour = ""
+    var thisMinute = ""
 
     var toast: Toast? = null
 
@@ -86,7 +92,7 @@ class CreateBoardFragment : Fragment() {
         }
 
         binding.createChoiceTime.setOnClickListener {
-            date = setCalenderDay()
+            setCalenderDay()
         }
 
         binding.createRangeSeekBar.setLabelFormatter { value: Float ->
@@ -118,7 +124,7 @@ class CreateBoardFragment : Fragment() {
             val title = binding.createEditCreateTitle.text.toString().trim()
             val boardContent = binding.createEditCreateContent.text.toString().trim()
             val count = binding.createEditPeopleCount.text.toString()
-            val dateTime = "$date$time"
+            val dateTime = "$appointmentDate$appointmentTime"
 
             builder.setPositiveButton("예") { dialog, which ->
                 if(viewModel.validation(title, boardContent, count, locationName, dateTime)){
@@ -195,16 +201,17 @@ class CreateBoardFragment : Fragment() {
     }
 
 
-    private fun setCalenderDay() : String {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
+    private fun setCalenderDay() {
         var isDataSet = false
+
+        val calendar = Calendar.getInstance()
+        var year = calendar.get(Calendar.YEAR)
+        var month = calendar.get(Calendar.MONTH)
+        var day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val mOnDismissListener = DialogInterface.OnDismissListener {
             if (isDataSet) {
-                time = setCalenderTime()
+                setCalenderTime()
             }
         }
 
@@ -218,6 +225,18 @@ class CreateBoardFragment : Fragment() {
             ) {
                 isDataSet = true
                 binding.createDate.text = "${yearDate}년 ${monthDate+1} 월 ${dayOfMonth}일"
+                thisMonth = "${monthDate+1}"
+                thisDay = "$dayOfMonth"
+
+                if(thisMonth.length != 2){
+                    thisMonth = "0$thisMonth"
+                }
+
+                if(thisDay.length != 2){
+                    thisDay = "0$thisDay"
+                }
+                thisYear = "$yearDate"
+                appointmentDate = "$thisYear-$thisMonth-$thisDay"
             }
         }
 
@@ -228,21 +247,6 @@ class CreateBoardFragment : Fragment() {
 
         datePicker.setOnDismissListener(mOnDismissListener)
         datePicker.show()
-
-
-
-        var thisMonth = "${month+1}"
-        var thisDay = "$day"
-
-        if(thisMonth.length != 2){
-            thisMonth = "0${month+1}"
-        }
-
-        if(thisDay.length != 2){
-            thisDay = "0$day"
-        }
-
-        return "$year-$thisMonth-$thisDay"
     }
 
 
@@ -259,7 +263,7 @@ class CreateBoardFragment : Fragment() {
     }
 
 
-    private fun setCalenderTime() : String {
+    private fun setCalenderTime() {
         val time = Calendar.getInstance()
         val hour = time.get(Calendar.HOUR)
         val minute = time.get(Calendar.MINUTE)
@@ -268,23 +272,23 @@ class CreateBoardFragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
                 binding.createTime.text = "${hourOfDay}시 ${minute}분"
+
+                thisHour = "$hourOfDay"
+                thisMinute = "$minute"
+
+                if(thisHour.length != 2){
+                    thisHour = "0$thisHour"
+                }
+
+                if(thisMinute.length != 2){
+                    thisMinute = "0$thisMinute"
+                }
+
+                appointmentTime = "T$thisHour:$thisMinute"
             }
         }
         val builder = TimePickerDialog(requireContext(), timeListener, hour, minute, false)
         builder.show()
-
-        var thisHour = "$hour"
-        var thisMinute = "$minute"
-
-        if(thisHour.length != 2){
-            thisHour = "0$hour"
-        }
-
-        if(thisMinute.length != 2){
-            thisMinute = "0$minute"
-        }
-
-        return "T$thisHour:$thisMinute"
     }
 
 

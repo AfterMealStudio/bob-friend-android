@@ -1,12 +1,15 @@
 package com.example.bob_friend_android.view
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.ActivityLocationSearchBinding
@@ -21,6 +24,9 @@ class LocationSearchActivity: AppCompatActivity() {
     private val listItems = arrayListOf<SearchLocation>()
     private val searchAdapter = SearchAdapter(listItems)
     private var keyword = ""
+    private var listPage = 0
+
+    var toast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,5 +65,49 @@ class LocationSearchActivity: AppCompatActivity() {
                 if(!isFinishing) finish()
             }
         })
+
+        observeData()
+    }
+
+
+    @SuppressLint("ShowToast")
+    private fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
+    }
+
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(this@LocationSearchActivity) {
+                showToast(it)
+            }
+
+            searchKeyword.observe(this@LocationSearchActivity) {
+                var count = 0
+                listItems.clear()
+                for(document in it.documents) {
+                    val searchLocation = SearchLocation(document.place_name, document.road_address_name, document.address_name, document.x.toDouble(), document.y.toDouble())
+                    listItems.add(searchLocation)
+                    count += 1
+                }
+                searchAdapter.addItems(listItems)
+
+//                if (count >= 20){
+//                    binding.searchRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+//                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                            super.onScrolled(recyclerView, dx, dy)
+//                            // 스크롤이 끝에 도달했는지 확인
+//                            if (!binding.searchRecyclerview.canScrollVertically(1)) {
+//                                listPage++
+//                                viewModel.setList(listPage)
+//                            }
+//                        }
+//                    })
+//                }
+            }
+        }
     }
 }

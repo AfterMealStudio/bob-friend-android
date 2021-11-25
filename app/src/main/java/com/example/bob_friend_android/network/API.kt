@@ -79,6 +79,10 @@ interface API {
     @GET("/recruitments/search?")
     fun searchList(@Query("category") category:String, @Query("keyword") keyword:String) :Call<BoardList>
 
+    //약속검색-시간 제한 기능
+    @GET("/recruitments/search?")
+    fun searchListTimeLimits(@Query("category") category:String, @Query("keyword") keyword:String, @Query("start") start:String, @Query("end") end:String) :Call<BoardList>
+
     //약속삭제
     @DELETE("/recruitments/{id}")
     fun deleteRecruitment(@Path("id") boardId: Int): Call<Void>

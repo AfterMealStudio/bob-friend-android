@@ -34,8 +34,8 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                 totalNumberOfPeople = count.toInt(),
                 restaurantAddress = address,
                 restaurantName = locationName,
-                longitude = y,
-                latitude = x,
+                longitude = x,
+                latitude = y,
                 appointmentTime = time,
                 sexRestriction = gender
             )
@@ -43,8 +43,8 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
             RetrofitBuilder.apiBob.addRecruitments(board).enqueue(object : Callback<Board> {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
                     val code = response.code()
+                    Log.d(TAG, "createBoard: title=$title, content=$content, responseCode: ${response.code()}, error : ${response.errorBody().toString()}")
                     if (code == 200) {
-                        Log.d(TAG, "createBoard: title=$title, content=$content")
                         _msg.postValue("약속이 작성되었습니다!")
                     }
                 }
