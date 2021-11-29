@@ -1,9 +1,14 @@
 package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -46,12 +51,20 @@ class LocationSearchActivity: AppCompatActivity() {
             onBackPressed()
         }
 
-        binding.searchBtn.setOnClickListener {
-            keyword = binding.editTextSearchLocation.text.toString()
-            if(keyword!="") {
-                viewModel.searchKeywordMap(keyword)
+        binding.locationEditTextSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH){
+                    keyword = binding.locationEditTextSearch.text.toString()
+                    if(keyword!="") {
+                        viewModel.searchKeywordMap(keyword)
+                    }
+                    hideKeyboard()
+                    return true
+                }
+                return false
             }
-        }
+        })
+
 
         searchAdapter.setItemClickListener(object: SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
@@ -79,6 +92,12 @@ class LocationSearchActivity: AppCompatActivity() {
     }
 
 
+    private fun hideKeyboard(){
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.locationEditTextSearch.windowToken, 0)
+    }
+
+
     private fun observeData() {
         with(viewModel) {
             errorMsg.observe(this@LocationSearchActivity) {
@@ -94,19 +113,6 @@ class LocationSearchActivity: AppCompatActivity() {
                     count += 1
                 }
                 searchAdapter.addItems(listItems)
-
-//                if (count >= 20){
-//                    binding.searchRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-//                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                            super.onScrolled(recyclerView, dx, dy)
-//                            // 스크롤이 끝에 도달했는지 확인
-//                            if (!binding.searchRecyclerview.canScrollVertically(1)) {
-//                                listPage++
-//                                viewModel.setList(listPage)
-//                            }
-//                        }
-//                    })
-//                }
             }
         }
     }

@@ -79,9 +79,6 @@ class ListFragment : Fragment() {
                         boardArrayList.clear()
                         viewModel.setList(listPage)
                     }
-//                    else if (callType == "search"){
-//
-//                    }
                 }
             }
         }
