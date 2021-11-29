@@ -49,8 +49,12 @@ class BoardSearchActivity : AppCompatActivity() {
     private var keyword = ""        // 검색 키워드
     private var listPage = 0 // 현재 페이지
 
-    var category = "all"
     var toast: Toast? = null
+
+    var category = "all"
+    var start: String = ""
+    var end : String = ""
+
     var startDate = ""
     var endDate = ""
     var startTime : String? = null
@@ -79,7 +83,12 @@ class BoardSearchActivity : AppCompatActivity() {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
                     keyword = binding.editTextSearchBoard.text.toString()
                     if(keyword!="") {
-                        viewModel.searchList(category,keyword)
+                        if (startTime!=null && endTime!=null){
+                            viewModel.searchListTimeLimits(category, keyword, start, end)
+                        }
+                        else {
+                            viewModel.searchList(category,keyword)
+                        }
                         binding.searchSettingView.visibility = View.GONE
                     }
                     hideKeyboard()
@@ -101,9 +110,29 @@ class BoardSearchActivity : AppCompatActivity() {
         binding.searchBtn.setOnClickListener {
             keyword = binding.editTextSearchBoard.text.toString()
             if(keyword!="") {
-                viewModel.searchList(category,keyword)
+                if (startTime!=null && endTime!=null) {
+                    val time1 = startTime!!.split(":")
+                    val time2 = endTime!!.split(":")
+                    val before = time1[0]+time1[1]
+                    val after = time2[0]+time2[1]
+
+                    Log.d("dddd", "${before.toInt()} ${after.toInt()}")
+                    if(startDate == endDate && before.toInt() > after.toInt()){
+                        showToast("시간 형식이 잘못되었습니다.")
+                        binding.searchCheckBox.isChecked = false
+                    }
+                    else {
+                        viewModel.searchListTimeLimits(category, keyword, start, end)
+                    }
+                }
+                else {
+                    viewModel.searchList(category,keyword)
+                }
                 binding.searchSettingView.visibility = View.GONE
                 binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
+            }
+            else {
+                showToast("검색어를 입력해주세요.")
             }
             hideKeyboard()
         }
@@ -194,17 +223,19 @@ class BoardSearchActivity : AppCompatActivity() {
         picker.addOnNegativeButtonClickListener{ picker.dismiss() }
         picker.addOnPositiveButtonClickListener {
             startDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.first)
+            start = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(it.first)
             endDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.second)
+            end = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(it.second)
             binding.startDate.text = startDate
             binding.endDate.text = endDate
-            Log.d("test", "startDate: $startDate, endDate : $endDate")
+            Log.d("test", "startDate: $start, endDate : $end")
 
             setCalenderTime(false)
         }
     }
 
 
-    private fun setCalenderTime(end: Boolean){
+    private fun setCalenderTime(endFlag: Boolean){
         val picker =
             MaterialTimePicker.Builder()
                 .setTimeFormat(TimeFormat.CLOCK_12H)
@@ -226,12 +257,14 @@ class BoardSearchActivity : AppCompatActivity() {
                 minute = "0$minute"
             }
 
-            if (!end) {
+            if (!endFlag) {
+                start = start + hour + minute
                 startTime = "$hour:$minute"
                 binding.startTime.text = startTime
                 setCalenderTime(true)
             }
-            else if (end) {
+            else if (endFlag) {
+                end = end + hour + minute
                 endTime = "$hour:$minute"
                 binding.endTime.text = endTime
             }

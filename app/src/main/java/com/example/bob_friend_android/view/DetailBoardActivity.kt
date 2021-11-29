@@ -363,15 +363,26 @@ class DetailBoardActivity : AppCompatActivity() {
 
     private fun observeData(context: DetailBoardActivity) {
         with(viewModel) {
+            progressVisible.observe(this@DetailBoardActivity) {
+                if (progressVisible.value!!) {
+                    binding.detailProgressBar.visibility = View.VISIBLE
+                }
+                else if (!progressVisible.value!!) {
+                    binding.detailProgressBar.visibility = View.INVISIBLE
+                }
+            }
+
             errorMsg.observe(this@DetailBoardActivity) {
-                if (errorMsg.value=="삭제되거나 마감된 글입니다."){
-                    setBoardDialog(context)
-                }
-                else if (errorMsg.value=="댓글이 삭제되었습니다."){
-                    readBoard(detailBoardId)
-                }
-                else {
-                    showToast(it)
+                when (errorMsg.value) {
+                    "삭제되거나 마감된 글입니다." -> {
+                        setBoardDialog(context)
+                    }
+                    "댓글이 삭제되었습니다." -> {
+                        readBoard(detailBoardId)
+                    }
+                    else -> {
+                        showToast(it)
+                    }
                 }
             }
         }

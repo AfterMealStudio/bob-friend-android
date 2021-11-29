@@ -136,7 +136,8 @@
                         android:id="@+id/detail_map_view"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:background="@drawable/border_line" />
+                        android:background="@drawable/border_line" >
+                    </RelativeLayout>
 
 
                     <LinearLayout
@@ -375,6 +376,19 @@
 <!--                android:text="@string/read"-->
 <!--                android:textSize="20sp" />-->
         </androidx.appcompat.widget.Toolbar>
+
+        <ProgressBar
+            android:id="@+id/detail_progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/comment_write"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/swipe_layout"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible"/>
+
         <LinearLayout
             android:id="@+id/comment_write"
             android:layout_width="match_parent"

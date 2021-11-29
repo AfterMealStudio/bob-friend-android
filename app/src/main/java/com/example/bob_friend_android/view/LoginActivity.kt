@@ -4,6 +4,7 @@ package com.example.bob_friend_android.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -56,13 +57,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this@LoginActivity, JoinActivity::class.java))
         }
 
-        keyboardVisibilityUtils = KeyboardVisibilityUtils(window,
-            onShowKeyboard = { keyboardHeight ->
-                binding.svRoot.run {
-                    smoothScrollTo(scrollX, scrollY + keyboardHeight)
-                }
-        })
-
         observeData()
     }
 
@@ -86,7 +80,7 @@ class LoginActivity : AppCompatActivity() {
         with(viewModel) {
             errorMsg.observe(this@LoginActivity) {
                 showToast(it)
-                if (it == "유효한 사용자입니다."){
+                if (it == "자동 로그인"){
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                 }
@@ -94,11 +88,20 @@ class LoginActivity : AppCompatActivity() {
 
             token.observe(this@LoginActivity) {
                 val editor = App.prefs.edit()
-                editor.putString("token", it.token)
+                editor.putString("token", it.accessToken)
                 editor.putBoolean("checked", checked)
                 editor.apply()
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 startActivity(intent)
+            }
+
+            progressVisible.observe(this@LoginActivity) {
+                if (progressVisible.value!!) {
+                    binding.loginProgressBar.visibility = View.VISIBLE
+                }
+                else if (!progressVisible.value!!) {
+                    binding.loginProgressBar.visibility = View.INVISIBLE
+                }
             }
         }
     }

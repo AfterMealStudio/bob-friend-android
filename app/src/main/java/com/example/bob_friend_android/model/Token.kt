@@ -1,5 +1,10 @@
 package com.example.bob_friend_android.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Token(
-    val token: String
+    @SerializedName("accessToken")
+    val accessToken: String,
+    @SerializedName("refreshToken")
+    val refreshToken: String
 )
