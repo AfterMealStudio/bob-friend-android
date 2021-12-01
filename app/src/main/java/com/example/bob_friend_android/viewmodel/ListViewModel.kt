@@ -37,11 +37,17 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val location : MutableLiveData<List<Locations>>
         get() = _location
 
+    private val _progressVisible = MutableLiveData<Boolean>()
+    val progressVisible : LiveData<Boolean>
+        get() = _progressVisible
+
 
 
     fun setList(listPage: Int){
         var lastPage: Boolean
         var element: Int
+
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.getRecruitments(listPage).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                 if(response.body() != null) {
@@ -56,6 +62,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                         }
                     }
                 }
+
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<BoardList>, t: Throwable) {
@@ -69,6 +77,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     fun searchList(category: String, keyword: String) {
         var lastPage: Boolean
         var element: Int
+
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.searchList(category, keyword).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
 //                Log.d(TAG, "searchList : ${response.body()!!.boardList}, ${response.body()!!.element}, ${response.body()!!.last}")
@@ -86,6 +96,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                         _msg.postValue("검색 결과가 없습니다.")
                     }
                 }
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<BoardList>, t: Throwable) {
@@ -99,6 +110,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     fun searchListTimeLimits(category: String, keyword: String, start: String, end: String) {
         var lastPage: Boolean
         var element: Int
+
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.searchListTimeLimits(category, keyword, start, end).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
 //                Log.d(TAG, "searchList : ${response.body()!!.boardList}, ${response.body()!!.element}, ${response.body()!!.last}")
@@ -116,6 +129,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                         _msg.postValue("검색 결과가 없습니다.")
                     }
                 }
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<BoardList>, t: Throwable) {
@@ -127,11 +141,14 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun setMarkers() {
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.getRecruitmentLocations().enqueue(object : Callback<List<Locations>> {
             override fun onResponse(call: Call<List<Locations>>, response: Response<List<Locations>>) {
                 if(response.body() != null) {
                     _location.postValue(response.body()!!)
                 }
+
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<List<Locations>>, t: Throwable) {
@@ -154,12 +171,15 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun searchKeywordMap(keyword: String) {
+
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiKakao.getSearchKeyword(API_KEY, keyword).enqueue(object : Callback<SearchKeyword> {
             override fun onResponse(
                 call: Call<SearchKeyword>,
                 response: Response<SearchKeyword>
             ) {
                 _searchKeyword.postValue(response.body())
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<SearchKeyword>, t: Throwable) {

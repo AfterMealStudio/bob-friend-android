@@ -13,10 +13,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.RadioGroup
-import android.widget.TextView
-import android.widget.TimePicker
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -36,6 +33,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_KEYBOARD
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.android.synthetic.main.activity_board_search.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -78,6 +76,13 @@ class BoardSearchActivity : AppCompatActivity() {
             onBackPressed()
         }
 
+        ArrayAdapter.createFromResource(this,
+            R.array.search_spinner,
+            android.R.layout.simple_spinner_item).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinner.adapter = adapter
+        }
+
         binding.editTextSearchBoard.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
@@ -104,7 +109,7 @@ class BoardSearchActivity : AppCompatActivity() {
             binding.radioButtonTitle.setTextColor(Color.parseColor("#000000"))
             binding.radioButtonContent.setTextColor(Color.parseColor("#000000"))
             binding.radioButtonPlace.setTextColor(Color.parseColor("#000000"))
-            binding.searchCheckBox.isChecked = false
+            binding.searchCheckTime.isChecked = false
         }
 
         binding.searchBtn.setOnClickListener {
@@ -119,7 +124,7 @@ class BoardSearchActivity : AppCompatActivity() {
                     Log.d("dddd", "${before.toInt()} ${after.toInt()}")
                     if(startDate == endDate && before.toInt() > after.toInt()){
                         showToast("시간 형식이 잘못되었습니다.")
-                        binding.searchCheckBox.isChecked = false
+                        binding.searchCheckTime.isChecked = false
                     }
                     else {
                         viewModel.searchListTimeLimits(category, keyword, start, end)
@@ -148,13 +153,15 @@ class BoardSearchActivity : AppCompatActivity() {
             }
         }
 
-        binding.searchCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.searchCheckTime.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 showDateRangePicker()
-                binding.setPeriod.visibility = View.VISIBLE
+                binding.searchTime1.visibility = View.VISIBLE
+                binding.searchTime2.visibility = View.VISIBLE
             }
             else {
-                binding.setPeriod.visibility = View.INVISIBLE
+                binding.searchTime1.visibility = View.INVISIBLE
+                binding.searchTime2.visibility = View.INVISIBLE
             }
         }
 

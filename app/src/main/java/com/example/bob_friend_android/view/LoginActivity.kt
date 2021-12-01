@@ -39,7 +39,6 @@ class LoginActivity : AppCompatActivity() {
 
         SharedPref.openSharedPrep(this)
         val check = App.prefs.getBoolean("checked",false)
-        val nickname = App.prefs.getString("nickname", "")
 
         if (check) {
             viewModel.validateUser()
@@ -89,18 +88,30 @@ class LoginActivity : AppCompatActivity() {
             token.observe(this@LoginActivity) {
                 val editor = App.prefs.edit()
                 editor.putString("token", it.accessToken)
+                editor.putString("refresh", it.refreshToken)
                 editor.putBoolean("checked", checked)
                 editor.apply()
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 startActivity(intent)
             }
 
+            refreshToken.observe(this@LoginActivity) {
+                val editor = App.prefs.edit()
+                editor.putString("token", it.accessToken)
+                editor.putString("refresh", it.refreshToken)
+                editor.putBoolean("checked", true)
+                editor.apply()
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                startActivity(intent)
+            }
+
+            val dialog = LoadingDialog(this@LoginActivity)
             progressVisible.observe(this@LoginActivity) {
                 if (progressVisible.value!!) {
-                    binding.loginProgressBar.visibility = View.VISIBLE
+                    dialog.show()
                 }
                 else if (!progressVisible.value!!) {
-                    binding.loginProgressBar.visibility = View.INVISIBLE
+                    dialog.dismiss()
                 }
             }
         }

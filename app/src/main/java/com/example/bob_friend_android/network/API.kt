@@ -35,6 +35,10 @@ interface API {
     @GET("api/validate")
     fun getToken(): Call<Boolean>
 
+    //토큰 재발급
+    @POST("api/reissue")
+    fun refreshToken(@Body token: Token): Call<Token>
+
     //회원탈퇴
     @DELETE("api/user/{id}")
     fun deleteUser(): Call<Void>

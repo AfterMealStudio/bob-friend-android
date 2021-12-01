@@ -46,6 +46,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                 sexRestriction = gender
             )
 
+            _progressVisible.postValue(true)
             RetrofitBuilder.apiBob.addRecruitments(board).enqueue(object : Callback<Board> {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
                     val code = response.code()
@@ -53,6 +54,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                     if (code == 200) {
                         _msg.postValue("약속이 작성되었습니다!")
                     }
+                    _progressVisible.postValue(false)
                 }
 
                 override fun onFailure(call: Call<Board>, t: Throwable) {
@@ -64,11 +66,37 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
+    fun readBoard(recruitmentId: Int){
+        _progressVisible.postValue(true)
+        viewModelScope.launch {
+            RetrofitBuilder.apiBob.getRecruitment(recruitmentId).enqueue(object : Callback<Board> {
+                override fun onResponse(call: Call<Board>, response: Response<Board>) {
+                    Log.d(TAG, "readBoard : ${response.code()}")
+                    if (response.code() == 200){
+                        _result.postValue(response.body())
+                    }
+                    else if(response.code() == 403){
+                        _msg.postValue("삭제되거나 마감된 글입니다.")
+                    }
+                    _progressVisible.postValue(false)
+                }
+
+                override fun onFailure(call: Call<Board>, t: Throwable) {
+                    _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
+                    Log.e(TAG, t.message.toString())
+                }
+            })
+        }
+    }
+
+
     fun deleteBoard(recruitmentId : Int) {
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.deleteRecruitment(recruitmentId).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 Log.d(TAG, "deleteBoard : $response")
                 _msg.postValue("약속이 삭제되었습니다.")
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -79,10 +107,12 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
 
 
     fun deleteComment(recruitmentId: Int, commentId : Int) {
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.deleteComment(recruitmentId,commentId).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 Log.d(TAG, "deleteComment : $response")
                 _msg.postValue("댓글이 삭제되었습니다.")
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -93,10 +123,12 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
 
 
     fun deleteReComment(recruitmentId: Int, commentId : Int, recommentId : Int) {
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.deleteReComment(recruitmentId,commentId,recommentId).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 Log.d(TAG, "deleteReComment : $response")
                 _msg.postValue("댓글이 삭제되었습니다.")
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -147,30 +179,9 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-    fun readBoard(recruitmentId: Int){
-        _progressVisible.postValue(true)
-        viewModelScope.launch {
-            RetrofitBuilder.apiBob.getRecruitment(recruitmentId).enqueue(object : Callback<Board> {
-                override fun onResponse(call: Call<Board>, response: Response<Board>) {
-                        Log.d(TAG, "readBoard : ${response.code()}")
-                        if (response.code() == 200){
-                            _result.postValue(response.body())
-                        }
-                        else if(response.code() == 403){
-                            _msg.postValue("삭제되거나 마감된 글입니다.")
-                        }
-                }
-
-                override fun onFailure(call: Call<Board>, t: Throwable) {
-                    _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
-                    Log.e(TAG, t.message.toString())
-                }
-            })
-        }
-        _progressVisible.postValue(false)
-    }
-
     fun participateBoard(recruitmentId: Int){
+        _progressVisible.postValue(true)
+
         viewModelScope.launch {
             RetrofitBuilder.apiBob.participateBoard(recruitmentId).enqueue(object : Callback<Board> {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
@@ -178,6 +189,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                         Log.d(TAG, "participate : $response")
                         _result.postValue(response.body())
                     }
+                    _progressVisible.postValue(false)
                 }
 
                 override fun onFailure(call: Call<Board>, t: Throwable) {
@@ -190,10 +202,12 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
 
 
     fun closeBoard(recruitmentId: Int){
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.closeBoard(recruitmentId).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 Log.d(TAG, "response : $response")
                 _msg.postValue("약속이 마감되었습니다")
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -207,6 +221,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
         val commentData = HashMap<String, String>()
         commentData["content"] = comment
 
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.addComment(recruitmentId, commentData).enqueue(object :Callback<Comment>{
             override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
                 val code = response.code()
@@ -215,6 +230,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                     _msg.postValue("댓글이 작성되었습니다!")
                     readBoard(recruitmentId)
                 }
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<Comment>, t: Throwable) {
@@ -228,6 +244,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
         val commentData = HashMap<String, String>()
         commentData["content"] = recomment
 
+        _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.addReComment(recruitmentId,commentId, commentData).enqueue(object :Callback<Comment>{
             override fun onResponse(call: Call<Comment>, response: Response<Comment>) {
                 val code = response.code()
@@ -236,6 +253,7 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                     _msg.postValue("댓글이 작성되었습니다!")
                     readBoard(recruitmentId)
                 }
+                _progressVisible.postValue(false)
             }
 
             override fun onFailure(call: Call<Comment>, t: Throwable) {

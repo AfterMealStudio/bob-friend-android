@@ -363,12 +363,14 @@ class DetailBoardActivity : AppCompatActivity() {
 
     private fun observeData(context: DetailBoardActivity) {
         with(viewModel) {
+
+            val dialog = LoadingDialog(this@DetailBoardActivity)
             progressVisible.observe(this@DetailBoardActivity) {
                 if (progressVisible.value!!) {
-                    binding.detailProgressBar.visibility = View.VISIBLE
+                    dialog.show()
                 }
                 else if (!progressVisible.value!!) {
-                    binding.detailProgressBar.visibility = View.INVISIBLE
+                    dialog.dismiss()
                 }
             }
 
