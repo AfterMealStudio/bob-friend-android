@@ -10,6 +10,7 @@
     <string name="register">회원가입</string>
     <string name="registerBtn">이메일 회원가입</string>
     <string name="FindIDPassword">아이디/비밀번호 찾기</string>
+    <string name="Loading">Loading</string>
 
 
     <!--회원가입-->
@@ -82,8 +83,8 @@
     <string name="read_member">약속 인원</string>
     <string name="read_gender">성별</string>
     <string name="read_gender2">상관없음</string>
-    <string name="read_meeting_time">시간</string>
-    <string name="read_meeting_place">장소</string>
+    <string name="read_meeting_time">시간 : </string>
+    <string name="read_meeting_place">장소 : </string>
     <string name="read_appointment_place_and_time">약속 장소 및 시간</string>
     <string name="read_write_time">작성시간</string>
     <string name="read_title2">오늘</string>
@@ -109,6 +110,7 @@
     <string name="search_content">내용 검색</string>
     <string name="search_place">장소 검색</string>
     <string name="search_time">기간 제한 설정</string>
+    <string name="search_condition">참가 가능한 약속만 보기</string>
     <string name="search_time_picker">원하는 기간을 선택해주세요.</string>
     <string name="search_reset">초기화</string>
     <string name="search">검색하기</string>

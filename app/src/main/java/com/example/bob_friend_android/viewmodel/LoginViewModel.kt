@@ -30,6 +30,10 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
     val token : LiveData<Token>
         get() = _token
 
+    private val _refreshToken = MutableLiveData<Token>()
+    val refreshToken : LiveData<Token>
+        get() = _refreshToken
+
     private val _progressVisible = MutableLiveData<Boolean>()
     val progressVisible : LiveData<Boolean>
         get() = _progressVisible
@@ -63,14 +67,43 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
         }
     }
 
+
+    fun refreshToken(access: String, refresh: String) {
+        val token = Token(access, refresh)
+        _progressVisible.postValue(true)
+        viewModelScope.launch {
+            RetrofitBuilder.apiBob.refreshToken(token).enqueue(object : Callback<Token> {
+                override fun onResponse(call: Call<Token>, response: Response<Token>) {
+                    when (response.code()) {
+                        200 -> _refreshToken.postValue(response.body())
+                        500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
+                        else -> _msg.postValue("자동 로그인에 실패했습니다.")
+                    }
+                    _progressVisible.postValue(false)
+                }
+
+                override fun onFailure(call: Call<Token>, t: Throwable) {
+                    _msg.postValue("서버에 연결이 되지 않았습니다.")
+                    Log.d(TAG, "ttt: $t")
+                }
+            })
+        }
+    }
+
+
     fun validateUser() {
         _progressVisible.postValue(true)
         viewModelScope.launch {
             RetrofitBuilder.apiBob.getToken().enqueue(object : Callback<Boolean> {
                 override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                     Log.d(TAG, "validateUser: ${response.body()}")
-                    if (response.body() != null && response.body()!!) {
-                        _msg.postValue("자동 로그인")
+                    if (response.body() != null) {
+                        if (response.body()!!) {
+                            _msg.postValue("자동 로그인")
+                        }
+                        else {
+                            refreshToken(App.prefs.getString("token","token")!!, App.prefs.getString("refresh", "")!!)
+                        }
                     }
                     _progressVisible.postValue(false)
                 }
@@ -82,6 +115,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
             })
         }
     }
+
 
     private fun validation(username : String, password: String): Boolean {
         if (username.isEmpty() || password.isEmpty()) {

@@ -47,17 +47,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.nav_host_fragment, fragmentA).commit()
         initNavigationBar()
 
-        viewModel.setUserInfo()
-
-        viewModel.userInfo.observe(this, { user ->
-            val editor = App.prefs.edit()
-            editor.putInt("id", user.id)
-            editor.putString("email", user.email)
-            editor.putString("nickname", user.nickname)
-            editor.putString("birth", user.birth)
-            editor.putString("sex", user.sex)
-            editor.apply()
-        })
+        observeData()
     }
 
     private fun initNavigationBar() {
@@ -114,11 +104,21 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun observeData(context: DetailBoardActivity) {
+    private fun observeData() {
         with(viewModel) {
             errorMsg.observe(this@MainActivity) {
                 showToast(it)
             }
+
+            userInfo.observe(this@MainActivity, { user ->
+                val editor = App.prefs.edit()
+                editor.putInt("id", user.id)
+                editor.putString("email", user.email)
+                editor.putString("nickname", user.nickname)
+                editor.putString("birth", user.birth)
+                editor.putString("sex", user.sex)
+                editor.apply()
+            })
         }
     }
 

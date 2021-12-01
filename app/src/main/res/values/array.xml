@@ -4,4 +4,9 @@
         <item>20</item>
         <item>70</item>
     </array>
+
+    <string-array name="search_spinner">
+        <item>마감이 임박한 순</item>
+        <item>최근 작성된 약속 순</item>
+    </string-array>
 </resources>

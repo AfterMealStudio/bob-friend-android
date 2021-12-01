@@ -81,7 +81,6 @@
             android:id="@+id/search_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:paddingBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_board"
@@ -157,20 +156,28 @@
                 </RadioGroup>
             </LinearLayout>
 
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <CheckBox
-                    android:id="@+id/search_checkBox"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/search_check_time"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:text="@string/search_time"/>
 
                 <LinearLayout
-                    android:id="@+id/set_period"
+                    android:id="@+id/search_time1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
@@ -199,29 +206,43 @@
                             android:textColor="@color/main_color1"
                             android:layout_marginStart="3dp"/>
                     </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <CheckBox
+                    android:id="@+id/search_check_condition"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/search_condition"/>
+
+                <LinearLayout
+                    android:id="@+id/search_time2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="invisible"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:id="@+id/end_date"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:layout_gravity="center">
+                        android:text="@string/search_day_set"
+                        android:textColor="@color/main_color1"
+                        android:layout_marginEnd="3dp"/>
 
-                        <TextView
-                            android:id="@+id/end_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/search_day_set"
-                            android:textColor="@color/main_color1"
-                            android:layout_marginEnd="3dp"/>
-
-                        <TextView
-                            android:id="@+id/end_time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/search_time_set"
-                            android:textColor="@color/main_color1"
-                            android:layout_marginStart="3dp"/>
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/end_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/search_time_set"
+                        android:textColor="@color/main_color1"
+                        android:layout_marginStart="3dp"/>
                 </LinearLayout>
             </LinearLayout>
 

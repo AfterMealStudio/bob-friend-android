@@ -84,7 +84,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:text="@string/write_member"
                         android:textColor="@color/main_color1"
                         android:textSize="20sp"
                         android:layout_marginBottom="10dp"/>
@@ -103,7 +102,6 @@
                         android:ems="10"
                         android:gravity="start"
                         android:minHeight="30dp"
-                        android:text="@string/read_content2"
                         android:textColor="@color/main_color1"
                         android:textSize="18sp" />
 
@@ -152,17 +150,25 @@
                             android:id="@+id/read_meeting_place"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/detail_place"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginStart="5dp"
+                            android:src="@drawable/detail_place2"
                             android:textColor="@color/main_color1"
                             android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/detail_place_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:text="@string/read_meeting_place"
+                            android:textColor="@color/main_color1"
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/detail_appointment_place_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/read_appointment_place_and_time"
                             android:textColor="@color/main_color1"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -180,16 +186,26 @@
                             android:id="@+id/read_meeting_time"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:layout_marginEnd="10dp"
-                            android:src="@drawable/detail_clock"
+                            android:padding="2dp"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginStart="5dp"
+                            android:src="@drawable/detail_clock2"
                             android:textColor="@color/main_color1"
                             android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/detail_meeting_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:text="@string/read_meeting_time"
+                            android:textColor="@color/main_color1"
+                            android:textSize="18sp" />
 
                         <TextView
                             android:id="@+id/read_meeting_time2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/read_meeting_time2"
                             android:textColor="@color/main_color1"
                             android:textSize="18sp" />
                     </LinearLayout>
@@ -376,18 +392,6 @@
 <!--                android:text="@string/read"-->
 <!--                android:textSize="20sp" />-->
         </androidx.appcompat.widget.Toolbar>
-
-        <ProgressBar
-            android:id="@+id/detail_progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/comment_write"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/swipe_layout"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible"/>
 
         <LinearLayout
             android:id="@+id/comment_write"

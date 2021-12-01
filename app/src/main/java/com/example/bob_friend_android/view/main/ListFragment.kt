@@ -24,6 +24,7 @@ import com.example.bob_friend_android.databinding.FragmentListBinding
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.view.BoardSearchActivity
 import com.example.bob_friend_android.view.DetailBoardActivity
+import com.example.bob_friend_android.view.LoadingDialog
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import java.util.*
 
@@ -150,6 +151,16 @@ class ListFragment : Fragment() {
                     boardArrayList.add(document)
                 }
                 boardAdapter.addItems(boardArrayList)
+            }
+
+            val dialog = LoadingDialog(requireContext())
+            progressVisible.observe(viewLifecycleOwner) {
+                if (progressVisible.value!!) {
+                    dialog.show()
+                }
+                else if (!progressVisible.value!!) {
+                    dialog.dismiss()
+                }
             }
         }
     }

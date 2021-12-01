@@ -26,9 +26,12 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
     val errorMsg : LiveData<String>
         get() = _msg
 
+    private val _progressVisible = MutableLiveData<Boolean>()
+    val progressVisible : LiveData<Boolean>
+        get() = _progressVisible
+
 
     fun join(password : String, passwordCheck: String, nickname : String, email: String, dateBirth:String, gender:String, agree1:Boolean, agree2:Boolean, agreeChoice:Boolean, idCheck: Boolean, emailCheck: Boolean) {
-
         if (validation(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, idCheck, emailCheck)) {
             val date = "${dateBirth.substring(0,4)}-${dateBirth.substring(4,6)}-${dateBirth.substring(6)}"
             val user = HashMap<String, String>()
@@ -40,6 +43,7 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
             user["sex"] = gender
             user["agree"] = agreeChoice.toString()
 
+            _progressVisible.postValue(true)
             RetrofitBuilder.apiBob.getJoinResponse(user).enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     Log.d(TAG, "join : ${response.body()}")
@@ -48,6 +52,7 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
                         405 -> _msg.postValue("회원가입 실패 : 아이디나 비번이 올바르지 않습니다.")
                         500 -> _msg.postValue("회원가입 실패 : 서버 오류입니다.")
                     }
+                    _progressVisible.postValue(false)
                 }
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
