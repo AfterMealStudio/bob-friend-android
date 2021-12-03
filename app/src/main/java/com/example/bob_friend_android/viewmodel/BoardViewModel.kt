@@ -32,7 +32,8 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
 
 
 
-    fun createBoard(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String, gender: String) {
+    fun createBoard(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String,
+                    gender: String, ageRestrictionStart: Int?, ageRestrictionEnd: Int?) {
         if(validation(title, content, count, locationName, time)) {
             val board = Board(
                 title = title,
@@ -43,7 +44,9 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
                 longitude = x,
                 latitude = y,
                 appointmentTime = time,
-                sexRestriction = gender
+                sexRestriction = gender,
+                ageRestrictionStart = ageRestrictionStart,
+                ageRestrictionEnd = ageRestrictionEnd
             )
 
             _progressVisible.postValue(true)

@@ -79,13 +79,14 @@
     <string name="read_title">약속 제목</string>
     <string name="read_writer">작성자 : </string>
     <string name="read_content">약속 내용</string>
-    <string name="read_age">나이</string>
+    <string name="read_age">나이 : </string>
     <string name="read_member">약속 인원</string>
-    <string name="read_gender">성별</string>
+    <string name="read_gender">성별 : </string>
     <string name="read_gender2">상관없음</string>
     <string name="read_meeting_time">시간 : </string>
     <string name="read_meeting_place">장소 : </string>
     <string name="read_appointment_place_and_time">약속 장소 및 시간</string>
+    <string name="read_appointment_condition">약속 조건</string>
     <string name="read_write_time">작성시간</string>
     <string name="read_title2">오늘</string>
     <string name="read_content2">오늘</string>

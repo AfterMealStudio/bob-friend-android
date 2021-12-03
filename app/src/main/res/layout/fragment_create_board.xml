@@ -281,14 +281,14 @@
                     android:visibility="gone">
 
                     <TextView
-                        android:id="@+id/create_time_from"
+                        android:id="@+id/create_age_from"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/write_minAge"
                         android:textColor="@color/main_color1" />
 
                     <TextView
-                        android:id="@+id/create_time_from2"
+                        android:id="@+id/create_age_from2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
@@ -296,7 +296,7 @@
                         android:textColor="@color/main_color1" />
 
                     <TextView
-                        android:id="@+id/create_time_to"
+                        android:id="@+id/create_age_to"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -304,7 +304,7 @@
                         android:textColor="@color/main_color1" />
 
                     <TextView
-                        android:id="@+id/create_time_to2"
+                        android:id="@+id/create_age_to2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/write_ageTo"

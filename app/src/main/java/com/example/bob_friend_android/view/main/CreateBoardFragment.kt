@@ -20,7 +20,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
@@ -57,6 +56,9 @@ class CreateBoardFragment : Fragment() {
     var thisDay = ""
     var thisHour = ""
     var thisMinute = ""
+
+    var ageRestrictionStart: Int? = null
+    var ageRestrictionEnd: Int? = null
 
     var toast: Toast? = null
 
@@ -103,8 +105,8 @@ class CreateBoardFragment : Fragment() {
 
         binding.createRangeSeekBar.addOnChangeListener { slider, value, fromUser ->
             val time = DecimalFormat("##0")
-            binding.createTimeFrom.text = time.format(slider.values[0])
-            binding.createTimeTo.text = time.format(slider.values[1])
+            binding.createAgeFrom.text = time.format(slider.values[0])
+            binding.createAgeTo.text = time.format(slider.values[1])
         }
 
         binding.createGenderGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -126,6 +128,11 @@ class CreateBoardFragment : Fragment() {
             val count = binding.createEditPeopleCount.text.toString()
             val dateTime = "$appointmentDate$appointmentTime"
 
+            if (binding.createAgeGroup.checkedRadioButtonId == binding.createAgeButton2.id) {
+                ageRestrictionStart = binding.createAgeFrom.text.toString().toInt()
+                ageRestrictionEnd = binding.createAgeTo.text.toString().toInt()
+            }
+
             builder.setPositiveButton("예") { dialog, which ->
                 if(viewModel.validation(title, boardContent, count, locationName, dateTime)){
                     viewModel.createBoard(
@@ -137,10 +144,12 @@ class CreateBoardFragment : Fragment() {
                         x,
                         y,
                         dateTime,
-                        gender
+                        gender,
+                        ageRestrictionStart,
+                        ageRestrictionEnd
                     )
-                    val ft: FragmentTransaction? = fragmentManager?.beginTransaction()
-                    ft?.detach(this)?.attach(this)?.commit()
+
+                    removeFragment()
                 }
             }
             builder.setNegativeButton("아니오") { dialog, which ->
@@ -198,6 +207,15 @@ class CreateBoardFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+
+    private fun removeFragment() {
+        val fragmentC = CreateBoardFragment()
+        val mFragmentManager = requireActivity().supportFragmentManager
+        val mFragmentTransaction = mFragmentManager.beginTransaction()
+        mFragmentTransaction.replace(R.id.nav_host_fragment, fragmentC)
+        mFragmentTransaction.commit()
     }
 
 
