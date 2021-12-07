@@ -13,6 +13,7 @@ import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.FragmentSettingBinding
 import com.example.bob_friend_android.view.LoginActivity
+import com.example.bob_friend_android.view.MyBoardActivity
 import com.example.bob_friend_android.viewmodel.LoginViewModel
 
 class SettingFragment : Fragment() {
@@ -35,6 +36,11 @@ class SettingFragment : Fragment() {
             editor.clear()
             editor.apply()
             val intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.myBoardList.setOnClickListener {
+            val intent = Intent(requireContext(), MyBoardActivity::class.java)
             startActivity(intent)
         }
 

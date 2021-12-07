@@ -71,13 +71,9 @@ interface API {
     @GET("/recruitments/locations")
     fun getRecruitmentLocations(): Call<List<Locations>>
 
-    //내 참가약속조회
-    @GET("/recruitments/my/joined")
-    fun getJoinRecruitment(): Call<List<Board>>
-
-    //내가 잡은 약속
-    @GET("/recruitments/my")
-    fun getMyRecruitment(): Call<List<Board>>
+    //내 약속조회
+    @GET("/recruitments?")
+    fun getMyRecruitment(@Query("type") type:String, @Query("page") page:Int): Call<BoardList>
 
     //약속검색
     @GET("/recruitments/search?")
