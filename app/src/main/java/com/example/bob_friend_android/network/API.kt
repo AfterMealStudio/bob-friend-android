@@ -15,6 +15,10 @@ interface API {
     @POST("api/signup")
     fun getJoinResponse(@Body user: Map<String, String>): Call<User>
 
+    //회원탈퇴
+    @DELETE("api/user/{userId}")
+    fun deleteUser(@Body password: Map<String, String>, @Path("userId") userId: Int): Call<Void>
+
     //닉네임 중복확인
     @GET("api/nickname/{nickname}")
     fun getNicknameCheck(@Path("nickname") username : String): Call<Boolean>
@@ -38,10 +42,6 @@ interface API {
     //토큰 재발급
     @POST("api/reissue")
     fun refreshToken(@Body token: Token): Call<Token>
-
-    //회원탈퇴
-    @DELETE("api/user/{id}")
-    fun deleteUser(): Call<Void>
 
     //약속잡기
     @POST("/recruitments")
@@ -71,13 +71,9 @@ interface API {
     @GET("/recruitments/locations")
     fun getRecruitmentLocations(): Call<List<Locations>>
 
-    //내 참가약속조회
-    @GET("/recruitments/my/joined")
-    fun getJoinRecruitment(): Call<List<Board>>
-
-    //내가 잡은 약속
-    @GET("/recruitments/my")
-    fun getMyRecruitment(): Call<List<Board>>
+    //내 약속조회
+    @GET("/recruitments?")
+    fun getMyRecruitment(@Query("type") type:String, @Query("page") page:Int, @Query("sort") sort:String): Call<BoardList>
 
     //약속검색
     @GET("/recruitments/search?")

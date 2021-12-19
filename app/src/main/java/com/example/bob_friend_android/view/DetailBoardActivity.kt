@@ -64,7 +64,7 @@ class DetailBoardActivity : AppCompatActivity() {
 
     var toast: Toast? = null
 
-    @SuppressLint("ClickableViewAccessibility")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_board)
@@ -97,112 +97,8 @@ class DetailBoardActivity : AppCompatActivity() {
                 withCommentItems(commentId, reComment.author!!.id, false, reComment.id, null)
             }
         }
-        observeData(this)
 
-        viewModel.result.observe(this, Observer { board ->
-            detailBoardId = board.id
-            binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
-            binding.detailCurrentComment.text = board.amountOfComments.toString()
-            binding.readWriter.text = board.author?.nickname
-            binding.detailWriteTime.text = board.createdAt
-
-            binding.detailTitle.text = board.title
-            binding.detailContent.text = board.content
-            binding.readWriter.text = board.author!!.nickname
-            if (board.appointmentTime != null) {
-                val createDay: String = board.appointmentTime!!
-                val created = createDay.split("T")
-                appointmentTime = created[0] + ", " + created[1].substring(0, 5)
-            }
-            binding.readMeetingTime2.text = appointmentTime
-            binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
-            binding.detailTotalMember.text = board.totalNumberOfPeople.toString()
-            binding.detailAppointmentPlaceName.text = board.restaurantName
-            binding.detailCurrentComment.text = board.amountOfComments.toString()
-
-            val marker = MapPOIItem()
-            marker.apply {
-                itemName = board.restaurantName
-                mapPoint = MapPoint.mapPointWithGeoCoord(board.latitude!!, board.longitude!!)
-                customImageResourceId = R.drawable.main_color1_marker
-                customSelectedImageResourceId = R.drawable.main_color2_marker
-                markerType = MapPOIItem.MarkerType.CustomImage
-                selectedMarkerType = MapPOIItem.MarkerType.CustomImage
-                isCustomImageAutoscale = false
-                setCustomImageAnchor(0.5f, 1.0f)
-                mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, false)
-            }
-            mapView.setZoomLevel(2, false)
-            mapView.zoomIn(false)
-            mapView.zoomOut(false)
-
-            mapView.setOnTouchListener { _, _ -> true }
-            mapView.addPOIItem(marker)
-
-            binding.commentRecyclerview.adapter = commentAdapter
-            val commentLayoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-            binding.commentRecyclerview.layoutManager = commentLayoutManager
-
-            binding.postComment.setOnClickListener {
-                if (binding.editTextComment.text.toString() != "" && !flag) {
-                    viewModel.addComment(
-                        detailBoardId,
-                        binding.editTextComment.text.toString()
-                    )
-                    binding.editTextComment.text = null
-                } else if (binding.editTextComment.text.toString() != "" && flag) {
-                    viewModel.addReComment(
-                        detailBoardId,
-                        detailCommentId,
-                        binding.editTextComment.text.toString()
-                    )
-                    binding.editTextComment.text = null
-                    flag = false
-                }
-            }
-            binding.detailMember.layoutManager = LinearLayoutManager(
-                this,
-                RecyclerView.VERTICAL,
-                false
-            )
-            binding.detailMember.adapter = userAdapter
-
-            if (board.author!!.id == App.prefs.getInt("id", -1)) {
-                binding.detailButton.text = "마감하기"
-            } else {
-                binding.detailButton.text = "참가하기"
-                for (member in board.members!!) {
-                    if (member.id == App.prefs.getInt("id", -1)) {
-                        binding.detailButton.text = "취소하기"
-                    }
-                }
-            }
-
-            commentList.clear()
-            if (board.comments != null) {
-                for (comment in board.comments!!) {
-                    commentList.add(comment)
-                    if (comment.replies !== null) {
-                        for (recomment in comment.replies!!) {
-                            val reComment = Comment(
-                                recomment.id,
-                                recomment.author,
-                                recomment.content,
-                                recomment.replies,
-                                typeFlag = 1,
-                                createdAt = recomment.createdAt
-                            )
-                            commentList.add(reComment)
-                        }
-                    }
-                }
-            }
-
-            userList.clear()
-            for (member in board.members!!) {
-                userList.add(member)
-            }
-        })
+        observeData()
 
         if(intent.hasExtra("boardId")) {
             detailBoardId = intent.getIntExtra("boardId", 0)
@@ -361,8 +257,134 @@ class DetailBoardActivity : AppCompatActivity() {
     }
 
 
-    private fun observeData(context: DetailBoardActivity) {
+    @SuppressLint("ClickableViewAccessibility")
+    private fun observeData() {
         with(viewModel) {
+            result.observe(this@DetailBoardActivity, Observer { board ->
+                detailBoardId = board.id
+                binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
+                binding.detailCurrentComment.text = board.amountOfComments.toString()
+                binding.readWriter.text = board.author?.nickname
+                binding.detailWriteTime.text = board.createdAt
+
+                binding.detailTitle.text = board.title
+                binding.detailContent.text = board.content
+                binding.readWriter.text = board.author!!.nickname
+
+                if (board.ageRestrictionStart != null && board.ageRestrictionEnd != null) {
+                    val ageFilter = board.ageRestrictionStart.toString() + "부터 " + board.ageRestrictionEnd.toString() + "까지"
+                    binding.detailAge2.text = ageFilter
+                }
+                else {
+                    binding.detailAgeLayout.visibility = View.GONE
+                }
+
+                when (board.sexRestriction) {
+                    "NONE" -> {
+                        binding.detailGenderLayout.visibility = View.GONE
+                    }
+                    "FEMALE" -> {
+                        binding.detailGender2.text = "여성"
+                    }
+                    "MALE" -> {
+                        binding.detailGender2.text = "남성"
+                    }
+                }
+
+                if (board.appointmentTime != null) {
+                    val createDay: String = board.appointmentTime!!
+                    val created = createDay.split("T")
+                    appointmentTime = created[0] + ", " + created[1].substring(0, 5)
+                }
+                binding.readMeetingTime2.text = appointmentTime
+                binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
+                binding.detailTotalMember.text = board.totalNumberOfPeople.toString()
+                binding.detailAppointmentPlaceName.text = board.restaurantName
+                binding.detailCurrentComment.text = board.amountOfComments.toString()
+
+                val marker = MapPOIItem()
+                marker.apply {
+                    itemName = board.restaurantName
+                    mapPoint = MapPoint.mapPointWithGeoCoord(board.latitude!!, board.longitude!!)
+                    customImageResourceId = R.drawable.main_color1_marker
+                    customSelectedImageResourceId = R.drawable.main_color2_marker
+                    markerType = MapPOIItem.MarkerType.CustomImage
+                    selectedMarkerType = MapPOIItem.MarkerType.CustomImage
+                    isCustomImageAutoscale = false
+                    setCustomImageAnchor(0.5f, 1.0f)
+                    mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, false)
+                }
+                mapView.setZoomLevel(2, false)
+                mapView.zoomIn(false)
+                mapView.zoomOut(false)
+
+                mapView.setOnTouchListener { _, _ -> true }
+                mapView.addPOIItem(marker)
+
+                binding.commentRecyclerview.adapter = commentAdapter
+                val commentLayoutManager = LinearLayoutManager(this@DetailBoardActivity, RecyclerView.VERTICAL, false)
+                binding.commentRecyclerview.layoutManager = commentLayoutManager
+
+                binding.postComment.setOnClickListener {
+                    if (binding.editTextComment.text.toString() != "" && !flag) {
+                        viewModel.addComment(
+                            detailBoardId,
+                            binding.editTextComment.text.toString()
+                        )
+                        binding.editTextComment.text = null
+                    } else if (binding.editTextComment.text.toString() != "" && flag) {
+                        viewModel.addReComment(
+                            detailBoardId,
+                            detailCommentId,
+                            binding.editTextComment.text.toString()
+                        )
+                        binding.editTextComment.text = null
+                        flag = false
+                    }
+                }
+                binding.detailMember.layoutManager = LinearLayoutManager(
+                    this@DetailBoardActivity,
+                    RecyclerView.VERTICAL,
+                    false
+                )
+                binding.detailMember.adapter = userAdapter
+
+                if (board.author!!.id == App.prefs.getInt("id", -1)) {
+                    binding.detailButton.text = "마감하기"
+                } else {
+                    binding.detailButton.text = "참가하기"
+                    for (member in board.members!!) {
+                        if (member.id == App.prefs.getInt("id", -1)) {
+                            binding.detailButton.text = "취소하기"
+                        }
+                    }
+                }
+
+                commentList.clear()
+                if (board.comments != null) {
+                    for (comment in board.comments!!) {
+                        commentList.add(comment)
+                        if (comment.replies !== null) {
+                            for (recomment in comment.replies!!) {
+                                val reComment = Comment(
+                                    recomment.id,
+                                    recomment.author,
+                                    recomment.content,
+                                    recomment.replies,
+                                    typeFlag = 1,
+                                    createdAt = recomment.createdAt
+                                )
+                                commentList.add(reComment)
+                            }
+                        }
+                    }
+                }
+
+                userList.clear()
+                for (member in board.members!!) {
+                    userList.add(member)
+                }
+            })
 
             val dialog = LoadingDialog(this@DetailBoardActivity)
             progressVisible.observe(this@DetailBoardActivity) {
@@ -377,7 +399,7 @@ class DetailBoardActivity : AppCompatActivity() {
             errorMsg.observe(this@DetailBoardActivity) {
                 when (errorMsg.value) {
                     "삭제되거나 마감된 글입니다." -> {
-                        setBoardDialog(context)
+                        setBoardDialog(this@DetailBoardActivity)
                     }
                     "댓글이 삭제되었습니다." -> {
                         readBoard(detailBoardId)

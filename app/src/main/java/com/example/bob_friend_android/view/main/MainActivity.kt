@@ -47,6 +47,8 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction().add(R.id.nav_host_fragment, fragmentA).commit()
         initNavigationBar()
 
+        viewModel.setUserInfo()
+
         observeData()
     }
 
@@ -117,6 +119,7 @@ class MainActivity : AppCompatActivity() {
                 editor.putString("nickname", user.nickname)
                 editor.putString("birth", user.birth)
                 editor.putString("sex", user.sex)
+                editor.putBoolean("agree", user.agree)
                 editor.apply()
             })
         }
