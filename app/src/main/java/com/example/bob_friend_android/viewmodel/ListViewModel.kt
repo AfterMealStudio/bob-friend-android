@@ -181,6 +181,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
             override fun onFailure(call: Call<List<Locations>>, t: Throwable) {
                 _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
+                _progressVisible.postValue(false)
                 Log.e(TAG, t.message.toString())
             }
         })

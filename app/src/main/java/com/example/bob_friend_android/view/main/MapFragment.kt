@@ -158,11 +158,11 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
     }
 
 
-    fun addMarkers(item: Locations) {
+    private fun addMarkers(item: Locations) {
         val point = MapPOIItem()
         point.apply {
             itemName = item.address
-            mapPoint = MapPoint.mapPointWithGeoCoord(item.longitude, item.latitude)
+            mapPoint = MapPoint.mapPointWithGeoCoord(item.latitude, item.longitude)
             customImageResourceId = R.drawable.main_color1_marker
             customSelectedImageResourceId = R.drawable.main_color2_marker
             markerType = MapPOIItem.MarkerType.CustomImage
@@ -174,7 +174,7 @@ class MapFragment : Fragment(), MapView.MapViewEventListener {
     }
 
 
-    fun setMyLocation() {
+    private fun setMyLocation() {
         val permissionCheck = ContextCompat.checkSelfPermission(
             requireActivity(),
             Manifest.permission.ACCESS_FINE_LOCATION
