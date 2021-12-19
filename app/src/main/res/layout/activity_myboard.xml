@@ -23,6 +23,7 @@
             android:layout_height="60dp"
             android:background="@color/main_color1"
             android:gravity="center"
+            app:titleTextColor="@color/white"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:layout_constraintEnd_toEndOf="parent"

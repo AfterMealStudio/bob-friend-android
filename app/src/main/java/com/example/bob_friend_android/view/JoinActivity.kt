@@ -149,6 +149,16 @@ class JoinActivity : AppCompatActivity() {
                             startActivity(intent)
                 }
             }
+
+            val dialog = LoadingDialog(this@JoinActivity)
+            progressVisible.observe(this@JoinActivity) {
+                if (progressVisible.value!!) {
+                    dialog.show()
+                }
+                else if (!progressVisible.value!!) {
+                    dialog.dismiss()
+                }
+            }
         }
     }
 

@@ -24,6 +24,9 @@
         <activity android:name=".view.JoinActivity" />
         <activity android:name=".view.LocationSearchActivity" />
         <activity android:name=".view.MyBoardActivity" />
+        <activity android:name=".view.AboutActivity" />
+        <activity android:name=".view.DeleteUserActivity" />
+        <activity android:name=".view.SetAgreeInfoActivity" />
         <activity android:name=".view.BoardSearchActivity"
             android:theme="@style/AppThemeMaterial"/>
         <activity android:name=".view.LoginActivity">

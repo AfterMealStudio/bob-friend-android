@@ -138,11 +138,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    fun getMyRecruitment(type: String, listPage: Int){
+    fun getMyRecruitment(type: String, listPage: Int, sort: String){
         var lastPage: Boolean
         var element: Int
         _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.getMyRecruitment(type, listPage).enqueue(object : Callback<BoardList> {
+        RetrofitBuilder.apiBob.getMyRecruitment(type, listPage, sort).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                 if(response.body() != null) {
                     element = response.body()!!.element

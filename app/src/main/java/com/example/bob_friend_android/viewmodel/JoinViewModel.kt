@@ -58,9 +58,35 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     _msg.postValue("서버에 연결이 되지 않았습니다.")
                     Log.e("JoinActivity!!!", t.message.toString())
+                    _progressVisible.postValue(false)
                 }
             })
         }
+    }
+
+
+    fun deleteUser(password: String, userId: Int) {
+        val pwd = HashMap<String, String>()
+        pwd["password"] = password
+
+        _progressVisible.postValue(true)
+        RetrofitBuilder.apiBob.deleteUser(pwd, userId).enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                Log.d(TAG, "join : ${response.body()}")
+                when (response.code()) {
+                    200 -> _msg.postValue("회원탈퇴에 성공했습니다.")
+                    400 -> _msg.postValue("회원탈퇴 실패 : 비밀번호가 올바르지 않습니다.")
+                    500 -> _msg.postValue("회원탈퇴 실패 : 서버 오류입니다.")
+                }
+                _progressVisible.postValue(false)
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                _msg.postValue("서버에 연결이 되지 않았습니다.")
+                Log.e("JoinActivity!!!", t.message.toString())
+                _progressVisible.postValue(false)
+            }
+        })
     }
 
 

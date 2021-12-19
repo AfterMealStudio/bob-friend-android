@@ -502,6 +502,7 @@
                 android:layout_margin="10dp"
                 android:maxHeight="180dp"
                 android:ems="10"
+                android:maxLength="1000"
                 android:inputType="text|textMultiLine"
                 android:singleLine="true"
                 android:imeOptions="actionDone">
