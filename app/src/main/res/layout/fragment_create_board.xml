@@ -183,7 +183,7 @@
                     android:textColor="@color/main_color1"
                     android:textStyle="bold" />
 
-                <RelativeLayout
+                <com.naver.maps.map.MapView
                     android:id="@+id/create_map_view"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"

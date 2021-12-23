@@ -21,7 +21,7 @@ import com.example.bob_friend_android.databinding.ActivityLocationSearchBinding
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
 
-class LocationSearchActivity: AppCompatActivity() {
+class SearchLocationActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityLocationSearchBinding
     private lateinit var viewModel: ListViewModel
@@ -71,8 +71,8 @@ class LocationSearchActivity: AppCompatActivity() {
                 val intent = Intent().apply {
                     putExtra("location", listItems[position].address)
                     putExtra("name", listItems[position].name)
-                    putExtra("x", listItems[position].x)
-                    putExtra("y", listItems[position].y)
+                    putExtra("longitude", listItems[position].x)
+                    putExtra("latitude", listItems[position].y)
                 }
                 setResult(RESULT_OK, intent)
                 if(!isFinishing) finish()
@@ -92,7 +92,7 @@ class LocationSearchActivity: AppCompatActivity() {
     }
 
 
-    private fun hideKeyboard(){
+    fun hideKeyboard(){
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.locationEditTextSearch.windowToken, 0)
     }
@@ -100,11 +100,11 @@ class LocationSearchActivity: AppCompatActivity() {
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(this@LocationSearchActivity) {
+            errorMsg.observe(this@SearchLocationActivity) {
                 showToast(it)
             }
 
-            searchKeyword.observe(this@LocationSearchActivity) {
+            searchKeyword.observe(this@SearchLocationActivity) {
                 var count = 0
                 listItems.clear()
                 for(document in it.documents) {

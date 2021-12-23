@@ -10,12 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
-import android.widget.RelativeLayout
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -23,31 +23,36 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
-import com.example.bob_friend_android.view.LocationSearchActivity
+import com.example.bob_friend_android.view.SearchLocationActivity
 import com.example.bob_friend_android.viewmodel.BoardViewModel
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.*
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.FusedLocationSource
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 
-class CreateBoardFragment : Fragment() {
+class CreateBoardFragment : Fragment(), OnMapReadyCallback {
     private val TAG = "CreateBoardFragment"
     private lateinit var binding : FragmentCreateBoardBinding
     private lateinit var viewModel : BoardViewModel
     private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
 
     private lateinit var mapView: MapView
-    private lateinit var mapViewContainer: RelativeLayout
+    private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
+    private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
+    private lateinit var naverMap: NaverMap
 
     private var gender : String = "NONE"
 
     var address: String = ""
     var locationName: String = ""
-    var y: Double? = 0.0
-    var x: Double? = 0.0
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
     var appointmentDate: String = ""
     var appointmentTime: String = ""
 
@@ -63,7 +68,6 @@ class CreateBoardFragment : Fragment() {
     var toast: Toast? = null
 
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,7 +82,13 @@ class CreateBoardFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.board = this
 
-        binding.createMapView.visibility = View.VISIBLE
+        mapView = binding.createMapView
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
+
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
+
+
 
         binding.createAgeGroup.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
@@ -141,8 +151,8 @@ class CreateBoardFragment : Fragment() {
                         count,
                         address,
                         locationName,
-                        x,
-                        y,
+                        longitude,
+                        latitude,
                         dateTime,
                         gender,
                         ageRestrictionStart,
@@ -159,12 +169,6 @@ class CreateBoardFragment : Fragment() {
 
         }
 
-        mapView = MapView(requireContext())
-        mapView.removeAllPOIItems()
-        mapViewContainer = binding.createMapView
-        mapViewContainer.addView(mapView)
-        mapView.setOnTouchListener { _, _ -> true }
-
         observeData()
 
         getLocationResultText = registerForActivityResult(
@@ -174,33 +178,29 @@ class CreateBoardFragment : Fragment() {
                 if(result.data != null) {
                     address = result.data?.getStringExtra("location").toString()
                     locationName = result.data?.getStringExtra("name").toString()
-                    y = result.data?.getDoubleExtra("y", 0.0)
-                    x = result.data?.getDoubleExtra("x", 0.0)
+                    latitude = result.data!!.getDoubleExtra("latitude", 0.0)
+                    longitude = result.data!!.getDoubleExtra("longitude", 0.0)
 
-                    binding.createLocation.text = locationName
-                    val marker = MapPOIItem()
-                    marker.apply {
-                        itemName = "내위치"
-                        mapPoint = MapPoint.mapPointWithGeoCoord(y!!, x!!)
-                        customImageResourceId = R.drawable.main_color1_marker
-                        customSelectedImageResourceId = R.drawable.main_color2_marker
-                        markerType = MapPOIItem.MarkerType.CustomImage
-                        selectedMarkerType = MapPOIItem.MarkerType.CustomImage
-                        isCustomImageAutoscale = false
-                        setCustomImageAnchor(0.5f, 1.0f)
-                        mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, true)
+                    if (latitude != 0.0 && longitude != 0.0) {
+                        binding.createLocation.text = locationName
+                        val marker = Marker()
+                        marker.apply {
+                            position = LatLng(latitude, longitude)
+                            map = naverMap
+                            val cameraPosition = CameraPosition( // 카메라 위치 변경
+                                LatLng(latitude, longitude),  // 위치 지정
+                                15.0 // 줌 레벨
+                            )
+                            naverMap.cameraPosition = cameraPosition
+                        }
                     }
-                    mapView.setZoomLevel(2, false)
-                    mapView.zoomIn(false)
-                    mapView.zoomOut(false)
-                    mapView.addPOIItem(marker)
                 }
             }
         }
 
         binding.createSearchBtn.setOnClickListener {
             activity?.let{
-                val intent = Intent(context, LocationSearchActivity::class.java)
+                val intent = Intent(context, SearchLocationActivity::class.java)
                 getLocationResultText.launch(intent)
             }
             binding.createLocation.visibility = View.VISIBLE
@@ -268,19 +268,6 @@ class CreateBoardFragment : Fragment() {
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        mapView.visibility = View.VISIBLE
-    }
-
-
-    override fun onPause() {
-        super.onPause()
-        mapView.visibility = View.GONE
-
-    }
-
-
     private fun setCalenderTime() {
         val time = Calendar.getInstance()
         val hour = time.get(Calendar.HOUR)
@@ -325,5 +312,47 @@ class CreateBoardFragment : Fragment() {
                 showToast(it)
             }
         }
+    }
+
+
+    override fun onMapReady(@NonNull naverMap: NaverMap) {
+        this.naverMap = naverMap
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
     }
 }

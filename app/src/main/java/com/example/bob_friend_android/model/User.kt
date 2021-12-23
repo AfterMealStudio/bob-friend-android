@@ -9,5 +9,6 @@ data class User(
     var reportCount: Int?,
     var accumulatedReports: Int?,
     var agree: Boolean,
-    var activated: Boolean
+    var activated: Boolean,
+    var rating: Float
 )

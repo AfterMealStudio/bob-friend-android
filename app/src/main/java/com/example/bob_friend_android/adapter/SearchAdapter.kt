@@ -7,11 +7,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.model.SearchKeyword
 import kotlin.collections.ArrayList
 
-class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
-    val listItems =  ArrayList<SearchLocation>()
+class SearchAdapter(val listItems: ArrayList<SearchLocation>): RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     private lateinit var itemClickListener : OnItemClickListener
 
@@ -21,17 +19,17 @@ class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapt
     }
 
     override fun getItemCount(): Int {
-        return itemList.size
+        return listItems.size
     }
 
     fun getItems(): ArrayList<SearchLocation> {
-         return itemList
+         return listItems
     }
 
     override fun onBindViewHolder(holder: SearchAdapter.ViewHolder, position: Int) {
-        holder.name.text = itemList[position].name
-        holder.road.text = itemList[position].road
-        holder.address.text = itemList[position].address
+        holder.name.text = listItems[position].name
+        holder.road.text = listItems[position].road
+        holder.address.text = listItems[position].address
         // 아이템 클릭 이벤트
         holder.itemView.setOnClickListener {
             itemClickListener.onClick(it, position)
@@ -53,7 +51,6 @@ class SearchAdapter(val itemList: ArrayList<SearchLocation>): RecyclerView.Adapt
     }
 
     fun addItems(item: ArrayList<SearchLocation>) {
-        listItems.clear()
         listItems.addAll(item)
         notifyDataSetChanged()
     }

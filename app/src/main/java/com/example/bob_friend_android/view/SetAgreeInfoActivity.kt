@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivitySetAgreeInfoBinding
 import com.example.bob_friend_android.viewmodel.ListViewModel
@@ -27,6 +28,7 @@ class SetAgreeInfoActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.toolbar.title = "정보 동의 설정"
+        binding.switch1.isChecked = App.prefs.getBoolean("agree", false)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

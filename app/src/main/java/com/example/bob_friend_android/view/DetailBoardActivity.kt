@@ -32,14 +32,15 @@ import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.UserItem
 import com.example.bob_friend_android.viewmodel.BoardViewModel
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.*
+import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.util.FusedLocationSource
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DetailBoardActivity : AppCompatActivity() {
+class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
     private val TAG = "DetailBoardActivity"
     private lateinit var binding: ActivityDetailBoardBinding
     private lateinit var viewModel: BoardViewModel
@@ -53,8 +54,11 @@ class DetailBoardActivity : AppCompatActivity() {
     private var commentAdapter = CommentAdapter(commentList, detailBoardId)
     private val userAdapter = UserAdapter(userList)
 
-    lateinit var mapView: MapView
-    lateinit var mapViewContainer: RelativeLayout
+    private lateinit var mapView: MapView
+    private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
+    private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
+    private lateinit var naverMap: NaverMap
+
     var appointmentTime = ""
 
     var inputMethodManager: InputMethodManager? = null
@@ -72,9 +76,10 @@ class DetailBoardActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.detail = viewModel
 
-        mapView = MapView(this)
-        mapViewContainer = binding.detailMapView
-        mapViewContainer.addView(mapView)
+        mapView = binding.detailMapView
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
@@ -142,11 +147,6 @@ class DetailBoardActivity : AppCompatActivity() {
 
             handled
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        binding.detailMapView.removeView(mapView)
     }
 
 
@@ -257,7 +257,6 @@ class DetailBoardActivity : AppCompatActivity() {
     }
 
 
-    @SuppressLint("ClickableViewAccessibility")
     private fun observeData() {
         with(viewModel) {
             result.observe(this@DetailBoardActivity, Observer { board ->
@@ -270,6 +269,15 @@ class DetailBoardActivity : AppCompatActivity() {
                 binding.detailTitle.text = board.title
                 binding.detailContent.text = board.content
                 binding.readWriter.text = board.author!!.nickname
+
+                val marker = Marker()
+                marker.position = LatLng(board.latitude!!, board.longitude!!)
+                marker.map = naverMap
+                val cameraPosition = CameraPosition( // 카메라 위치 변경
+                    LatLng(board.latitude!!, board.longitude!!),  // 위치 지정
+                    15.0 // 줌 레벨
+                )
+                naverMap.cameraPosition = cameraPosition // 변경된 위치 반영
 
                 if (board.ageRestrictionStart != null && board.ageRestrictionEnd != null) {
                     val ageFilter = board.ageRestrictionStart.toString() + "부터 " + board.ageRestrictionEnd.toString() + "까지"
@@ -301,25 +309,6 @@ class DetailBoardActivity : AppCompatActivity() {
                 binding.detailTotalMember.text = board.totalNumberOfPeople.toString()
                 binding.detailAppointmentPlaceName.text = board.restaurantName
                 binding.detailCurrentComment.text = board.amountOfComments.toString()
-
-                val marker = MapPOIItem()
-                marker.apply {
-                    itemName = board.restaurantName
-                    mapPoint = MapPoint.mapPointWithGeoCoord(board.latitude!!, board.longitude!!)
-                    customImageResourceId = R.drawable.main_color1_marker
-                    customSelectedImageResourceId = R.drawable.main_color2_marker
-                    markerType = MapPOIItem.MarkerType.CustomImage
-                    selectedMarkerType = MapPOIItem.MarkerType.CustomImage
-                    isCustomImageAutoscale = false
-                    setCustomImageAnchor(0.5f, 1.0f)
-                    mapView.setMapCenterPointAndZoomLevel(mapPoint, mapView.zoomLevel, false)
-                }
-                mapView.setZoomLevel(2, false)
-                mapView.zoomIn(false)
-                mapView.zoomOut(false)
-
-                mapView.setOnTouchListener { _, _ -> true }
-                mapView.addPOIItem(marker)
 
                 binding.commentRecyclerview.adapter = commentAdapter
                 val commentLayoutManager = LinearLayoutManager(this@DetailBoardActivity, RecyclerView.VERTICAL, false)
@@ -431,5 +420,45 @@ class DetailBoardActivity : AppCompatActivity() {
             toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
         } else toast?.setText(msg)
         toast?.show()
+    }
+
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+        naverMap.locationSource = locationSource
+    }
+
+    override fun onStart() {
+        super.onStart()
+        mapView.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mapView.onSaveInstanceState(outState)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mapView.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapView.onDestroy()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mapView.onLowMemory()
     }
 }
