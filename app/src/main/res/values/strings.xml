@@ -139,9 +139,9 @@
     <string name="setting_board">내가 만든 약속</string>
     <string name="setting_appointment">참가한 약속</string>
     <string name="setting_comment">댓글 단 약속</string>
-    <string name="setting_appointments">약속 관련 기능</string>
-    <string name="setting_users">계정 관련 기능</string>
-    <string name="setting_etc">기타 관련 기능</string>
+    <string name="setting_appointments">약속</string>
+    <string name="setting_users">계정</string>
+    <string name="setting_etc">기타</string>
     <string name="setting_revise_user_info">회원 정보 수정</string>
     <string name="setting_user_info_agree_btn">정보 동의 설정</string>
     <string name="setting_ask">문의하기</string>
@@ -156,6 +156,8 @@
     <string name="about_git">Git : https://github.com/Bob-Friend</string>
     <string name="setting_check_password">비밀번호를 입력해주세요.</string>
     <string name="setting_del_user">탈퇴하기</string>
+    <string name="setting_year">세</string>
+
 
     <!--바텀메뉴-->
     <string name="set_list">리스트</string>

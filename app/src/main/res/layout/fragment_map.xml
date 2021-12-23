@@ -21,26 +21,11 @@
             app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
             tools:context=".view.main.MapFragment">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.naver.maps.map.MapView
                 android:id="@+id/map_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:onClick="hideKeyboard"/>
+                android:layout_height="match_parent"/>
         </FrameLayout>
-
-        <ImageView
-            android:id="@+id/my_location"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_gravity="right|bottom"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/main_location"
-            android:padding="7dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/my_locaiton"
-            app:tint="#5F5F5F" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_toolbar"

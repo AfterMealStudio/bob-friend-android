@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity() {
                 editor.putString("birth", user.birth)
                 editor.putString("sex", user.sex)
                 editor.putBoolean("agree", user.agree)
+                editor.putFloat("rating", user.rating)
                 editor.apply()
             })
         }

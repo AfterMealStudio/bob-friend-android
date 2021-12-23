@@ -130,12 +130,12 @@
                         android:text="@string/read_appointment_place_and_time"
                         android:textColor="@color/main_color1" />
 
-                    <RelativeLayout
+                    <com.naver.maps.map.MapView
                         android:id="@+id/detail_map_view"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         android:background="@drawable/border_line" >
-                    </RelativeLayout>
+                    </com.naver.maps.map.MapView>
 
                     <TextView
                         android:id="@+id/detail_line1"

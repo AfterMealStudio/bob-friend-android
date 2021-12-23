@@ -28,56 +28,70 @@ class SettingFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.logout = viewModel
 
-        binding.headerEmail.text = App.prefs.getString("email", "")
-        binding.headerUsername.text = App.prefs.getString("nickname","")
+        val gender = App.prefs.getString("sex","")
+        var userGender = "NONE"
+        if (gender=="MALE") {
+            userGender = "남성"
+        }
+        else if (gender=="FEMALE") {
+            userGender = "여성"
+        }
+        else if (gender=="NONE") {
+            userGender = "비공개"
+        }
+            binding.headerEmail.text = App.prefs.getString("email", "")
+            binding.headerUsername.text = App.prefs.getString("nickname","")
+            binding.headerBirth.text = App.prefs.getString("birth","")
+            binding.headerGender.text = userGender
+            binding.ratingBar.rating = App.prefs.getFloat("rating",0.0F)
 
-        binding.logoutBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("로그아웃")
-            builder.setMessage("로그아웃을 하시겠습니까?")
+            binding.logoutBtn.setOnClickListener {
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("로그아웃")
+                builder.setMessage("로그아웃을 하시겠습니까?")
 
-            builder.setPositiveButton("예") { dialog, which ->
-                val editor = App.prefs.edit()
-                editor.clear()
-                editor.apply()
-                val intent = Intent(requireContext(), LoginActivity::class.java)
+                builder.setPositiveButton("예") { dialog, which ->
+                    val editor = App.prefs.edit()
+                    editor.clear()
+                    editor.apply()
+                    val intent = Intent(requireContext(), LoginActivity::class.java)
+                    startActivity(intent)
+                }
+                builder.setNegativeButton("아니오") { dialog, which ->
+                    return@setNegativeButton
+                }
+                builder.show()
+            }
+
+            binding.deleteUserBtn.setOnClickListener {
+                val intent = Intent(requireContext(), DeleteUserActivity::class.java)
                 startActivity(intent)
             }
-            builder.setNegativeButton("아니오") { dialog, which ->
-                return@setNegativeButton
+
+            binding.myBoardList.setOnClickListener {
+                val intent = Intent(requireContext(), MyBoardActivity::class.java)
+                intent.putExtra("type", "owned")
+                intent.putExtra("sort", "createdAt,desc")
+                startActivity(intent)
             }
-            builder.show()
-        }
 
-        binding.deleteUserBtn.setOnClickListener {
-            val intent = Intent(requireContext(), DeleteUserActivity::class.java)
-            startActivity(intent)
-        }
+            binding.myAppointmentList.setOnClickListener {
+                val intent = Intent(requireContext(), MyBoardActivity::class.java)
+                intent.putExtra("type", "joined")
+                intent.putExtra("sort", "createdAt,desc")
+                startActivity(intent)
+            }
 
-        binding.myBoardList.setOnClickListener {
-            val intent = Intent(requireContext(), MyBoardActivity::class.java)
-            intent.putExtra("type", "owned")
-            intent.putExtra("sort", "createdAt,desc")
-            startActivity(intent)
-        }
+            binding.settingAbout.setOnClickListener {
+                val intent = Intent(requireContext(), AboutActivity::class.java)
+                startActivity(intent)
+            }
 
-        binding.myAppointmentList.setOnClickListener {
-            val intent = Intent(requireContext(), MyBoardActivity::class.java)
-            intent.putExtra("type", "joined")
-            intent.putExtra("sort", "createdAt,desc")
-            startActivity(intent)
-        }
+            binding.userInfoAgreeBtn.setOnClickListener {
+                val intent = Intent(requireContext(), SetAgreeInfoActivity::class.java)
+                startActivity(intent)
+            }
 
-        binding.settingAbout.setOnClickListener {
-            val intent = Intent(requireContext(), AboutActivity::class.java)
-            startActivity(intent)
+            return binding.root
         }
-
-        binding.userInfoAgreeBtn.setOnClickListener {
-            val intent = Intent(requireContext(), SetAgreeInfoActivity::class.java)
-            startActivity(intent)
-        }
-
-        return binding.root
-    }
 }

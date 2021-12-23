@@ -200,7 +200,6 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun searchKeywordMap(keyword: String) {
-
         _progressVisible.postValue(true)
         RetrofitBuilder.apiKakao.getSearchKeyword(API_KEY, keyword).enqueue(object : Callback<SearchKeyword> {
             override fun onResponse(
