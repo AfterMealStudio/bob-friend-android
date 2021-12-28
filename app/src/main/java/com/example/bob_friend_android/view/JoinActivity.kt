@@ -13,9 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityJoinBinding
-import com.example.bob_friend_android.model.SearchLocation
-import com.example.bob_friend_android.viewmodel.JoinViewModel
-import java.time.LocalDate
+import com.example.bob_friend_android.viewmodel.UserViewModel
 import kotlin.properties.Delegates
 
 class JoinActivity : AppCompatActivity() {
@@ -24,7 +22,7 @@ class JoinActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityJoinBinding
     private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
-    private lateinit var viewModel : JoinViewModel
+    private lateinit var viewModel : UserViewModel
 
     var agreeAll by Delegates.notNull<Boolean>() //동의하기
     var agree1 by Delegates.notNull<Boolean>()
@@ -47,7 +45,7 @@ class JoinActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_join)
-        viewModel = ViewModelProvider(this).get(JoinViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         binding.join = this
         binding.lifecycleOwner = this
 
@@ -106,7 +104,7 @@ class JoinActivity : AppCompatActivity() {
             agreeChoice = binding.agree3.isChecked
 
             builder.setPositiveButton("예") { dialog, which ->
-                viewModel.join(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, nicknameCheck, emailCheck)
+                viewModel.joinUser(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, nicknameCheck, emailCheck)
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton

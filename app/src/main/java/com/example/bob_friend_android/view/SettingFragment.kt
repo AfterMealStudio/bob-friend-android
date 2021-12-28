@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.view.main
+package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -19,6 +20,7 @@ import com.example.bob_friend_android.viewmodel.LoginViewModel
 class SettingFragment : Fragment() {
     private lateinit var binding: FragmentSettingBinding
     private lateinit var viewModel: LoginViewModel
+    var toast: Toast? = null
 
     @SuppressLint("CommitPrefEdits")
     override fun onCreateView(
@@ -27,6 +29,8 @@ class SettingFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         binding.lifecycleOwner = this
         binding.logout = viewModel
+
+        observeData()
 
         val gender = App.prefs.getString("sex","")
         var userGender = "NONE"
@@ -87,6 +91,11 @@ class SettingFragment : Fragment() {
                 startActivity(intent)
             }
 
+            binding.updateUserInfo.setOnClickListener {
+                val intent = Intent(requireContext(), UpdateUserInfoActivity::class.java)
+                startActivity(intent)
+            }
+
             binding.userInfoAgreeBtn.setOnClickListener {
                 val intent = Intent(requireContext(), AgreeInfoActivity::class.java)
                 startActivity(intent)
@@ -94,4 +103,20 @@ class SettingFragment : Fragment() {
 
             return binding.root
         }
+
+    @SuppressLint("ShowToast")
+    private fun showToast(msg: String) {
+        if (toast == null) {
+            toast = Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
+        } else toast?.setText(msg)
+        toast?.show()
+    }
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(viewLifecycleOwner) {
+                showToast(it)
+            }
+        }
+    }
 }

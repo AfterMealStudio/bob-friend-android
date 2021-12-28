@@ -18,9 +18,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.util.regex.Pattern
 
-class JoinViewModel(application: Application): AndroidViewModel(application) {
+class UserViewModel(application: Application): AndroidViewModel(application) {
 
-    val TAG = "JoinViewModel"
+    val TAG = "UserViewModel"
 
     private val _msg = MutableLiveData<String>()
     val errorMsg : LiveData<String>
@@ -30,8 +30,12 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
     val progressVisible : LiveData<Boolean>
         get() = _progressVisible
 
+    private val _userInfo = MutableLiveData<User>()
+    val userInfo : LiveData<User>
+        get() = _userInfo
 
-    fun join(password : String, passwordCheck: String, nickname : String, email: String, dateBirth:String, gender:String, agree1:Boolean, agree2:Boolean, agreeChoice:Boolean, idCheck: Boolean, emailCheck: Boolean) {
+
+    fun joinUser(password : String, passwordCheck: String, nickname : String, email: String, dateBirth:String, gender:String, agree1:Boolean, agree2:Boolean, agreeChoice:Boolean, idCheck: Boolean, emailCheck: Boolean) {
         if (validation(password, passwordCheck, nickname, email, dateBirth, gender, agree1, agree2, agreeChoice, idCheck, emailCheck)) {
             val date = "${dateBirth.substring(0,4)}-${dateBirth.substring(4,6)}-${dateBirth.substring(6)}"
             val user = HashMap<String, String>()
@@ -106,7 +110,10 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 Log.d(TAG, "join : ${response.code()}")
                 when (response.code()) {
-                    200 -> _msg.postValue("회원정보수정에 성공했습니다.")
+                    200 -> {
+                        _msg.postValue("회원정보수정에 성공했습니다.")
+                        _userInfo.postValue(response.body())
+                    }
                     500 -> _msg.postValue("회원정보수정 실패 : 서버 오류입니다.")
                     else -> _msg.postValue("회원정보수정 실패: ${response.code()}")
                 }
@@ -117,6 +124,24 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
                 _msg.postValue("서버에 연결이 되지 않았습니다.")
                 Log.e("JoinActivity!!!", t.message.toString())
                 _progressVisible.postValue(false)
+            }
+        })
+    }
+
+
+    fun setUserInfo() {
+        RetrofitBuilder.apiBob.getUserId().enqueue(object : Callback<User> {
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                val code = response.code()
+                if (code == 200) {
+                    Log.d(TAG, "setUserInfo: $response")
+                    _userInfo.postValue(response.body())
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                _msg.postValue("서버에 연결이 되지 않았습니다.")
+                Log.e(TAG, t.message.toString())
             }
         })
     }
@@ -171,7 +196,7 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-    private fun validation(password : String, passwordCheck: String, username: String, email:String,
+    fun validation(password : String, passwordCheck: String, username: String, email:String,
                            dateBirth:String, gender:String, agree1: Boolean, agree2: Boolean, agreeChoice: Boolean, idCheck: Boolean, emailCheck: Boolean): Boolean {
         if (email.isEmpty() || password.isEmpty() || passwordCheck.isEmpty()) {
             _msg.postValue("아이디와 비밀번호가 비어있습니다.")
@@ -222,6 +247,27 @@ class JoinViewModel(application: Application): AndroidViewModel(application) {
             _msg.postValue("개인정보 취급방침을 동의 해주세요.")
             return false
         }
+        return true
+    }
+
+    fun validationUpdate(password : String?, passwordCheck: String?, nickname: String?,
+                   dateBirth:String?, gender:String?, nicknameCheck: Boolean): Boolean {
+        if (nickname == null && password == null && passwordCheck == null
+            && dateBirth == null && gender == null) {
+            _msg.postValue("변경할 것이 없습니다.")
+            return false
+        }
+
+        if (password != passwordCheck) {
+            _msg.postValue("비밀번호가 서로 다릅니다.")
+            return false
+        }
+
+        if (!nicknameCheck && nickname!=null) {
+            _msg.postValue("닉네임 중복확인을 해주세요.")
+            return false
+        }
+
         return true
     }
 }

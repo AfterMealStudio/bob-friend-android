@@ -6,7 +6,7 @@
     <data>
         <variable
             name="board"
-            type="com.example.bob_friend_android.view.main.CreateBoardFragment" />
+            type="com.example.bob_friend_android.view.CreateBoardFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

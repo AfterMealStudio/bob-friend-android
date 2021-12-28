@@ -29,6 +29,7 @@
         <activity android:name=".view.AboutActivity" />
         <activity android:name=".view.DeleteUserActivity" />
         <activity android:name=".view.AgreeInfoActivity" />
+        <activity android:name=".view.UpdateUserInfoActivity" />
         <activity android:name=".view.BoardSearchActivity"
             android:theme="@style/AppThemeMaterial"/>
         <activity android:name=".view.LoginActivity">
@@ -39,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.main.MainActivity"
+            android:name=".view.MainActivity"
             android:windowSoftInputMode="adjustResize" />
     </application>
 

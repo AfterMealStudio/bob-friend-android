@@ -8,7 +8,7 @@
     <data>
         <variable
             name="list"
-            type="com.example.bob_friend_android.viewmodel.JoinViewModel" />
+            type="com.example.bob_friend_android.viewmodel.UserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

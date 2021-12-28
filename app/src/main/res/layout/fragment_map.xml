@@ -19,7 +19,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
-            tools:context=".view.main.MapFragment">
+            tools:context=".view.MapFragment">
 
             <com.naver.maps.map.MapView
                 android:id="@+id/map_view"

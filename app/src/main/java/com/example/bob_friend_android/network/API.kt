@@ -23,7 +23,6 @@ interface API {
     @PUT("/api/user")
     fun updateUser(@Body userInfo:Map<String, String?>): Call<User>
 
-
     //닉네임 중복확인
     @GET("api/nickname/{nickname}")
     fun getNicknameCheck(@Path("nickname") username : String): Call<Boolean>

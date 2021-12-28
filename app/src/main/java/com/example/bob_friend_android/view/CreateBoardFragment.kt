@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.view.main
+package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
-import com.example.bob_friend_android.view.SearchLocationActivity
 import com.example.bob_friend_android.viewmodel.BoardViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -32,8 +31,6 @@ import com.naver.maps.map.util.FusedLocationSource
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-import kotlin.math.round
-import kotlin.math.roundToInt
 
 
 class CreateBoardFragment : Fragment(), OnMapReadyCallback {
