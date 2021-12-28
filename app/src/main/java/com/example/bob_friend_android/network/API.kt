@@ -2,7 +2,6 @@ package com.example.bob_friend_android.network
 
 
 import com.example.bob_friend_android.model.Board
-import com.example.bob_friend_android.model.Locations
 import com.example.bob_friend_android.model.Token
 import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.model.*
@@ -72,8 +71,9 @@ interface API {
     fun getRecruitment(@Path("id") id : Int): Call<Board>
 
     //약속위치조회
-    @GET("/recruitments/locations")
-    fun getRecruitmentLocations(): Call<List<Locations>>
+    @GET("/recruitments/locations?")
+    fun getRecruitmentLocations(@Query("zoom") zoom:Int, @Query("longitude") longitude:Double,
+                                @Query("latitude") latitude:Double,): Call<LocationList>
 
     //내 약속조회
     @GET("/recruitments?")

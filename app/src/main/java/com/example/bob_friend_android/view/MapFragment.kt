@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentMapBinding
-import com.example.bob_friend_android.model.Locations
+import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.naver.maps.geometry.LatLng
@@ -82,8 +82,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mapView.getMapAsync(this)
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
-
-        viewModel.setMarkers()
 
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(binding.mainToolbar)
@@ -163,7 +161,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    private fun addMarkers(item: Locations) {
+    private fun addMarkers(item: Location) {
         val marker = Marker()
         marker.position = LatLng(item.latitude, item.longitude)
         marker.map = naverMap
@@ -186,6 +184,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         naverMap.uiSettings.isLocationButtonEnabled = true
         naverMap.setOnMapClickListener { point, coord ->
             binding.rvList.visibility = View.GONE
+        }
+
+        naverMap.addOnCameraChangeListener { reason, animated ->
+            Log.i("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
+            val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
+            val cameraPositionLongitude = naverMap.cameraPosition.target.longitude
+            viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
         }
     }
 
