@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.view.main
+package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -19,12 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.adapter.BoardAdapter
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentListBinding
-import com.example.bob_friend_android.model.SearchLocation
-import com.example.bob_friend_android.view.BoardSearchActivity
-import com.example.bob_friend_android.view.DetailBoardActivity
-import com.example.bob_friend_android.view.LoadingDialog
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import java.util.*
 
@@ -117,17 +112,6 @@ class ListFragment : Fragment() {
         observeData()
 
         return binding.root
-    }
-
-
-    private fun refreshAdapter() {
-        binding.recyclerview.adapter?.notifyDataSetChanged()
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        refreshAdapter()
     }
 
 

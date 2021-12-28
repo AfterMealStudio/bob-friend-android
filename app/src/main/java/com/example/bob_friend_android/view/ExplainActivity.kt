@@ -1,24 +1,23 @@
 package com.example.bob_friend_android.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.ActivitySetAgreeInfoBinding
+import com.example.bob_friend_android.databinding.ActivityExplainBinding
 import com.example.bob_friend_android.viewmodel.ListViewModel
 
-class SetAgreeInfoActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivitySetAgreeInfoBinding
+class ExplainActivity: AppCompatActivity() {
+    private lateinit var binding: ActivityExplainBinding
     private lateinit var viewModel: ListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_set_agree_info)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_explain)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.list = viewModel
@@ -27,8 +26,12 @@ class SetAgreeInfoActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.toolbar.title = "정보 동의 설정"
-        binding.switch1.isChecked = App.prefs.getBoolean("agree", false)
+        binding.toolbar.title = "로그인 방법"
+        binding.button.setOnClickListener {
+            val intent = Intent(this@ExplainActivity, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -1,8 +1,7 @@
-package com.example.bob_friend_android.view.main
+package com.example.bob_friend_android.view
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -11,13 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityMainBinding
-import com.example.bob_friend_android.view.DetailBoardActivity
-import com.example.bob_friend_android.viewmodel.MainViewModel
+import com.example.bob_friend_android.viewmodel.UserViewModel
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: UserViewModel
 
     private val PERMISSIONS_REQUEST_CODE = 100
     private var REQUIRED_PERMISSIONS = arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -27,16 +25,12 @@ class MainActivity : AppCompatActivity() {
 
     var backKeyPressedTime: Long = 0
 
-    companion object {
-        const val API_KEY = "KakaoAK 81e4657cca25cf97b1cec85102769390"  // REST API 키
-    }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         binding.lifecycleOwner = this
         binding.main = viewModel
 

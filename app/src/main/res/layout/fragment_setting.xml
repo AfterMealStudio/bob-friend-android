@@ -45,9 +45,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginRight="20dp"
-                    android:background="@color/main_color1"
-                    app:srcCompat="@drawable/rice"
-                    app:tint="@color/white" />
+                    app:srcCompat="@drawable/profile"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -229,7 +227,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/detail_line1">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/user_info_btn"
+                    android:id="@+id/update_user_info"
                     android:layout_width="match_parent"
                     android:layout_height="65dp"
                     android:layout_marginLeft="10dp"
@@ -258,20 +256,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/header_layout" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/setting_notification"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:backgroundTint="@color/white"
-                    android:text="@string/setting_notification"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/header_layout" />
+<!--                <androidx.appcompat.widget.AppCompatButton-->
+<!--                    android:id="@+id/setting_notification"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="65dp"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginRight="10dp"-->
+<!--                    style="@style/Widget.AppCompat.Button.Borderless"-->
+<!--                    android:backgroundTint="@color/white"-->
+<!--                    android:text="@string/setting_notification"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="16sp"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/header_layout" />-->
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/logout_btn"

@@ -4,7 +4,6 @@ package com.example.bob_friend_android.view
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -14,7 +13,6 @@ import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.SharedPref
 import com.example.bob_friend_android.databinding.ActivityLoginBinding
-import com.example.bob_friend_android.view.main.MainActivity
 import com.example.bob_friend_android.viewmodel.LoginViewModel
 
 class LoginActivity : AppCompatActivity() {

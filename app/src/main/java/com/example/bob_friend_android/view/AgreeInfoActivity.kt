@@ -1,7 +1,6 @@
 package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -10,42 +9,42 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.ActivityWithdrawalBinding
+import com.example.bob_friend_android.databinding.ActivitySetAgreeInfoBinding
 import com.example.bob_friend_android.viewmodel.UserViewModel
-import kotlin.properties.Delegates
 
-class DeleteUserActivity : AppCompatActivity() {
+class AgreeInfoActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityWithdrawalBinding
+    private lateinit var binding: ActivitySetAgreeInfoBinding
     private lateinit var viewModel: UserViewModel
-    private lateinit var token: String
-    var toast:Toast? = null
+    var toast: Toast? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_withdrawal)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_set_agree_info)
         viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         binding.lifecycleOwner = this
-        binding.list = viewModel
+        binding.join = viewModel
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.toolbar.title = "회원탈퇴"
+        binding.toolbar.title = "정보 동의 설정"
+        binding.switch1.isChecked = App.prefs.getBoolean("agree", false)
 
         observeData()
 
-        token = App.prefs.getString("token", "").toString()
-
-        binding.deleteUserBtn.setOnClickListener {
-            viewModel.deleteUser(token, binding.editTextTextPassword.text.toString())
-            val editor = App.prefs.edit()
-            editor.clear()
-            editor.apply()
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+        binding.switch1.setOnCheckedChangeListener { compoundButton, isChecked ->
+            if (isChecked) {
+                viewModel.updateUser(agree = true, email = null, nickname = null,
+                    password = null, sex = null, birth = null
+                )
+            } else {
+                viewModel.updateUser(agree = false, email = null, nickname = null,
+                    password = null, sex = null, birth = null
+                )
+            }
         }
     }
 
@@ -60,6 +59,7 @@ class DeleteUserActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
     @SuppressLint("ShowToast")
     private fun showToast(msg: String) {
         if (toast == null) {
@@ -70,9 +70,15 @@ class DeleteUserActivity : AppCompatActivity() {
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(this@DeleteUserActivity) {
+            errorMsg.observe(this@AgreeInfoActivity) {
                 showToast(it)
             }
+
+            userInfo.observe(this@AgreeInfoActivity, { user ->
+                val editor = App.prefs.edit()
+                editor.putBoolean("agree", user.agree)
+                editor.apply()
+            })
         }
     }
 }

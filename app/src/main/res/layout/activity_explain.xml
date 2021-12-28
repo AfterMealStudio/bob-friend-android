@@ -7,8 +7,8 @@
 
     <data>
         <variable
-            name="join"
-            type="com.example.bob_friend_android.viewmodel.UserViewModel" />
+            name="list"
+            type="com.example.bob_friend_android.viewmodel.ListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +30,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <LinearLayout
+            android:id="@+id/linearLayout4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -42,19 +43,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/textView8"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <Switch
-                    android:id="@+id/switch1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:textColor="@color/main_color1"
-                    android:text="광고성 정보 수신 동의"/>
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:text="@string/login_explain"
+                android:textColor="@color/main_color1"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/detail_line"
@@ -71,10 +66,22 @@
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="어쩌고 저쩌고 무슨 알림이가고, 무슨 혜택등 무슨 정보를 보낸다는 내용"
+                android:text="@string/login_explain2"
                 android:textColor="@color/main_color1"
                 android:textSize="16sp" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_next"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
