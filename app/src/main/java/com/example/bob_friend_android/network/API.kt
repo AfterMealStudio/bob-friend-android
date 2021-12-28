@@ -16,8 +16,13 @@ interface API {
     fun getJoinResponse(@Body user: Map<String, String>): Call<User>
 
     //회원탈퇴
-    @DELETE("api/user/{userId}")
-    fun deleteUser(@Body password: Map<String, String>, @Path("userId") userId: Int): Call<Void>
+    @HTTP(method = "DELETE", path = "http://117.17.102.143:8080/api/user/", hasBody = true)
+    fun deleteUser(@Header("Authorization") token:String, @Body password: Map<String, String>): Call<Void>
+
+    //회원정보 수정
+    @PUT("/api/user")
+    fun updateUser(@Body userInfo:Map<String, String?>): Call<User>
+
 
     //닉네임 중복확인
     @GET("api/nickname/{nickname}")

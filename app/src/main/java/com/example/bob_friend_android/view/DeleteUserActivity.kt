@@ -15,6 +15,7 @@ class DeleteUserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWithdrawalBinding
     private lateinit var viewModel: JoinViewModel
+    private lateinit var token: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +33,10 @@ class DeleteUserActivity : AppCompatActivity() {
 
         val userId = App.prefs.getInt("id",2019108267)
 
+        token = App.prefs.getString("token", "").toString()
+
         binding.deleteUserBtn.setOnClickListener {
-            viewModel.deleteUser(binding.editTextTextPassword.text.toString(), userId)
+            viewModel.deleteUser(token, binding.editTextTextPassword.text.toString())
         }
     }
 

@@ -7,8 +7,8 @@
 
     <data>
         <variable
-            name="list"
-            type="com.example.bob_friend_android.viewmodel.ListViewModel" />
+            name="join"
+            type="com.example.bob_friend_android.viewmodel.JoinViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,8 +53,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textColor="@color/main_color1"
-                    android:text="광고성 정보 수신 동의"
-                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+                    android:text="광고성 정보 수신 동의"/>
             </LinearLayout>
 
             <TextView

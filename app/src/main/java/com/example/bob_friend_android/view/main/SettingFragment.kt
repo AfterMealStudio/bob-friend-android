@@ -88,7 +88,7 @@ class SettingFragment : Fragment() {
             }
 
             binding.userInfoAgreeBtn.setOnClickListener {
-                val intent = Intent(requireContext(), SetAgreeInfoActivity::class.java)
+                val intent = Intent(requireContext(), AgreeInfoActivity::class.java)
                 startActivity(intent)
             }
 
