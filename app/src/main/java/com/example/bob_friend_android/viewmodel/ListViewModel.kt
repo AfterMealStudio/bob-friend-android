@@ -8,7 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.bob_friend_android.model.Board
-import com.example.bob_friend_android.model.Locations
+import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.model.SearchKeyword
 import com.example.bob_friend_android.model.*
 import com.example.bob_friend_android.network.RetrofitBuilder
@@ -33,8 +33,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val searchKeyword : LiveData<SearchKeyword>
         get() = _searchKeyword
 
-    private val _location = MutableLiveData<List<Locations>>()
-    val location : MutableLiveData<List<Locations>>
+    private val _location = MutableLiveData<List<Location>>()
+    val location : MutableLiveData<List<Location>>
         get() = _location
 
     private val _progressVisible = MutableLiveData<Boolean>()
@@ -113,7 +113,6 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         _progressVisible.postValue(true)
         RetrofitBuilder.apiBob.searchListTimeLimits(category, keyword, start, end).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
-//                Log.d(TAG, "searchList : ${response.body()!!.boardList}, ${response.body()!!.element}, ${response.body()!!.last}")
                 if(response.body() != null) {
                     element = response.body()!!.element
                     lastPage = response.body()!!.last
@@ -168,18 +167,18 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    fun setMarkers() {
+    fun setMarkers(zoom: Int, longitude: Double, latitude:Double) {
         _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.getRecruitmentLocations().enqueue(object : Callback<List<Locations>> {
-            override fun onResponse(call: Call<List<Locations>>, response: Response<List<Locations>>) {
+        RetrofitBuilder.apiBob.getRecruitmentLocations(zoom, longitude, latitude).enqueue(object : Callback<LocationList> {
+            override fun onResponse(call: Call<LocationList>, response: Response<LocationList>) {
                 if(response.body() != null) {
-                    _location.postValue(response.body()!!)
+                    _location.postValue(response.body()!!.List)
                 }
 
                 _progressVisible.postValue(false)
             }
 
-            override fun onFailure(call: Call<List<Locations>>, t: Throwable) {
+            override fun onFailure(call: Call<LocationList>, t: Throwable) {
                 _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
                 _progressVisible.postValue(false)
                 Log.e(TAG, t.message.toString())
