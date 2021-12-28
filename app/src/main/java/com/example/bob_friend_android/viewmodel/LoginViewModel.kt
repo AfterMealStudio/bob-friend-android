@@ -58,6 +58,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                 override fun onFailure(call: Call<Token>, t: Throwable) {
                     _msg.postValue("서버에 연결이 되지 않았습니다.")
                     Log.e(TAG, t.message.toString())
+                    _progressVisible.postValue(false)
                 }
             })
         }
@@ -90,11 +91,11 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
     fun validateUser() {
         _progressVisible.postValue(true)
         viewModelScope.launch {
-            RetrofitBuilder.apiBob.getToken().enqueue(object : Callback<Boolean> {
-                override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+            RetrofitBuilder.apiBob.getToken().enqueue(object : Callback<Map<String,Boolean>> {
+                override fun onResponse(call: Call<Map<String,Boolean>>, response: Response<Map<String,Boolean>>) {
                     Log.d(TAG, "validateUser: ${response.body()}")
                     if (response.body() != null) {
-                        if (response.body()!!) {
+                        if (response.body()!!.containsValue(true)) {
                             _msg.postValue("자동 로그인")
                         }
                         else {
@@ -104,7 +105,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     _progressVisible.postValue(false)
                 }
 
-                override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                override fun onFailure(call: Call<Map<String,Boolean>>, t: Throwable) {
                     _msg.postValue("서버에 연결이 되지 않았습니다.")
                     Log.d(TAG, "ttt: $t")
                 }

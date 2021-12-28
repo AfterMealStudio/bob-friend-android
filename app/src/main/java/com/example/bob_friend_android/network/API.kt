@@ -41,7 +41,7 @@ interface API {
 
     //토큰 가져오기
     @GET("api/validate")
-    fun getToken(): Call<Boolean>
+    fun getToken(): Call<Map<String,Boolean>>
 
     //토큰 재발급
     @POST("api/reissue")

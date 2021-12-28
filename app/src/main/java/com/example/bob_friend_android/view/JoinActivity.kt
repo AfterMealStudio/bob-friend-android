@@ -142,7 +142,7 @@ class JoinActivity : AppCompatActivity() {
             errorMsg.observe(this@JoinActivity) {
                 showToast(it)
                 if (it == "회원가입에 성공했습니다."){
-                    val intent = Intent(this@JoinActivity, LoginActivity::class.java)
+                    val intent = Intent(this@JoinActivity, ExplainActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             startActivity(intent)
                 }

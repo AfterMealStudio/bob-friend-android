@@ -11,7 +11,9 @@
     <string name="registerBtn">이메일 회원가입</string>
     <string name="FindIDPassword">아이디/비밀번호 찾기</string>
     <string name="Loading">Loading</string>
-
+    <string name="login_explain">회원가입 후 로그인 방법</string>
+    <string name="login_explain2">이메일(아이디) 칸에 입력했던 이메일로 확인 url이 발송됩니다. 링크로 접속하여 사용자 확인이 완료되기 전까지는 로그인이 되지 않습니다. 로그인을 하기 전 이메일을 확인해주시길 바랍니다. 확인하셨다면 다음버튼을 눌러주십시오.</string>
+    <string name="login_next">확인했습니다</string>
 
     <!--회원가입-->
     <string name="userId">이메일(아이디)</string>
