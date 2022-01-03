@@ -134,7 +134,9 @@ class ListFragment : Fragment() {
                 for(document in it) {
                     boardArrayList.add(document)
                 }
+
                 boardAdapter.addItems(boardArrayList)
+
             }
 
             val dialog = LoadingDialog(requireContext())

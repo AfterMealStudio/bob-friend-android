@@ -2,6 +2,7 @@ package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -12,6 +13,9 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -40,10 +44,14 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     private lateinit var binding: FragmentMapBinding
     private lateinit var viewModel: ListViewModel
 
+    private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
+
     private var x: Double? = null
     private var y: Double? = null
     private var placeName: String? = null
     private var click: Boolean? = false
+
+    private var address: String = ""
 
     lateinit var mapView: MapView
     private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
@@ -116,6 +124,20 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
             }
         })
 
+        getListResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+                result: ActivityResult ->
+            if(result.resultCode == AppCompatActivity.RESULT_OK) {
+                if(result.data != null) {
+                    val callType = result.data?.getStringExtra("CallType")
+                    if (callType == "delete" || callType == "close"){
+                        bottomArrayList.clear()
+                        viewModel.getRecruitmentAddress(address)
+                    }
+                }
+            }
+        }
+
         // 리스트 아이템 클릭 시 해당 위치로 이동
         searchAdapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
@@ -126,6 +148,17 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
                     listItems[position].x
                 )
                 setPosition(listItems[position].y, listItems[position].x)
+            }
+        })
+
+        bottomViewAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
+            override fun onItemClick(v: View, data: Board, pos: Int) {
+                activity?.let {
+                    val intent = Intent(context, DetailBoardActivity::class.java)
+                    intent.putExtra("boardId", data.id)
+                    intent.putExtra("userId", data.author!!.id)
+                    getListResultLauncher.launch(intent)
+                }
             }
         })
 
@@ -177,6 +210,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun observeData() {
         with(viewModel) {
             errorMsg.observe(viewLifecycleOwner) {
@@ -210,6 +244,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
                     bottomArrayList.add(document)
                 }
                 bottomViewAdapter.addItems(bottomArrayList)
+                binding.bottomList.totalElements.text = "약속 ${it.size}개"
             }
         }
     }
@@ -217,7 +252,8 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
 
     override fun onClick(p0: Overlay): Boolean {
         bottomArrayList.clear()
-        viewModel.getRecruitmentAddress(p0.tag as String)
+        address = p0.tag.toString()
+        viewModel.getRecruitmentAddress(address)
         binding.bottomList.bottomView.visibility = View.VISIBLE
         return true
     }
