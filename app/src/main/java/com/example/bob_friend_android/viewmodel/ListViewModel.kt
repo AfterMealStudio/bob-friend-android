@@ -137,6 +137,36 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
+
+    fun getRecruitmentAddress(address: String){
+        var lastPage: Boolean
+        var element: Int
+        _progressVisible.postValue(true)
+        RetrofitBuilder.apiBob.getRecruitmentAddress("specific", address).enqueue(object : Callback<BoardList> {
+            override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
+                if(response.body() != null) {
+                    element = response.body()!!.element
+                    lastPage = response.body()!!.last
+                    if(!lastPage||(element != 0 && lastPage)){
+                        for (document in response.body()!!.boardList) {
+                            Log.d(TAG, "setList : ${response.body()!!.boardList}")
+                            Log.d(TAG, "setList : ${response.body()}")
+
+                            _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                        }
+                    }
+                }
+                _progressVisible.postValue(false)
+            }
+
+            override fun onFailure(call: Call<BoardList>, t: Throwable) {
+                _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
+                Log.e(TAG, t.message.toString())
+            }
+        })
+    }
+
+
     fun getMyRecruitment(type: String, listPage: Int, sort: String){
         var lastPage: Boolean
         var element: Int

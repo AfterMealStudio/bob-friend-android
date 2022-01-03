@@ -17,19 +17,24 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.adapter.BoardAdapter
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentMapBinding
+import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
+import java.util.ArrayList
 
 
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     val TAG = "MapFragment"
 
     private lateinit var binding: FragmentMapBinding
@@ -51,6 +56,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private var pageNumber = 1      // 검색 페이지 번호
     private var keyword = ""        // 검색 키워드
 
+    private val bottomViewAdapter = BoardAdapter()
+    private var bottomArrayList : ArrayList<Board> = ArrayList()
+
     var toast: Toast? = null
 
     override fun onCreateView(
@@ -71,6 +79,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         )
         binding.rvList.adapter = searchAdapter
         binding.rvList.visibility = View.GONE
+
+        binding.bottomList.recyclerviewBottom.layoutManager = LinearLayoutManager(requireActivity())
+        binding.bottomList.recyclerviewBottom.adapter = bottomViewAdapter
 
         x = arguments?.getDouble("x")
         y = arguments?.getDouble("y")
@@ -129,6 +140,42 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         imm.hideSoftInputFromWindow(binding.mainEditTextSearch.windowToken, 0)
     }
 
+    private fun addMarkers(item: Location) {
+        val marker = Marker()
+        marker.position = LatLng(item.latitude, item.longitude)
+        marker.map = naverMap
+        marker.onClickListener = this
+        marker.tag = item.address
+    }
+
+
+    fun setPosition(y: Double, x: Double) {
+        val cameraPosition = CameraPosition(
+            LatLng(y, x),
+            14.0
+        )
+        naverMap.cameraPosition = cameraPosition
+    }
+
+
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        naverMap.uiSettings.isLocationButtonEnabled = true
+        naverMap.setOnMapClickListener { point, coord ->
+            binding.bottomList.bottomView.visibility = View.GONE
+            binding.rvList.visibility = View.GONE
+            val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
+            val cameraPositionLongitude = naverMap.cameraPosition.target.longitude
+            viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
+        }
+
+        naverMap.addOnCameraChangeListener { reason, animated ->
+            Log.i("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
+        }
+    }
+
 
     private fun observeData() {
         with(viewModel) {
@@ -157,41 +204,22 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     addMarkers(document)
                 }
             }
+
+            boardList.observe(viewLifecycleOwner) {
+                for(document in it) {
+                    bottomArrayList.add(document)
+                }
+                bottomViewAdapter.addItems(bottomArrayList)
+            }
         }
     }
 
 
-    private fun addMarkers(item: Location) {
-        val marker = Marker()
-        marker.position = LatLng(item.latitude, item.longitude)
-        marker.map = naverMap
-    }
-
-
-    fun setPosition(y: Double, x: Double) {
-        val cameraPosition = CameraPosition(
-            LatLng(y, x),
-            14.0
-        )
-        naverMap.cameraPosition = cameraPosition
-    }
-
-
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-        naverMap.uiSettings.isLocationButtonEnabled = true
-        naverMap.setOnMapClickListener { point, coord ->
-            binding.rvList.visibility = View.GONE
-        }
-
-        naverMap.addOnCameraChangeListener { reason, animated ->
-            Log.i("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
-            val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
-            val cameraPositionLongitude = naverMap.cameraPosition.target.longitude
-            viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
-        }
+    override fun onClick(p0: Overlay): Boolean {
+        bottomArrayList.clear()
+        viewModel.getRecruitmentAddress(p0.tag as String)
+        binding.bottomList.bottomView.visibility = View.VISIBLE
+        return true
     }
 
     override fun onStart() {

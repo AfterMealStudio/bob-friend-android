@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -8,24 +8,9 @@
             name="map"
             type="com.example.bob_friend_android.viewmodel.ListViewModel" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
-            tools:context=".view.MapFragment">
-
-            <com.naver.maps.map.MapView
-                android:id="@+id/map_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </FrameLayout>
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/main_toolbar"
@@ -34,9 +19,9 @@
             android:background="@color/main_color1"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -48,11 +33,11 @@
                     android:id="@+id/rise"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/rice"
-                    app:tint="@color/white" />
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:srcCompat="@drawable/rice"
+                    bind:tint="@color/white" />
 
                 <EditText
                     android:id="@+id/main_editText_search"
@@ -71,23 +56,11 @@
                     android:textColor="@color/main_color1"
                     android:textColorHint="@color/main_color1"
                     android:imeOptions="actionSearch"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/rise"
-                    app:layout_constraintTop_toTopOf="parent">
-
-<!--                    <requestFocus />-->
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toEndOf="@+id/rise"
+                    bind:layout_constraintTop_toTopOf="parent">
                 </EditText>
-<!--                <ImageView-->
-<!--                    android:id="@+id/search"-->
-<!--                    android:layout_width="30dp"-->
-<!--                    android:layout_height="30dp"-->
-<!--                    android:layout_marginRight="13dp"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintTop_toTopOf="parent"-->
-<!--                    app:srcCompat="@drawable/ic_baseline_search_24"-->
-<!--                    app:tint="@color/white" />-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
@@ -96,11 +69,30 @@
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:background="@color/white"
+            android:layout_marginTop="60dp"
             android:scrollbarThumbVertical="@color/main_color1"
             android:scrollbarSize="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_toolbar"/>
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintTop_toBottomOf="@+id/main_toolbar"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            bind:layout_constraintBottom_toBottomOf="parent"
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintTop_toBottomOf="@+id/main_toolbar"
+            tools:context=".view.MapFragment">
+
+            <com.naver.maps.map.MapView
+                android:id="@+id/map_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+
+        <include layout="@layout/view_bottom_list"
+            bind:map="@{map}"
+            android:id="@+id/bottom_list"/>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
