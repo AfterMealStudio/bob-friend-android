@@ -2,6 +2,7 @@ package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -12,33 +13,45 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.adapter.BoardAdapter
 import com.example.bob_friend_android.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentMapBinding
+import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.util.FusedLocationSource
+import java.util.ArrayList
 
 
-class MapFragment : Fragment(), OnMapReadyCallback {
+class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     val TAG = "MapFragment"
 
     private lateinit var binding: FragmentMapBinding
     private lateinit var viewModel: ListViewModel
 
+    private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
+
     private var x: Double? = null
     private var y: Double? = null
     private var placeName: String? = null
     private var click: Boolean? = false
+
+    private var address: String = ""
 
     lateinit var mapView: MapView
     private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
@@ -50,6 +63,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private val searchAdapter = SearchAdapter(listItems)    // 리사이클러 뷰 어댑터
     private var pageNumber = 1      // 검색 페이지 번호
     private var keyword = ""        // 검색 키워드
+
+    private val bottomViewAdapter = BoardAdapter()
+    private var bottomArrayList : ArrayList<Board> = ArrayList()
 
     var toast: Toast? = null
 
@@ -71,6 +87,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         )
         binding.rvList.adapter = searchAdapter
         binding.rvList.visibility = View.GONE
+
+        binding.bottomList.recyclerviewBottom.layoutManager = LinearLayoutManager(requireActivity())
+        binding.bottomList.recyclerviewBottom.adapter = bottomViewAdapter
 
         x = arguments?.getDouble("x")
         y = arguments?.getDouble("y")
@@ -105,6 +124,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             }
         })
 
+        getListResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+                result: ActivityResult ->
+            if(result.resultCode == AppCompatActivity.RESULT_OK) {
+                if(result.data != null) {
+                    val callType = result.data?.getStringExtra("CallType")
+                    if (callType == "delete" || callType == "close"){
+                        bottomArrayList.clear()
+                        viewModel.getRecruitmentAddress(address)
+                    }
+                }
+            }
+        }
+
         // 리스트 아이템 클릭 시 해당 위치로 이동
         searchAdapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
@@ -115,6 +148,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     listItems[position].x
                 )
                 setPosition(listItems[position].y, listItems[position].x)
+            }
+        })
+
+        bottomViewAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
+            override fun onItemClick(v: View, data: Board, pos: Int) {
+                activity?.let {
+                    val intent = Intent(context, DetailBoardActivity::class.java)
+                    intent.putExtra("boardId", data.id)
+                    intent.putExtra("userId", data.author!!.id)
+                    getListResultLauncher.launch(intent)
+                }
             }
         })
 
@@ -129,7 +173,44 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         imm.hideSoftInputFromWindow(binding.mainEditTextSearch.windowToken, 0)
     }
 
+    private fun addMarkers(item: Location) {
+        val marker = Marker()
+        marker.position = LatLng(item.latitude, item.longitude)
+        marker.map = naverMap
+        marker.onClickListener = this
+        marker.tag = item.address
+    }
 
+
+    fun setPosition(y: Double, x: Double) {
+        val cameraPosition = CameraPosition(
+            LatLng(y, x),
+            14.0
+        )
+        naverMap.cameraPosition = cameraPosition
+    }
+
+
+    override fun onMapReady(naverMap: NaverMap) {
+        this.naverMap = naverMap
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
+        naverMap.uiSettings.isLocationButtonEnabled = true
+        naverMap.setOnMapClickListener { point, coord ->
+            binding.bottomList.bottomView.visibility = View.GONE
+            binding.rvList.visibility = View.GONE
+            val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
+            val cameraPositionLongitude = naverMap.cameraPosition.target.longitude
+            viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
+        }
+
+        naverMap.addOnCameraChangeListener { reason, animated ->
+            Log.i("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
+        }
+    }
+
+
+    @SuppressLint("SetTextI18n")
     private fun observeData() {
         with(viewModel) {
             errorMsg.observe(viewLifecycleOwner) {
@@ -157,41 +238,24 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     addMarkers(document)
                 }
             }
+
+            boardList.observe(viewLifecycleOwner) {
+                for(document in it) {
+                    bottomArrayList.add(document)
+                }
+                bottomViewAdapter.addItems(bottomArrayList)
+                binding.bottomList.totalElements.text = "약속 ${it.size}개"
+            }
         }
     }
 
 
-    private fun addMarkers(item: Location) {
-        val marker = Marker()
-        marker.position = LatLng(item.latitude, item.longitude)
-        marker.map = naverMap
-    }
-
-
-    fun setPosition(y: Double, x: Double) {
-        val cameraPosition = CameraPosition(
-            LatLng(y, x),
-            14.0
-        )
-        naverMap.cameraPosition = cameraPosition
-    }
-
-
-    override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
-        naverMap.uiSettings.isLocationButtonEnabled = true
-        naverMap.setOnMapClickListener { point, coord ->
-            binding.rvList.visibility = View.GONE
-        }
-
-        naverMap.addOnCameraChangeListener { reason, animated ->
-            Log.i("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
-            val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
-            val cameraPositionLongitude = naverMap.cameraPosition.target.longitude
-            viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
-        }
+    override fun onClick(p0: Overlay): Boolean {
+        bottomArrayList.clear()
+        address = p0.tag.toString()
+        viewModel.getRecruitmentAddress(address)
+        binding.bottomList.bottomView.visibility = View.VISIBLE
+        return true
     }
 
     override fun onStart() {

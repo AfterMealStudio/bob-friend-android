@@ -75,6 +75,10 @@ interface API {
     fun getRecruitmentLocations(@Query("zoom") zoom:Int, @Query("longitude") longitude:Double,
                                 @Query("latitude") latitude:Double,): Call<LocationList>
 
+    //주소로 약속조희
+    @GET("/recruitments?")
+    fun getRecruitmentAddress(@Query("type") type:String, @Query("address") address:String): Call<BoardList>
+
     //내 약속조회
     @GET("/recruitments?")
     fun getMyRecruitment(@Query("type") type:String, @Query("page") page:Int, @Query("sort") sort:String): Call<BoardList>
