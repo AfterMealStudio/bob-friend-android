@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                 editor.putInt("id", user.id)
                 editor.putString("email", user.email)
                 editor.putString("nickname", user.nickname)
-                editor.putString("birth", user.birth)
+                editor.putString("age", user.age)
                 editor.putString("sex", user.sex)
                 editor.putBoolean("agree", user.agree)
                 editor.putFloat("rating", user.rating)
