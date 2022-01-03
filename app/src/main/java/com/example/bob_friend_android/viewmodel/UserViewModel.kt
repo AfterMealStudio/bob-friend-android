@@ -98,11 +98,14 @@ class UserViewModel(application: Application): AndroidViewModel(application) {
     fun updateUser(email: String?, nickname: String?, password: String?,
                    sex: String?, birth: String?, agree: Boolean?) {
         val updateInfo = HashMap<String, String?>()
+        if (birth!=null) {
+            val dateBirth = "${birth.substring(0, 4)}-${birth.substring(4, 6)}-${birth.substring(6)}"
+            updateInfo["birth"] = dateBirth
+        }
         updateInfo["email"] = email
         updateInfo["nickname"] = nickname
         updateInfo["password"] = password
         updateInfo["sex"] = sex
-        updateInfo["birth"] = birth
         updateInfo["agree"] = agree.toString()
 
         _progressVisible.postValue(true)

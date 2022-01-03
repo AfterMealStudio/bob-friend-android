@@ -31,7 +31,6 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
         get() = _progressVisible
 
 
-
     fun createBoard(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String,
                     gender: String, ageRestrictionStart: Int?, ageRestrictionEnd: Int?) {
         if(validation(title, content, count, locationName, time)) {

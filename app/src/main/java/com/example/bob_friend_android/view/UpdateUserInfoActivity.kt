@@ -46,7 +46,7 @@ class UpdateUserInfoActivity: AppCompatActivity() {
             gender = when(checkedId) {
                 R.id.male -> "MALE"
                 R.id.female -> "FEMALE"
-                R.id.third_gender -> "THIRD"
+                R.id.third_gender -> "NONE"
                 else -> ""
             }
         }
@@ -124,7 +124,7 @@ class UpdateUserInfoActivity: AppCompatActivity() {
                 editor.putInt("id", user.id)
                 editor.putString("email", user.email)
                 editor.putString("nickname", user.nickname)
-                editor.putString("birth", user.age)
+                editor.putString("age", user.age)
                 editor.putString("sex", user.sex)
                 editor.putBoolean("agree", user.agree)
                 editor.putFloat("rating", user.rating)
