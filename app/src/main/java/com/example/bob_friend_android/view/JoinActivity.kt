@@ -1,18 +1,19 @@
 package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityJoinBinding
 import com.example.bob_friend_android.viewmodel.UserViewModel
@@ -24,7 +25,6 @@ class JoinActivity : AppCompatActivity() {
     val TAG = "JoinActivity"
 
     private lateinit var binding: ActivityJoinBinding
-    private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
     private lateinit var viewModel : UserViewModel
 
     var agreeAll by Delegates.notNull<Boolean>() //동의하기
@@ -144,12 +144,9 @@ class JoinActivity : AppCompatActivity() {
             nicknameCheck = true
         }
 
-        keyboardVisibilityUtils = KeyboardVisibilityUtils(window,
-            onShowKeyboard = { keyboardHeight ->
-                binding.joinScroll.run {
-                    smoothScrollTo(scrollX, scrollY + keyboardHeight)
-                }
-            })
+        binding.joinLayout.setOnClickListener {
+            hideKeyboard()
+        }
 
         binding.editTextEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -287,5 +284,14 @@ class JoinActivity : AppCompatActivity() {
             toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
         } else toast?.setText(msg)
         toast?.show()
+    }
+
+    private fun hideKeyboard(){
+        val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.editTextEmail.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextNickname.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextPassword.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextPasswordCheck.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextDateBirth.windowToken, 0)
     }
 }
