@@ -50,7 +50,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                         200 -> _token.postValue(response.body())
                         405 -> _msg.postValue("로그인 실패 : 아이디나 비번이 올바르지 않습니다!")
                         500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
-                        else -> _msg.postValue("로그인에 실패했습니다.")
+                        else -> _msg.postValue("로그인에 실패했습니다. ${response.errorBody()?.string()}")
                     }
 
                     _progressVisible.postValue(false)
@@ -74,7 +74,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     when (response.code()) {
                         200 -> _refreshToken.postValue(response.body())
                         500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
-                        else -> _msg.postValue("자동 로그인에 실패했습니다.")
+                        else -> _msg.postValue("자동 로그인에 실패했습니다. ${response.errorBody()?.string()}")
                     }
                     _progressVisible.postValue(false)
                 }
