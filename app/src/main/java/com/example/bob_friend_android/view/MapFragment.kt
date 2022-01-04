@@ -203,10 +203,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
             val cameraPositionLongitude = naverMap.cameraPosition.target.longitude
             viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
         }
-
-        naverMap.addOnCameraChangeListener { reason, animated ->
-            Log.i("NaverMap", "카메라 변경 - reson: $reason, animated: $animated")
-        }
     }
 
 
