@@ -4,7 +4,7 @@ data class User(
     var id: Int = 0,
     var email: String,
     var nickname: String,
-    var birth: String,
+    var age: String,
     var sex: String,
     var reportCount: Int?,
     var accumulatedReports: Int?,

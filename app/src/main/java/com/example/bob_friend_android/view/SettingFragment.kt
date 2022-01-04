@@ -45,7 +45,7 @@ class SettingFragment : Fragment() {
         }
             binding.headerEmail.text = App.prefs.getString("email", "")
             binding.headerUsername.text = App.prefs.getString("nickname","")
-            binding.headerBirth.text = App.prefs.getString("birth","")
+            binding.headerBirth.text = App.prefs.getString("age","")
             binding.headerGender.text = userGender
             binding.ratingBar.rating = App.prefs.getFloat("rating",0.0F)
 
