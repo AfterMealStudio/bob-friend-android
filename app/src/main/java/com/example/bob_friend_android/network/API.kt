@@ -64,7 +64,7 @@ interface API {
 
     //약속들조회
     @GET("/recruitments?")
-    fun getRecruitments(@Query("page") id:Int): Call<BoardList>
+    fun getRecruitments(@Query("page") id:Int, @Query("sort") sort:String): Call<BoardList>
 
     //약속하나조회
     @GET("/recruitments/{id}")
