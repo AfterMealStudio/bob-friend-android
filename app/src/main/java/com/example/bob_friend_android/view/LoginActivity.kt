@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
-import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.SharedPref
 import com.example.bob_friend_android.databinding.ActivityLoginBinding
@@ -19,7 +18,6 @@ class LoginActivity : AppCompatActivity() {
     val TAG = "LOGIN"
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
     private lateinit var viewModel : LoginViewModel
 
     private var backKeyPressedTime : Long = 0
