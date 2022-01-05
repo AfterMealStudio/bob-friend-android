@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.model.Token
+import com.example.bob_friend_android.model.UserCheck
 import com.example.bob_friend_android.network.RetrofitBuilder
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -50,7 +51,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                         200 -> _token.postValue(response.body())
                         405 -> _msg.postValue("로그인 실패 : 아이디나 비번이 올바르지 않습니다!")
                         500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
-                        else -> _msg.postValue("로그인에 실패했습니다. ${response.errorBody()?.string()}")
+                        else -> _msg.postValue("로그인에 실패했습니다. ${response.errorBody()?.toString()}")
                     }
 
                     _progressVisible.postValue(false)
@@ -74,7 +75,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     when (response.code()) {
                         200 -> _refreshToken.postValue(response.body())
                         500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
-                        else -> _msg.postValue("자동 로그인에 실패했습니다. ${response.errorBody()?.string()}")
+                        else -> _msg.postValue("자동 로그인에 실패했습니다. ${response.errorBody()?.toString()}")
                     }
                     _progressVisible.postValue(false)
                 }
@@ -91,11 +92,11 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
     fun validateUser() {
         _progressVisible.postValue(true)
         viewModelScope.launch {
-            RetrofitBuilder.apiBob.getToken().enqueue(object : Callback<Map<String,Boolean>> {
-                override fun onResponse(call: Call<Map<String,Boolean>>, response: Response<Map<String,Boolean>>) {
+            RetrofitBuilder.apiBob.getToken().enqueue(object : Callback<UserCheck> {
+                override fun onResponse(call: Call<UserCheck>, response: Response<UserCheck>) {
                     Log.d(TAG, "validateUser: ${response.body()}")
                     if (response.body() != null) {
-                        if (response.body()!!.containsValue(true)) {
+                        if (response.body()!!.isValid) {
                             _msg.postValue("자동 로그인")
                         }
                         else {
@@ -105,7 +106,7 @@ class LoginViewModel(application: Application): AndroidViewModel(application) {
                     _progressVisible.postValue(false)
                 }
 
-                override fun onFailure(call: Call<Map<String,Boolean>>, t: Throwable) {
+                override fun onFailure(call: Call<UserCheck>, t: Throwable) {
                     _msg.postValue("서버에 연결이 되지 않았습니다.")
                     Log.d(TAG, "ttt: $t")
                 }

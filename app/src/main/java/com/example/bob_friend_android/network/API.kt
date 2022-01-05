@@ -40,10 +40,10 @@ interface API {
 
     //토큰 가져오기
     @GET("api/validate")
-    fun getToken(): Call<Map<String,Boolean>>
+    fun getToken(): Call<UserCheck>
 
     //토큰 재발급
-    @POST("api/reissue")
+    @POST("api/issue")
     fun refreshToken(@Body token: Token): Call<Token>
 
     //약속잡기
