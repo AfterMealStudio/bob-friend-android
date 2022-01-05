@@ -46,8 +46,9 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     fun setList(listPage: Int){
         var lastPage: Boolean
         var element: Int
+        val sort = "createdAt,desc"
         _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.getRecruitments(listPage).enqueue(object : Callback<BoardList> {
+        RetrofitBuilder.apiBob.getRecruitments(listPage, sort).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                 if(response.body() != null) {
                     element = response.body()!!.element

@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
 import android.graphics.Color
@@ -8,6 +9,7 @@ import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -76,6 +78,15 @@ class MyBoardActivity: AppCompatActivity() {
                 }
             })
         }
+
+        boardAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
+            override fun onItemClick(v: View, data: Board, pos: Int) {
+                val intent = Intent(this@MyBoardActivity, DetailBoardActivity::class.java)
+                intent.putExtra("boardId", data.id)
+                intent.putExtra("userId", data.author!!.id)
+                startActivity(intent)
+            }
+        })
 
         observeData()
     }

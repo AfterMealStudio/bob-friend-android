@@ -40,10 +40,10 @@ interface API {
 
     //토큰 가져오기
     @GET("api/validate")
-    fun getToken(): Call<Map<String,Boolean>>
+    fun getToken(): Call<UserCheck>
 
     //토큰 재발급
-    @POST("api/reissue")
+    @POST("api/issue")
     fun refreshToken(@Body token: Token): Call<Token>
 
     //약속잡기
@@ -64,7 +64,7 @@ interface API {
 
     //약속들조회
     @GET("/recruitments?")
-    fun getRecruitments(@Query("page") id:Int): Call<BoardList>
+    fun getRecruitments(@Query("page") id:Int, @Query("sort") sort:String): Call<BoardList>
 
     //약속하나조회
     @GET("/recruitments/{id}")
