@@ -1,28 +1,13 @@
 package com.example.bob_friend_android.adapter
 
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.example.bob_friend_android.model.Comment
-import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.ItemBoardBinding
 import com.example.bob_friend_android.databinding.ItemBoardCommentsBinding
 import com.example.bob_friend_android.databinding.ItemBoardRecommmentsBinding
-import com.example.bob_friend_android.model.Board
-import com.example.bob_friend_android.model.BoardItem
-import com.example.bob_friend_android.view.DetailBoardActivity
-import com.example.bob_friend_android.view.DialogCommentFragment
-import com.example.bob_friend_android.viewmodel.BoardViewModel
+import com.example.bob_friend_android.model.Comment
 import kotlinx.android.synthetic.main.item_board_comments.view.*
 import kotlinx.android.synthetic.main.item_board_recommments.view.*
 
@@ -124,21 +109,5 @@ class CommentAdapter(private var list: MutableList<Comment>, boardId: Int): Recy
                 }
             }
         }
-    }
-
-    fun addCommentItems(item: List<Comment>) {
-        list.clear()
-        list.addAll(item)
-        notifyDataSetChanged()
-    }
-
-
-    interface OnItemClickListener{
-        fun onItemClick(v:View, data: Comment, pos : Int)
-    }
-
-    private var listener : OnItemClickListener? = null
-    fun setOnItemClickListener(listener : OnItemClickListener) {
-        this.listener = listener
     }
 }
