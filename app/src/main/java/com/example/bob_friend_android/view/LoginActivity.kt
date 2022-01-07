@@ -2,8 +2,10 @@ package com.example.bob_friend_android.view
 
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -52,6 +54,14 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this@LoginActivity, JoinActivity::class.java))
         }
 
+        binding.findUserAccountBtn.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, FindUserAccountActivity::class.java))
+        }
+
+        binding.loginLayout.setOnClickListener {
+            hideKeyboard()
+        }
+
         observeData()
     }
 
@@ -70,6 +80,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun hideKeyboard(){
+        val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.editTextEmail.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextPassword.windowToken, 0)
+    }
 
     private fun observeData() {
         with(viewModel) {
