@@ -201,6 +201,12 @@
                 android:text="@string/allAgree" />
 
             <CheckBox
+                android:id="@+id/agree3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/marketingAgree" />
+
+            <CheckBox
                 android:id="@+id/agree1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -212,11 +218,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/personalInformationAgree" />
 
-            <CheckBox
-                android:id="@+id/agree3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/marketingAgree" />
 
             <Button
                 android:id="@+id/join_btn"

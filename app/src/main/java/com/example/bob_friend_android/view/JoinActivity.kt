@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.ActivityJoinBinding
 import com.example.bob_friend_android.viewmodel.UserViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.properties.Delegates
 
 
@@ -252,8 +254,20 @@ class JoinActivity : AppCompatActivity() {
     private fun validateDateBirth(): Boolean {
         val value: String = binding.editTextDateBirth.text.toString()
 
+        val currentDate = Calendar.getInstance().time
+        val format = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+        val currentDateFormat = format.format(currentDate)
+
+        var age = value.substring(0,4).toInt() - currentDateFormat.substring(0,4).toInt()
+        if (value.substring(5,8).toInt() - currentDateFormat.substring(5,8).toInt() > 0) {
+            age += 1
+        }
+
         return if (value.isEmpty()) {
             binding.editTextDateBirth.error = "생년월일을 입력해주세요."
+            false
+        } else if(age < 15) {
+            binding.editTextDateBirth.error = "만 14세 미만의 이용자는 해당 서비스를 이용할 수 없습니다."
             false
         } else {
             binding.editTextDateBirth.error = null
