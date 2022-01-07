@@ -1,23 +1,16 @@
 package com.example.bob_friend_android.viewmodel
 
 import android.app.Application
-import android.content.Context
-import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.bob_friend_android.App
 import com.example.bob_friend_android.model.DuplicatedCheck
 import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.network.RetrofitBuilder
-import com.example.bob_friend_android.network.StatusCode
-import com.example.bob_friend_android.view.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.regex.Pattern
 
 class UserViewModel(application: Application): AndroidViewModel(application) {
 
