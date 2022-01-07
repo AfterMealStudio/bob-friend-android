@@ -40,8 +40,6 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
     private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
 
     private lateinit var mapView: MapView
-    private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
-    private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
 
     private var gender : String = "NONE"
@@ -82,9 +80,6 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
         mapView = binding.createMapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
-
 
 
         binding.createAgeGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -314,8 +309,6 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(@NonNull naverMap: NaverMap) {
         this.naverMap = naverMap
-        naverMap.locationSource = locationSource
-        naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     override fun onStart() {
