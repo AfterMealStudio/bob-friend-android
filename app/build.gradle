@@ -42,7 +42,6 @@ dependencies {
     //네이버 지도 api
     implementation 'com.naver.maps:map-sdk:3.12.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.1'
-    implementation 'com.google.android.gms:play-services-location:19.0.0'
 
     //네비게이션 드로어
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
