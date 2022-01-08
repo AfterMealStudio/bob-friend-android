@@ -139,7 +139,7 @@
     <string name="logout">로그아웃/회원탈퇴</string>
     <string name="logout_btn">로그아웃</string>
     <string name="del_user_btn">회원탈퇴</string>
-    <string name="about">개발자 정보</string>
+    <string name="about">문의하기</string>
 
     <!--setting-->
     <string name="setting_user_info">사용자 정보</string>
@@ -157,6 +157,7 @@
     <string name="setting_condition_of_service">서비스 이용약관</string>
     <string name="setting_personal_info">개인정보 처리방침</string>
     <string name="about_title">이 프로젝트의 개발자들</string>
+    <string name="about_team">Team : aftermealstudio@gmail.com</string>
     <string name="about_android">Android(PM) : noion0511@gmail.com</string>
     <string name="about_ios">IOS : mrmagnet777@gmail.com</string>
     <string name="about_server">Server : qww1552@gmail.com</string>
