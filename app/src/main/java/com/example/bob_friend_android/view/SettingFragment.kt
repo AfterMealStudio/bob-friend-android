@@ -75,14 +75,12 @@ class SettingFragment : Fragment() {
             binding.myBoardList.setOnClickListener {
                 val intent = Intent(requireContext(), MyBoardActivity::class.java)
                 intent.putExtra("type", "owned")
-                intent.putExtra("sort", "createdAt,desc")
                 startActivity(intent)
             }
 
             binding.myAppointmentList.setOnClickListener {
                 val intent = Intent(requireContext(), MyBoardActivity::class.java)
                 intent.putExtra("type", "joined")
-                intent.putExtra("sort", "createdAt,desc")
                 startActivity(intent)
             }
 
@@ -93,11 +91,6 @@ class SettingFragment : Fragment() {
 
             binding.updateUserInfo.setOnClickListener {
                 val intent = Intent(requireContext(), UpdateUserInfoActivity::class.java)
-                startActivity(intent)
-            }
-
-            binding.userInfoAgreeBtn.setOnClickListener {
-                val intent = Intent(requireContext(), AgreeInfoActivity::class.java)
                 startActivity(intent)
             }
 
