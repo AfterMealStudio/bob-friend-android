@@ -43,12 +43,11 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
 
 
 
-    fun setList(listPage: Int){
+    fun setList(listPage: Int, keyword: String? = null, type: String? = null, start: String? = null, end: String? = null, address: String? = null){
         var lastPage: Boolean
         var element: Int
-        val sort = "createdAt,desc"
         _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.getRecruitments(listPage, sort).enqueue(object : Callback<BoardList> {
+        RetrofitBuilder.apiBob.getRecruitments(listPage, keyword, type, start, end, address).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                 if(response.body() != null) {
                     element = response.body()!!.element
@@ -61,129 +60,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                             _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
                         }
                     }
-                }
-
-                _progressVisible.postValue(false)
-            }
-
-            override fun onFailure(call: Call<BoardList>, t: Throwable) {
-                _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
-                Log.e(TAG, t.message.toString())
-            }
-        })
-    }
-
-
-    fun searchList(category: String, keyword: String) {
-        var lastPage: Boolean
-        var element: Int
-
-        _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.searchList(category, keyword).enqueue(object : Callback<BoardList> {
-            override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
-//                Log.d(TAG, "searchList : ${response.body()!!.boardList}, ${response.body()!!.element}, ${response.body()!!.last}")
-                if(response.body() != null) {
-                    element = response.body()!!.element
-                    lastPage = response.body()!!.last
-                    if(!lastPage||(element != 0 && lastPage)){
-                        for (document in response.body()!!.boardList) {
-                            Log.d(TAG, "searchList : ${response.body()!!.boardList}")
-
-                            _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
-                        }
-                    }
-                    else {
+                    else if (keyword != null){
                         _msg.postValue("검색 결과가 없습니다.")
-                    }
-                }
-                _progressVisible.postValue(false)
-            }
-
-            override fun onFailure(call: Call<BoardList>, t: Throwable) {
-                _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
-                Log.e(TAG, t.message.toString())
-            }
-        })
-    }
-
-
-    fun searchListTimeLimits(category: String, keyword: String, start: String, end: String) {
-        var lastPage: Boolean
-        var element: Int
-
-        _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.searchListTimeLimits(category, keyword, start, end).enqueue(object : Callback<BoardList> {
-            override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
-                if(response.body() != null) {
-                    element = response.body()!!.element
-                    lastPage = response.body()!!.last
-                    if(!lastPage||(element != 0 && lastPage)){
-                        for (document in response.body()!!.boardList) {
-                            Log.d(TAG, "searchList : ${response.body()!!.boardList}")
-
-                            _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
-                        }
-                    }
-                    else {
-                        _msg.postValue("검색 결과가 없습니다.")
-                    }
-                }
-                _progressVisible.postValue(false)
-            }
-
-            override fun onFailure(call: Call<BoardList>, t: Throwable) {
-                _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
-                Log.e(TAG, t.message.toString())
-            }
-        })
-    }
-
-
-    fun getRecruitmentAddress(address: String){
-        var lastPage: Boolean
-        var element: Int
-        _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.getRecruitmentAddress("specific", address).enqueue(object : Callback<BoardList> {
-            override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
-                if(response.body() != null) {
-                    element = response.body()!!.element
-                    lastPage = response.body()!!.last
-                    if(!lastPage||(element != 0 && lastPage)){
-                        for (document in response.body()!!.boardList) {
-                            Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                            Log.d(TAG, "setList : ${response.body()}")
-
-                            _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
-                        }
-                    }
-                }
-                _progressVisible.postValue(false)
-            }
-
-            override fun onFailure(call: Call<BoardList>, t: Throwable) {
-                _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
-                Log.e(TAG, t.message.toString())
-            }
-        })
-    }
-
-
-    fun getMyRecruitment(type: String, listPage: Int, sort: String){
-        var lastPage: Boolean
-        var element: Int
-        _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.getMyRecruitment(type, listPage, sort).enqueue(object : Callback<BoardList> {
-            override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
-                if(response.body() != null) {
-                    element = response.body()!!.element
-                    lastPage = response.body()!!.last
-                    if(!lastPage||(element != 0 && lastPage)){
-                        for (document in response.body()!!.boardList) {
-                            Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                            Log.d(TAG, "setList : ${response.body()}")
-
-                            _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
-                        }
                     }
                 }
 

@@ -64,9 +64,10 @@ interface API {
 
     //약속들조회
     @GET("/recruitments?")
-    fun getRecruitments(@Query("page") id:Int, @Query("sort") sort:String): Call<BoardList>
+    fun getRecruitments(@Query("page") id:Int, @Query("keyword") keyword:String?, @Query("type") type:String?
+                        , @Query("start") start:String?, @Query("end") end:String?, @Query("address") address:String?): Call<BoardList>
 
-    //약속하나조회
+    //약속조회
     @GET("/recruitments/{id}")
     fun getRecruitment(@Path("id") id : Int): Call<Board>
 
@@ -75,31 +76,11 @@ interface API {
     fun getRecruitmentLocations(@Query("zoom") zoom:Int, @Query("longitude") longitude:Double,
                                 @Query("latitude") latitude:Double,): Call<LocationList>
 
-    //주소로 약속조희
-    @GET("/recruitments?")
-    fun getRecruitmentAddress(@Query("type") type:String, @Query("address") address:String): Call<BoardList>
-
-    //내 약속조회
-    @GET("/recruitments?")
-    fun getMyRecruitment(@Query("type") type:String, @Query("page") page:Int, @Query("sort") sort:String): Call<BoardList>
-
-    //약속검색
-    @GET("/recruitments/search?")
-    fun searchList(@Query("category") category:String, @Query("keyword") keyword:String) :Call<BoardList>
-
-    //약속검색-시간 제한 기능
-    @GET("/recruitments/search?")
-    fun searchListTimeLimits(@Query("category") category:String, @Query("keyword") keyword:String, @Query("start") start:String, @Query("end") end:String) :Call<BoardList>
-
     //약속삭제
     @DELETE("/recruitments/{id}")
     fun deleteRecruitment(@Path("id") boardId: Int): Call<Void>
 
     //댓글---------------------------
-
-    //댓글 조회
-    @GET("/recruitments/{recruitmentId}/comments")
-    fun getComments(@Path("recruitmentId") recruitmentId: Int): Call<List<Comment>>
 
     //댓글 작성
     @POST("/recruitments/{recruitmentId}/comments")

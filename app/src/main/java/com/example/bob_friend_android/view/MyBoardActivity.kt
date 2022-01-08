@@ -32,7 +32,6 @@ class MyBoardActivity: AppCompatActivity() {
     private var listPage = 0 // 현재 페이지
 
     private var type : String = ""
-    private var sort : String = ""
 
     private lateinit var boardAdapter: BoardAdapter
     private var boardArrayList : ArrayList<Board> = ArrayList()
@@ -63,9 +62,8 @@ class MyBoardActivity: AppCompatActivity() {
 
         if(intent.hasExtra("type")){
             type = intent.getStringExtra("type").toString()
-            sort = intent.getStringExtra("sort").toString()
 
-            viewModel.getMyRecruitment(type, listPage, sort)
+            viewModel.setList(type = type, listPage = listPage)
 
             binding.recyclerviewBoard.addOnScrollListener(object : RecyclerView.OnScrollListener(){
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -73,7 +71,7 @@ class MyBoardActivity: AppCompatActivity() {
                     // 스크롤이 끝에 도달했는지 확인
                     if (!binding.recyclerviewBoard.canScrollVertically(1)) {
                         listPage++
-                        viewModel.getMyRecruitment(type, listPage, sort)
+                        viewModel.setList(type = type, listPage = listPage)
                     }
                 }
             })
