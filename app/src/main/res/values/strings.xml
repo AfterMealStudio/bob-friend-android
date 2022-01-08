@@ -50,14 +50,15 @@
     <!--글쓰기-->
     <string name="write_board">약속 작성하기</string>
     <string name="write_board_ok">확인</string>
-    <string name="write_board_search">장소 검색</string>
-    <string name="write_board_time">시간 선택</string>
+    <string name="write_board_search">장소 검색하기</string>
+    <string name="write_board_date">약속 날짜 선택하기</string>
+    <string name="write_board_time">약속 시간 선택하기</string>
     <string name="write_search">검색</string>
     <string name="write_board_search2">장소를 검색해주세요.</string>
     <string name="write">작성하기</string>
-    <string name="write_title">제목</string>
-    <string name="write_content">내용</string>
-    <string name="write_member">약속 인원</string>
+    <string name="write_title">약속 제목</string>
+    <string name="write_content">약속 내용</string>
+    <string name="write_member">약속 인원 수</string>
     <string name="write_member2">ex) 4</string>
     <string name="write_meeting_time">약속 시간</string>
     <string name="write_appointment_place">약속 장소</string>

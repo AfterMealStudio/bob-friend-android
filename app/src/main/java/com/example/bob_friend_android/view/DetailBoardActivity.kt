@@ -52,8 +52,6 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
     private val userAdapter = UserAdapter(userList)
 
     private lateinit var mapView: MapView
-    private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
-    private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
 
     var appointmentTime = ""
@@ -76,7 +74,6 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView = binding.detailMapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
@@ -421,7 +418,6 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        naverMap.locationSource = locationSource
     }
 
     override fun onStart() {
