@@ -72,30 +72,17 @@ class BoardSearchActivity : AppCompatActivity() {
         binding.searchRecyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.searchRecyclerview.adapter = searchAdapter
 
-        binding.searchBackBtn.setOnClickListener {
-            onBackPressed()
-        }
-
-        ArrayAdapter.createFromResource(this,
-            R.array.search_spinner,
-            android.R.layout.simple_spinner_item).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinner.adapter = adapter
+        binding.searchBtn.setOnClickListener {
+            keyword = binding.editTextSearchBoard.text.toString()
+            searchList(keyword)
+            hideKeyboard()
         }
 
         binding.editTextSearchBoard.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
                     keyword = binding.editTextSearchBoard.text.toString()
-                    if(keyword!="") {
-                        if (startTime!=null && endTime!=null){
-                            viewModel.searchListTimeLimits(category, keyword, start, end)
-                        }
-                        else {
-                            viewModel.searchList(category,keyword)
-                        }
-                        binding.searchSettingView.visibility = View.GONE
-                    }
+                    searchList(keyword)
                     hideKeyboard()
                     return true
                 }
@@ -103,55 +90,16 @@ class BoardSearchActivity : AppCompatActivity() {
             }
         })
 
-        binding.searchResetBtn.setOnClickListener {
-            binding.searchRadioGroup.check(binding.radioButtonAll.id)
-            binding.radioButtonAll.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.radioButtonTitle.setTextColor(Color.parseColor("#000000"))
-            binding.radioButtonContent.setTextColor(Color.parseColor("#000000"))
-            binding.radioButtonPlace.setTextColor(Color.parseColor("#000000"))
-            binding.searchCheckTime.isChecked = false
-        }
-
-        binding.searchBtn.setOnClickListener {
-            keyword = binding.editTextSearchBoard.text.toString()
-            if(keyword!="") {
-                if (startTime!=null && endTime!=null) {
-                    val time1 = startTime!!.split(":")
-                    val time2 = endTime!!.split(":")
-                    val before = time1[0]+time1[1]
-                    val after = time2[0]+time2[1]
-
-                    Log.d("dddd", "${before.toInt()} ${after.toInt()}")
-                    if(startDate == endDate && before.toInt() > after.toInt()){
-                        showToast("시간 형식이 잘못되었습니다.")
-                        binding.searchCheckTime.isChecked = false
-                    }
-                    else {
-                        viewModel.searchListTimeLimits(category, keyword, start, end)
-                    }
+        binding.searchRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                // 스크롤이 끝에 도달했는지 확인
+                if (!binding.searchRecyclerview.canScrollVertically(1)) {
+                    listPage++
+                    viewModel.setList(listPage, keyword, category, start, end)
                 }
-                else {
-                    viewModel.searchList(category,keyword)
-                }
-                binding.searchSettingView.visibility = View.GONE
-                binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
             }
-            else {
-                showToast("검색어를 입력해주세요.")
-            }
-            hideKeyboard()
-        }
-
-        binding.searchSettingOnOffBtn.setOnClickListener {
-            if (binding.searchSettingView.visibility == View.GONE){
-                binding.searchSettingView.visibility = View.VISIBLE
-                binding.searchSettingOnOffBtn.setImageResource(R.drawable.up_arrow)
-            }
-            else if(binding.searchSettingView.visibility == View.VISIBLE) {
-                binding.searchSettingView.visibility = View.GONE
-                binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
-            }
-        }
+        })
 
         binding.searchCheckTime.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
@@ -197,6 +145,35 @@ class BoardSearchActivity : AppCompatActivity() {
                     category = "place"
                 }
             }
+        }
+
+        binding.searchSettingOnOffBtn.setOnClickListener {
+            if (binding.searchSettingView.visibility == View.GONE){
+                binding.searchSettingView.visibility = View.VISIBLE
+                binding.searchSettingOnOffBtn.setImageResource(R.drawable.up_arrow)
+            }
+            else if(binding.searchSettingView.visibility == View.VISIBLE) {
+                binding.searchSettingView.visibility = View.GONE
+                binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
+            }
+        }
+
+        binding.searchSettingView.setOnClickListener {
+            hideKeyboard()
+        }
+
+        binding.searchBackBtn.setOnClickListener {
+            onBackPressed()
+        }
+
+        binding.searchResetBtn.setOnClickListener {
+            binding.searchRadioGroup.check(binding.radioButtonAll.id)
+            binding.radioButtonAll.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.radioButtonTitle.setTextColor(Color.parseColor("#000000"))
+            binding.radioButtonContent.setTextColor(Color.parseColor("#000000"))
+            binding.radioButtonPlace.setTextColor(Color.parseColor("#000000"))
+            binding.searchCheckTime.isChecked = false
+            binding.searchCheckCondition.isChecked = false
         }
 
         searchAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
@@ -251,7 +228,6 @@ class BoardSearchActivity : AppCompatActivity() {
                 .build()
         picker.show(supportFragmentManager, "tag");
 
-
         picker.addOnPositiveButtonClickListener {
             var hour = picker.hour.toString()
             var minute = picker.minute.toString()
@@ -279,6 +255,36 @@ class BoardSearchActivity : AppCompatActivity() {
     }
 
 
+    private fun searchList(keyword: String?) {
+        boardItems.clear()
+        listPage = 0
+        if(keyword!="") {
+            if (startTime!=null && endTime!=null) {
+                val time1 = startTime!!.split(":")
+                val time2 = endTime!!.split(":")
+                val before = time1[0]+time1[1]
+                val after = time2[0]+time2[1]
+
+                if(startDate == endDate && before.toInt() > after.toInt()){
+                    showToast("시간 형식이 잘못되었습니다.")
+                    binding.searchCheckTime.isChecked = false
+                }
+                else {
+                    viewModel.setList(listPage, keyword, category, start, end)
+                }
+            }
+            else {
+                viewModel.setList(listPage, keyword, category, start, end)
+            }
+            binding.searchSettingView.visibility = View.GONE
+            binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
+        }
+        else {
+            showToast("검색어를 입력해주세요.")
+        }
+    }
+
+
     private fun hideKeyboard(){
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.editTextSearchBoard.windowToken, 0)
@@ -301,26 +307,10 @@ class BoardSearchActivity : AppCompatActivity() {
             }
 
             boardList.observe(this@BoardSearchActivity) {
-                var count = 0
                 for(document in it) {
                     boardItems.add(document)
-                    count += 1
                 }
                 searchAdapter.addItems(boardItems)
-                boardItems.clear()
-
-                if (count >= 20){
-                    binding.searchRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-                        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                            super.onScrolled(recyclerView, dx, dy)
-                            // 스크롤이 끝에 도달했는지 확인
-                            if (!binding.searchRecyclerview.canScrollVertically(1)) {
-                                listPage++
-                                viewModel.setList(listPage)
-                            }
-                        }
-                    })
-                }
             }
         }
     }
