@@ -18,7 +18,7 @@ data class Board (
     var appointmentTime: String? = null,
     var createdAt: String? = null,
     var sexRestriction: String = "",
-    var report: Long? = null,
+    var reportCount: Int? = null,
     var ageRestrictionStart: Int? = null,
     var ageRestrictionEnd: Int? = null
 )

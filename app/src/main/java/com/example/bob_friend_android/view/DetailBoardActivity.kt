@@ -10,10 +10,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -24,11 +22,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.App
-import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.adapter.CommentAdapter
 import com.example.bob_friend_android.adapter.UserAdapter
 import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding
+import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.UserItem
 import com.example.bob_friend_android.viewmodel.BoardViewModel
@@ -55,9 +53,9 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
     private val userAdapter = UserAdapter(userList)
 
     private lateinit var mapView: MapView
-    private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
-    private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
+
+    private var participate = "참가하기"
 
     var appointmentTime = ""
 
@@ -79,7 +77,6 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView = binding.detailMapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-        locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
@@ -118,11 +115,6 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.detailButton.setOnClickListener {
                 if(binding.detailButton.text=="마감하기"){
                     viewModel.closeBoard(detailBoardId)
-                    val intent = Intent().apply {
-                        putExtra("CallType", "close")
-                    }
-                    setResult(RESULT_OK, intent)
-                    if(!isFinishing) finish()
                 }
                 else {
                     viewModel.participateBoard(detailBoardId)
@@ -149,6 +141,27 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    private fun makeBuilder(title: String, content:String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(title)
+        builder.setMessage(content)
+
+        if (title == "약속 마감" || title == "접근할 수 없는 약속" || title == "마감하기") {
+            builder.setPositiveButton("확인") { dialog, which ->
+                val intent = Intent().apply {
+                    putExtra("CallType", "close")
+                }
+                setResult(RESULT_OK, intent)
+                if(!isFinishing) finish()
+            }
+        }
+        else {
+            builder.setPositiveButton("확인") { dialog, which ->
+                return@setPositiveButton
+            }
+        }
+        builder.show()
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.option_menu, menu)
@@ -260,119 +273,7 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun observeData() {
         with(viewModel) {
             result.observe(this@DetailBoardActivity, Observer { board ->
-                detailBoardId = board.id
-                binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
-                binding.detailCurrentComment.text = board.amountOfComments.toString()
-                binding.readWriter.text = board.author?.nickname
-                binding.detailWriteTime.text = board.createdAt
-
-                binding.detailTitle.text = board.title
-                binding.detailContent.text = board.content
-                binding.readWriter.text = board.author!!.nickname
-
-                val marker = Marker()
-                marker.position = LatLng(board.latitude!!, board.longitude!!)
-                marker.map = naverMap
-                val cameraPosition = CameraPosition( // 카메라 위치 변경
-                    LatLng(board.latitude!!, board.longitude!!),  // 위치 지정
-                    15.0 // 줌 레벨
-                )
-                naverMap.cameraPosition = cameraPosition // 변경된 위치 반영
-
-                if (board.ageRestrictionStart != null && board.ageRestrictionEnd != null) {
-                    val ageFilter = board.ageRestrictionStart.toString() + "부터 " + board.ageRestrictionEnd.toString() + "까지"
-                    binding.detailAge2.text = ageFilter
-                }
-                else {
-                    binding.detailAgeLayout.visibility = View.GONE
-                }
-
-                when (board.sexRestriction) {
-                    "NONE" -> {
-                        binding.detailGenderLayout.visibility = View.GONE
-                    }
-                    "FEMALE" -> {
-                        binding.detailGender2.text = "여성"
-                    }
-                    "MALE" -> {
-                        binding.detailGender2.text = "남성"
-                    }
-                }
-
-                if (board.appointmentTime != null) {
-                    val createDay: String = board.appointmentTime!!
-                    val created = createDay.split("T")
-                    appointmentTime = created[0] + ", " + created[1].substring(0, 5)
-                }
-                binding.readMeetingTime2.text = appointmentTime
-                binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
-                binding.detailTotalMember.text = board.totalNumberOfPeople.toString()
-                binding.detailAppointmentPlaceName.text = board.restaurantName
-                binding.detailCurrentComment.text = board.amountOfComments.toString()
-
-                binding.commentRecyclerview.adapter = commentAdapter
-                val commentLayoutManager = LinearLayoutManager(this@DetailBoardActivity, RecyclerView.VERTICAL, false)
-                binding.commentRecyclerview.layoutManager = commentLayoutManager
-
-                binding.postComment.setOnClickListener {
-                    if (binding.editTextComment.text.toString() != "" && !flag) {
-                        viewModel.addComment(
-                            detailBoardId,
-                            binding.editTextComment.text.toString()
-                        )
-                        binding.editTextComment.text = null
-                    } else if (binding.editTextComment.text.toString() != "" && flag) {
-                        viewModel.addReComment(
-                            detailBoardId,
-                            detailCommentId,
-                            binding.editTextComment.text.toString()
-                        )
-                        binding.editTextComment.text = null
-                        flag = false
-                    }
-                }
-                binding.detailMember.layoutManager = LinearLayoutManager(
-                    this@DetailBoardActivity,
-                    RecyclerView.VERTICAL,
-                    false
-                )
-                binding.detailMember.adapter = userAdapter
-
-                if (board.author!!.id == App.prefs.getInt("id", -1)) {
-                    binding.detailButton.text = "마감하기"
-                } else {
-                    binding.detailButton.text = "참가하기"
-                    for (member in board.members!!) {
-                        if (member.id == App.prefs.getInt("id", -1)) {
-                            binding.detailButton.text = "취소하기"
-                        }
-                    }
-                }
-
-                commentList.clear()
-                if (board.comments != null) {
-                    for (comment in board.comments!!) {
-                        commentList.add(comment)
-                        if (comment.replies !== null) {
-                            for (recomment in comment.replies!!) {
-                                val reComment = Comment(
-                                    recomment.id,
-                                    recomment.author,
-                                    recomment.content,
-                                    recomment.replies,
-                                    typeFlag = 1,
-                                    createdAt = recomment.createdAt
-                                )
-                                commentList.add(reComment)
-                            }
-                        }
-                    }
-                }
-
-                userList.clear()
-                for (member in board.members!!) {
-                    userList.add(member)
-                }
+                setBoard(board)
             })
 
             val dialog = LoadingDialog(this@DetailBoardActivity)
@@ -387,29 +288,33 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
 
             errorMsg.observe(this@DetailBoardActivity) {
                 when (errorMsg.value) {
-                    "삭제되거나 마감된 글입니다." -> {
-                        setBoardDialog(this@DetailBoardActivity)
+                    "접근할 수 없는 약속" -> {
+                        makeBuilder("접근할 수 없는 약속", "마감되거나 삭제되어 접근 할 수 없는 약속입니다.")
                     }
                     "댓글이 삭제되었습니다." -> {
                         readBoard(detailBoardId)
+                    }
+                    "참가할 수 없는 약속" -> {
+                        makeBuilder("참가할 수 없는 약속", "참가 조건이 맞지 않아 참가할 수 없는 약속입니다.")
+                    }
+                    "약속 참가 기능" -> {
+                        when (participate) {
+                            "참가하기" -> {
+                                makeBuilder("약속 취소", "해당 약속을 취소했습니다.")
+                            }
+                            "취소하기" -> {
+                                makeBuilder("약속 참가", "해당 약속에 참가되었습니다.")
+                            }
+                            "마감하기" -> {
+                                makeBuilder("약속 마감", "해당 약속을 마감했습니다.")
+                            }
+                        }
                     }
                     else -> {
                         showToast(it)
                     }
                 }
             }
-        }
-    }
-
-
-    private fun setBoardDialog(context: Context) {
-        AlertDialog.Builder(context).apply {
-            setTitle("접근할 수 없는 약속")
-            setMessage("마감되거나 삭제되어 접근 할 수 없는 약속입니다..")
-            setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                finish()
-            })
-            show()
         }
     }
 
@@ -424,7 +329,6 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
-        naverMap.locationSource = locationSource
     }
 
     override fun onStart() {
@@ -460,5 +364,127 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()
+    }
+
+    private fun setBoard(board : Board) {
+        detailBoardId = board.id
+        binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
+        binding.detailCurrentComment.text = board.amountOfComments.toString()
+        binding.readWriter.text = board.author?.nickname
+        binding.detailWriteTime.text = board.createdAt
+
+        binding.detailTitle.text = board.title
+        binding.detailContent.text = board.content
+        binding.readWriter.text = board.author!!.nickname
+
+        val marker = Marker()
+        marker.position = LatLng(board.latitude!!, board.longitude!!)
+        marker.map = naverMap
+        val cameraPosition = CameraPosition( // 카메라 위치 변경
+            LatLng(board.latitude!!, board.longitude!!),  // 위치 지정
+            15.0 // 줌 레벨
+        )
+        naverMap.cameraPosition = cameraPosition // 변경된 위치 반영
+
+        if (board.ageRestrictionStart != null && board.ageRestrictionEnd != null) {
+            val ageFilter = board.ageRestrictionStart.toString() + "부터 " + board.ageRestrictionEnd.toString() + "까지"
+            binding.detailAge2.text = ageFilter
+        }
+        else {
+            binding.detailAgeLayout.visibility = View.GONE
+        }
+
+        when (board.sexRestriction) {
+            "NONE" -> {
+                binding.detailGenderLayout.visibility = View.GONE
+            }
+            "FEMALE" -> {
+                binding.detailGender2.text = "여성"
+            }
+            "MALE" -> {
+                binding.detailGender2.text = "남성"
+            }
+        }
+
+        if (board.appointmentTime != null) {
+            val createDay: String = board.appointmentTime!!
+            val created = createDay.split("T")
+            appointmentTime = created[0] + ", " + created[1].substring(0, 5)
+        }
+        binding.readMeetingTime2.text = appointmentTime
+        binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
+        binding.detailTotalMember.text = board.totalNumberOfPeople.toString()
+        binding.detailAppointmentPlaceName.text = board.restaurantName
+        binding.detailCurrentComment.text = board.amountOfComments.toString()
+
+        binding.commentRecyclerview.adapter = commentAdapter
+        val commentLayoutManager = LinearLayoutManager(this@DetailBoardActivity, RecyclerView.VERTICAL, false)
+        binding.commentRecyclerview.layoutManager = commentLayoutManager
+
+        binding.postComment.setOnClickListener {
+            if (binding.editTextComment.text.toString() != "" && !flag) {
+                viewModel.addComment(
+                    detailBoardId,
+                    binding.editTextComment.text.toString()
+                )
+                binding.editTextComment.text = null
+            } else if (binding.editTextComment.text.toString() != "" && flag) {
+                viewModel.addReComment(
+                    detailBoardId,
+                    detailCommentId,
+                    binding.editTextComment.text.toString()
+                )
+                binding.editTextComment.text = null
+                flag = false
+            }
+        }
+        binding.detailMember.layoutManager = LinearLayoutManager(
+            this@DetailBoardActivity,
+            RecyclerView.VERTICAL,
+            false
+        )
+        binding.detailMember.adapter = userAdapter
+
+        if (board.author!!.id == App.prefs.getInt("id", -1)) {
+            participate = "마감하기"
+            binding.detailButton.text = participate
+        }
+        else {
+            for (member in board.members!!) {
+                if (member.id == App.prefs.getInt("id", -1)) {
+                    participate = "취소하기"
+                    break
+                }
+                else {
+                    participate = "참가하기"
+                }
+            }
+            binding.detailButton.text = participate
+        }
+
+        commentList.clear()
+        if (board.comments != null) {
+            for (comment in board.comments!!) {
+                commentList.add(comment)
+                if (comment.replies !== null) {
+                    for (recomment in comment.replies!!) {
+                        val reComment = Comment(
+                            recomment.id,
+                            recomment.author,
+                            recomment.content,
+                            recomment.replies,
+                            typeFlag = 1,
+                            createdAt = recomment.createdAt
+                        )
+                        commentList.add(reComment)
+                    }
+                }
+            }
+        }
+
+        userList.clear()
+        for (member in board.members!!) {
+            userList.add(member)
+        }
     }
 }
