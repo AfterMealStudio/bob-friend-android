@@ -23,15 +23,15 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/join_layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="20dp"
+            android:layout_margin="20dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/register_title">
+
 
             <TextView
                 android:id="@+id/register_title"
@@ -44,118 +44,139 @@
                 android:textColor="@color/main_color1"
                 android:textSize="24sp" />
 
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"
+                android:text="@string/userId" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_weight="1">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_email"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:ems="10"
-                        android:hint="@string/userId"
-                        android:inputType="textEmailAddress" />
-                </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/editText_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/userId2"
+                    android:layout_marginRight="20dp"
+                    android:inputType="textEmailAddress" />
 
                 <Button
                     android:id="@+id/email_check"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="@color/main_color1"
-                    android:layout_gravity="center"
                     android:text="@string/userEmailBtn" />
             </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
+                android:id="@+id/email_status"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:passwordToggleEnabled="true"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1">
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/userPassword"
-                    android:inputType="textPassword" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
+                android:id="@+id/password"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:passwordToggleEnabled="true"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1">
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"
+                android:text="@string/userPassword" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_password_check"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/userPasswordCheck"
-                    android:inputType="textPassword" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/editText_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/userPassword2"
+                android:inputType="textPassword" />
 
+            <TextView
+                android:id="@+id/password_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"/>
+
+            <TextView
+                android:id="@+id/password_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"
+                android:text="@string/userPasswordCheck" />
+
+            <EditText
+                android:id="@+id/editText_password_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/userPasswordCheck2"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:id="@+id/password_check_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1" />
+
+            <TextView
+                android:id="@+id/nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"
+                android:text="@string/userName" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_weight="1">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_nickname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:hint="@string/userName"
-                        android:maxLength="10"
-                        android:inputType="text" />
-                </com.google.android.material.textfield.TextInputLayout>
+                <EditText
+                    android:id="@+id/editText_nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="@string/userName2"
+                    android:layout_marginRight="20dp"
+                    android:inputType="text" />
 
                 <Button
                     android:id="@+id/nickname_check"
-                    android:layout_width="match_parent"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:backgroundTint="@color/main_color1"
                     android:text="@string/userEmailBtn" />
             </LinearLayout>
 
-
-            <com.google.android.material.textfield.TextInputLayout
+            <TextView
+                android:id="@+id/nickname_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:counterEnabled="true"
-                app:counterMaxLength="8"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:textColor="@color/main_color1"/>
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_date_birth"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLength="8"
-                    android:hint="@string/userDateOfBirth"
-                    android:inputType="date"/>
-            </com.google.android.material.textfield.TextInputLayout>
+            <TextView
+                android:id="@+id/date_birth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"
+                android:text="@string/userDateOfBirth" />
+
+            <EditText
+                android:id="@+id/editText_date_birth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/userDateOfBirth2"
+                android:inputType="date"/>
+
+            <TextView
+                android:id="@+id/date_birth_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_color1"/>
 
             <TextView
                 android:id="@+id/gender"
@@ -168,7 +189,6 @@
                 android:id="@+id/register_gender_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <RadioButton
@@ -201,12 +221,6 @@
                 android:text="@string/allAgree" />
 
             <CheckBox
-                android:id="@+id/agree3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/marketingAgree" />
-
-            <CheckBox
                 android:id="@+id/agree1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -218,6 +232,11 @@
                 android:layout_height="wrap_content"
                 android:text="@string/personalInformationAgree" />
 
+            <CheckBox
+                android:id="@+id/agree3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/marketingAgree" />
 
             <Button
                 android:id="@+id/join_btn"

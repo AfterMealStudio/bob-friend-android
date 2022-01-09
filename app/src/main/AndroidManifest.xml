@@ -3,6 +3,8 @@
     package="com.example.bob_friend_android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
 
     <application
@@ -23,7 +25,6 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".view.JoinActivity" />
         <activity android:name=".view.SearchLocationActivity" />
-        <activity android:name=".view.FindUserAccountActivity" />
         <activity android:name=".view.MyBoardActivity" />
         <activity android:name=".view.AboutActivity" />
         <activity android:name=".view.DeleteUserActivity" />

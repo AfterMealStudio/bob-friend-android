@@ -40,6 +40,8 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
     private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
 
     private lateinit var mapView: MapView
+    private val LOCATION_PERMISSTION_REQUEST_CODE: Int = 1000
+    private lateinit var locationSource: FusedLocationSource // 위치를 반환하는 구현체
     private lateinit var naverMap: NaverMap
 
     private var gender : String = "NONE"
@@ -81,6 +83,9 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSTION_REQUEST_CODE)
+
+
 
         binding.createAgeGroup.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
@@ -95,13 +100,10 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        binding.createChoiceDate.setOnClickListener {
+        binding.createChoiceTime.setOnClickListener {
             setCalenderDay()
         }
 
-        binding.createChoiceTime.setOnClickListener {
-            setCalenderTime()
-        }
         binding.createRangeSeekBar.setLabelFormatter { value: Float ->
             val format = NumberFormat.getInstance(Locale.KOREAN)
             format.maximumFractionDigits = 0
@@ -215,10 +217,18 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun setCalenderDay() {
+        var isDataSet = false
+
         val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        var year = calendar.get(Calendar.YEAR)
+        var month = calendar.get(Calendar.MONTH)
+        var day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val mOnDismissListener = DialogInterface.OnDismissListener {
+            if (isDataSet) {
+                setCalenderTime()
+            }
+        }
 
         val dateListener = object : DatePickerDialog.OnDateSetListener {
             @SuppressLint("SetTextI18n")
@@ -228,6 +238,7 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
                 monthDate: Int,
                 dayOfMonth: Int
             ) {
+                isDataSet = true
                 binding.createDate.text = "${yearDate}년 ${monthDate+1} 월 ${dayOfMonth}일"
                 thisMonth = "${monthDate+1}"
                 thisDay = "$dayOfMonth"
@@ -248,6 +259,8 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
             .apply {
                 datePicker.minDate = System.currentTimeMillis()
         }
+
+        datePicker.setOnDismissListener(mOnDismissListener)
         datePicker.show()
     }
 
@@ -301,6 +314,8 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
 
     override fun onMapReady(@NonNull naverMap: NaverMap) {
         this.naverMap = naverMap
+        naverMap.locationSource = locationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
     override fun onStart() {

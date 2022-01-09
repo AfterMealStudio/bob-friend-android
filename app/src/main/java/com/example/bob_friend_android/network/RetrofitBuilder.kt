@@ -10,7 +10,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 object RetrofitBuilder {
     var apiBob: API
     var apiKakao: KakaoAPI
-    var retrofitBob: Retrofit
 
     val gson = GsonBuilder()
         .setLenient()
@@ -23,7 +22,7 @@ object RetrofitBuilder {
             it.proceed(request)
         }
 
-        retrofitBob = Retrofit.Builder()
+        val retrofitBob = Retrofit.Builder()
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client.build())
