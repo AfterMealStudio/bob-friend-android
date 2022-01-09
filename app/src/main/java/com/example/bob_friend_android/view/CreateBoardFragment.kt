@@ -95,10 +95,13 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        binding.createChoiceTime.setOnClickListener {
+        binding.createChoiceDate.setOnClickListener {
             setCalenderDay()
         }
 
+        binding.createChoiceTime.setOnClickListener {
+            setCalenderTime()
+        }
         binding.createRangeSeekBar.setLabelFormatter { value: Float ->
             val format = NumberFormat.getInstance(Locale.KOREAN)
             format.maximumFractionDigits = 0
@@ -212,18 +215,10 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun setCalenderDay() {
-        var isDataSet = false
-
         val calendar = Calendar.getInstance()
-        var year = calendar.get(Calendar.YEAR)
-        var month = calendar.get(Calendar.MONTH)
-        var day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val mOnDismissListener = DialogInterface.OnDismissListener {
-            if (isDataSet) {
-                setCalenderTime()
-            }
-        }
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val dateListener = object : DatePickerDialog.OnDateSetListener {
             @SuppressLint("SetTextI18n")
@@ -233,7 +228,6 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
                 monthDate: Int,
                 dayOfMonth: Int
             ) {
-                isDataSet = true
                 binding.createDate.text = "${yearDate}년 ${monthDate+1} 월 ${dayOfMonth}일"
                 thisMonth = "${monthDate+1}"
                 thisDay = "$dayOfMonth"
@@ -254,8 +248,6 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
             .apply {
                 datePicker.minDate = System.currentTimeMillis()
         }
-
-        datePicker.setOnDismissListener(mOnDismissListener)
         datePicker.show()
     }
 

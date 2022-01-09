@@ -138,9 +138,7 @@ class ListFragment : Fragment() {
                 for(document in it) {
                     boardArrayList.add(document)
                 }
-
                 boardAdapter.addItems(boardArrayList)
-
             }
 
             refreshToken.observe(viewLifecycleOwner) {
