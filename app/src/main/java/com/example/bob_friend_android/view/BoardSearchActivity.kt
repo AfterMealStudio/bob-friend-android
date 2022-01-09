@@ -50,8 +50,8 @@ class BoardSearchActivity : AppCompatActivity() {
     var toast: Toast? = null
 
     var category = "all"
-    var start: String = ""
-    var end : String = ""
+    var start: String? = null
+    var end : String? = null
 
     var startDate = ""
     var endDate = ""
@@ -96,7 +96,7 @@ class BoardSearchActivity : AppCompatActivity() {
                 // 스크롤이 끝에 도달했는지 확인
                 if (!binding.searchRecyclerview.canScrollVertically(1)) {
                     listPage++
-                    viewModel.setList(listPage, keyword, category, start, end)
+                    viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
                 }
             }
         })
@@ -105,11 +105,9 @@ class BoardSearchActivity : AppCompatActivity() {
             if (isChecked) {
                 showDateRangePicker()
                 binding.searchTime1.visibility = View.VISIBLE
-                binding.searchTime2.visibility = View.VISIBLE
             }
             else {
-                binding.searchTime1.visibility = View.INVISIBLE
-                binding.searchTime2.visibility = View.INVISIBLE
+                binding.searchTime1.visibility = View.GONE
             }
         }
 
@@ -255,7 +253,7 @@ class BoardSearchActivity : AppCompatActivity() {
     }
 
 
-    private fun searchList(keyword: String?) {
+    private fun searchList(keyword: String) {
         boardItems.clear()
         listPage = 0
         if(keyword!="") {
@@ -270,11 +268,11 @@ class BoardSearchActivity : AppCompatActivity() {
                     binding.searchCheckTime.isChecked = false
                 }
                 else {
-                    viewModel.setList(listPage, keyword, category, start, end)
+                    viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
                 }
             }
             else {
-                viewModel.setList(listPage, keyword, category, start, end)
+                viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
             }
             binding.searchSettingView.visibility = View.GONE
             binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)

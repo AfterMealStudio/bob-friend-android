@@ -16,6 +16,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.bob_friend_android.App
 import com.example.bob_friend_android.adapter.BoardAdapter
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.R
@@ -128,6 +129,9 @@ class ListFragment : Fragment() {
         with(viewModel) {
             errorMsg.observe(viewLifecycleOwner) {
                 showToast(it)
+                if (it == "Forbidden") {
+                    viewModel.refreshToken(App.prefs.getString("token", "")!!, App.prefs.getString("refresh", "")!!)
+                }
             }
 
             boardList.observe(viewLifecycleOwner) {
@@ -135,6 +139,14 @@ class ListFragment : Fragment() {
                     boardArrayList.add(document)
                 }
                 boardAdapter.addItems(boardArrayList)
+            }
+
+            refreshToken.observe(viewLifecycleOwner) {
+                val editor = App.prefs.edit()
+                editor.putString("token", it.accessToken)
+                editor.putString("refresh", it.refreshToken)
+                editor.putBoolean("checked", true)
+                editor.apply()
             }
 
             val dialog = LoadingDialog(requireContext())

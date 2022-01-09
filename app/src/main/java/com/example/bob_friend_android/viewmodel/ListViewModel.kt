@@ -3,18 +3,23 @@ package com.example.bob_friend_android.viewmodel
 import android.app.Application
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.model.SearchKeyword
 import com.example.bob_friend_android.model.*
 import com.example.bob_friend_android.network.RetrofitBuilder
+import com.google.gson.GsonBuilder
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.IOException
 
 class ListViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -41,27 +46,42 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val progressVisible : LiveData<Boolean>
         get() = _progressVisible
 
+    private val _refreshToken = MutableLiveData<Token>()
+    val refreshToken : LiveData<Token>
+        get() = _refreshToken
 
 
-    fun setList(listPage: Int, keyword: String? = null, type: String? = null, start: String? = null, end: String? = null, address: String? = null){
+
+    fun setList(listPage: Int, type: String? = null, address: String? = null){
         var lastPage: Boolean
         var element: Int
         _progressVisible.postValue(true)
-        RetrofitBuilder.apiBob.getRecruitments(listPage, keyword, type, start, end, address).enqueue(object : Callback<BoardList> {
+        RetrofitBuilder.apiBob.getRecruitments(listPage, type, address).enqueue(object : Callback<BoardList> {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
-                if(response.body() != null) {
+                Log.d(TAG, "setList : ${response.body()}")
+
+                if(response.code() == 403) {
+                    val gson = GsonBuilder().create()
+                    try {
+                        val error = gson.fromJson<ErrorResponse>(response.errorBody()!!.string(), ErrorResponse::class.java)
+                        if (error.message == null){
+                            _msg.postValue(error.error)
+                        }
+                        else {
+                            _msg.postValue(error.message)
+                        }
+                    } catch (e : IOException) {
+                        return
+                    }
+                }
+                else if(response.body() != null) {
                     element = response.body()!!.element
                     lastPage = response.body()!!.last
                     if(!lastPage||(element != 0 && lastPage)){
                         for (document in response.body()!!.boardList) {
                             Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                            Log.d(TAG, "setList : ${response.body()}")
-
                             _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
                         }
-                    }
-                    else if (keyword != null){
-                        _msg.postValue("검색 결과가 없습니다.")
                     }
                 }
 
@@ -73,6 +93,92 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e(TAG, t.message.toString())
             }
         })
+    }
+
+
+    fun searchList(listPage: Int, category: String = "all", keyword: String, start: String? = null, end: String? = null){
+        var lastPage: Boolean
+        var element: Int
+
+        _progressVisible.postValue(true)
+        if (start != null && end != null) {
+            RetrofitBuilder.apiBob.searchRecruitmentsTimeLimit(listPage, category, keyword, start, end).enqueue(object : Callback<BoardList> {
+                override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
+                    Log.d(TAG, "setList : ${response.body()}")
+
+                    if(response.code() == 403) {
+                        val gson = GsonBuilder().create()
+                        try {
+                            val error = gson.fromJson<ErrorResponse>(response.errorBody()!!.string(), ErrorResponse::class.java)
+                            if (error.message == null){
+                                _msg.postValue(error.error)
+                            }
+                            else {
+                                _msg.postValue(error.message)
+                            }
+                        } catch (e : IOException) {
+                            return
+                        }
+                    }
+                    else if(response.body() != null) {
+                        element = response.body()!!.element
+                        lastPage = response.body()!!.last
+                        if(!lastPage||(element != 0 && lastPage)){
+                            for (document in response.body()!!.boardList) {
+                                Log.d(TAG, "setList : ${response.body()!!.boardList}")
+                                _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                            }
+                        }
+                    }
+
+                    _progressVisible.postValue(false)
+                }
+
+                override fun onFailure(call: Call<BoardList>, t: Throwable) {
+                    _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
+                    Log.e(TAG, t.message.toString())
+                }
+            })
+        }
+        else {
+            RetrofitBuilder.apiBob.searchRecruitments(listPage, category, keyword).enqueue(object : Callback<BoardList> {
+                override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
+                    Log.d(TAG, "setList : ${response.body()}")
+
+                    if(response.code() == 403) {
+                        val gson = GsonBuilder().create()
+                        try {
+                            val error = gson.fromJson<ErrorResponse>(response.errorBody()!!.string(), ErrorResponse::class.java)
+                            if (error.message == null){
+                                _msg.postValue(error.error)
+                            }
+                            else {
+                                _msg.postValue(error.message)
+                            }
+                        } catch (e : IOException) {
+                            return
+                        }
+                    }
+                    else if(response.body() != null) {
+                        element = response.body()!!.element
+                        lastPage = response.body()!!.last
+                        if(!lastPage||(element != 0 && lastPage)){
+                            for (document in response.body()!!.boardList) {
+                                Log.d(TAG, "setList : ${response.body()!!.boardList}")
+                                _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                            }
+                        }
+                    }
+
+                    _progressVisible.postValue(false)
+                }
+
+                override fun onFailure(call: Call<BoardList>, t: Throwable) {
+                    _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
+                    Log.e(TAG, t.message.toString())
+                }
+            })
+        }
     }
 
 
@@ -93,6 +199,29 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e(TAG, t.message.toString())
             }
         })
+    }
+
+
+    fun refreshToken(access: String, refresh: String) {
+        val token = Token(access, refresh)
+        _progressVisible.postValue(true)
+        viewModelScope.launch {
+            RetrofitBuilder.apiBob.refreshToken(token).enqueue(object : Callback<Token> {
+                override fun onResponse(call: Call<Token>, response: Response<Token>) {
+                    when (response.code()) {
+                        200 -> _refreshToken.postValue(response.body())
+                        500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
+                        else -> _msg.postValue("자동 로그인에 실패했습니다. ${response.errorBody()?.toString()}")
+                    }
+                    _progressVisible.postValue(false)
+                }
+
+                override fun onFailure(call: Call<Token>, t: Throwable) {
+                    _msg.postValue("서버에 연결이 되지 않았습니다.")
+                    Log.d(TAG, "ttt: $t")
+                }
+            })
+        }
     }
 
 

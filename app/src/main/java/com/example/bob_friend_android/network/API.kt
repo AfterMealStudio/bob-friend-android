@@ -64,8 +64,16 @@ interface API {
 
     //약속들조회
     @GET("/recruitments?")
-    fun getRecruitments(@Query("page") id:Int, @Query("keyword") keyword:String?, @Query("type") type:String?
-                        , @Query("start") start:String?, @Query("end") end:String?, @Query("address") address:String?): Call<BoardList>
+    fun getRecruitments(@Query("page") id:Int,
+                        @Query("type") type:String?, @Query("address") address:String?): Call<BoardList>
+
+    //약속들검색
+    @GET("/recruitments/search?")
+    fun searchRecruitments(@Query("page") id:Int, @Query("category") category:String, @Query("keyword") keyword:String): Call<BoardList>
+
+    @GET("/recruitments/search?")
+    fun searchRecruitmentsTimeLimit(@Query("page") id:Int, @Query("category") category:String, @Query("keyword") keyword:String,
+                           @Query("start") start:String, @Query("end") end:String): Call<BoardList>
 
     //약속조회
     @GET("/recruitments/{id}")
