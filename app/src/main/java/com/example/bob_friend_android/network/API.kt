@@ -24,11 +24,11 @@ interface API {
 
     //닉네임 중복확인
     @GET("api/nickname/{nickname}")
-    fun getNicknameCheck(@Path("nickname") username : String): Call<DuplicatedCheck>
+    fun getNicknameCheck(@Path("nickname") username : String): Call<Boolean>
 
     //이메일 중복 확인
     @GET("api/email/{email}")
-    fun getEmailCheck(@Path("email") email : String): Call<DuplicatedCheck>
+    fun getEmailCheck(@Path("email") email : String): Call<Boolean>
 
     //로그인
     @POST("api/signin")
@@ -40,10 +40,10 @@ interface API {
 
     //토큰 가져오기
     @GET("api/validate")
-    fun getToken(): Call<UserCheck>
+    fun getToken(): Call<Map<String,Boolean>>
 
     //토큰 재발급
-    @POST("api/issue")
+    @POST("api/reissue")
     fun refreshToken(@Body token: Token): Call<Token>
 
     //약속잡기
@@ -64,18 +64,9 @@ interface API {
 
     //약속들조회
     @GET("/recruitments?")
-    fun getRecruitments(@Query("page") id:Int,
-                        @Query("type") type:String?, @Query("address") address:String?): Call<BoardList>
+    fun getRecruitments(@Query("page") id:Int, @Query("sort") sort:String): Call<BoardList>
 
-    //약속들검색
-    @GET("/recruitments/search?")
-    fun searchRecruitments(@Query("page") id:Int, @Query("category") category:String, @Query("keyword") keyword:String): Call<BoardList>
-
-    @GET("/recruitments/search?")
-    fun searchRecruitmentsTimeLimit(@Query("page") id:Int, @Query("category") category:String, @Query("keyword") keyword:String,
-                           @Query("start") start:String, @Query("end") end:String): Call<BoardList>
-
-    //약속조회
+    //약속하나조회
     @GET("/recruitments/{id}")
     fun getRecruitment(@Path("id") id : Int): Call<Board>
 
@@ -84,11 +75,31 @@ interface API {
     fun getRecruitmentLocations(@Query("zoom") zoom:Int, @Query("longitude") longitude:Double,
                                 @Query("latitude") latitude:Double,): Call<LocationList>
 
+    //주소로 약속조희
+    @GET("/recruitments?")
+    fun getRecruitmentAddress(@Query("type") type:String, @Query("address") address:String): Call<BoardList>
+
+    //내 약속조회
+    @GET("/recruitments?")
+    fun getMyRecruitment(@Query("type") type:String, @Query("page") page:Int, @Query("sort") sort:String): Call<BoardList>
+
+    //약속검색
+    @GET("/recruitments/search?")
+    fun searchList(@Query("category") category:String, @Query("keyword") keyword:String) :Call<BoardList>
+
+    //약속검색-시간 제한 기능
+    @GET("/recruitments/search?")
+    fun searchListTimeLimits(@Query("category") category:String, @Query("keyword") keyword:String, @Query("start") start:String, @Query("end") end:String) :Call<BoardList>
+
     //약속삭제
     @DELETE("/recruitments/{id}")
     fun deleteRecruitment(@Path("id") boardId: Int): Call<Void>
 
     //댓글---------------------------
+
+    //댓글 조회
+    @GET("/recruitments/{recruitmentId}/comments")
+    fun getComments(@Path("recruitmentId") recruitmentId: Int): Call<List<Comment>>
 
     //댓글 작성
     @POST("/recruitments/{recruitmentId}/comments")

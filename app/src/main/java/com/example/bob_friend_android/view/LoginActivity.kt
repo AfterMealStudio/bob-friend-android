@@ -2,15 +2,14 @@ package com.example.bob_friend_android.view
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
+import com.example.bob_friend_android.KeyboardVisibilityUtils
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.SharedPref
 import com.example.bob_friend_android.databinding.ActivityLoginBinding
@@ -20,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
     val TAG = "LOGIN"
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var keyboardVisibilityUtils: KeyboardVisibilityUtils
     private lateinit var viewModel : LoginViewModel
 
     private var backKeyPressedTime : Long = 0
@@ -54,14 +54,6 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this@LoginActivity, JoinActivity::class.java))
         }
 
-        binding.findUserAccountBtn.setOnClickListener {
-            startActivity(Intent(this@LoginActivity, FindUserAccountActivity::class.java))
-        }
-
-        binding.loginLayout.setOnClickListener {
-            hideKeyboard()
-        }
-
         observeData()
     }
 
@@ -80,11 +72,6 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideKeyboard(){
-        val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.editTextEmail.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.editTextPassword.windowToken, 0)
-    }
 
     private fun observeData() {
         with(viewModel) {
