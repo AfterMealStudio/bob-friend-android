@@ -74,11 +74,9 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
             RetrofitBuilder.apiBob.getRecruitment(recruitmentId).enqueue(object : Callback<Board> {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
                     Log.d(TAG, "readBoard : ${response.code()}")
-                    if (response.code() == 200){
-                        _result.postValue(response.body())
-                    }
-                    else if(response.code() == 403){
-                        _msg.postValue("삭제되거나 마감된 글입니다.")
+                    when (response.code()) {
+                        200 -> _result.postValue(response.body())
+                        403 -> _msg.postValue("접근할 수 없는 약속")
                     }
                     _progressVisible.postValue(false)
                 }
@@ -187,9 +185,12 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch {
             RetrofitBuilder.apiBob.participateBoard(recruitmentId).enqueue(object : Callback<Board> {
                 override fun onResponse(call: Call<Board>, response: Response<Board>) {
-                    if(response.body() != null) {
-                        Log.d(TAG, "participate : $response")
-                        _result.postValue(response.body())
+                    when (response.code()) {
+                        200 -> {
+                            _result.postValue(response.body())
+                            _msg.postValue("약속 참가 기능")
+                        }
+                        403 -> _msg.postValue("참가할 수 없는 약속")
                     }
                     _progressVisible.postValue(false)
                 }
