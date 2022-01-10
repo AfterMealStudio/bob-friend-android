@@ -254,8 +254,9 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
 
     private fun setCalenderTime() {
         val time = Calendar.getInstance()
-        val hour = time.get(Calendar.HOUR)
+        val hour = time.get(Calendar.HOUR_OF_DAY)
         val minute = time.get(Calendar.MINUTE)
+        val amPm = time.get(Calendar.AM_PM)
 
         val timeListener = object : TimePickerDialog.OnTimeSetListener{
             @SuppressLint("SetTextI18n")
