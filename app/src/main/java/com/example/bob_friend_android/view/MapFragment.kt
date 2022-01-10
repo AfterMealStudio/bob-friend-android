@@ -52,6 +52,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     private var click: Boolean? = false
 
     private var address: String = ""
+    private var listPage = 0 // 현재 페이지
 
     lateinit var mapView: MapView
     private lateinit var naverMap: NaverMap
@@ -129,11 +130,22 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
                     val callType = result.data?.getStringExtra("CallType")
                     if (callType == "delete" || callType == "close"){
                         bottomArrayList.clear()
-                        viewModel.getRecruitmentAddress(address)
+                        viewModel.setList(listPage = listPage, type = "specific", address = address)
                     }
                 }
             }
         }
+
+        binding.bottomList.recyclerviewBottom.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                // 스크롤이 끝에 도달했는지 확인
+                if (!binding.bottomList.recyclerviewBottom.canScrollVertically(1)) {
+                    listPage++
+                    viewModel.setList(listPage = listPage, type = "specific", address = address)
+                }
+            }
+        })
 
         // 리스트 아이템 클릭 시 해당 위치로 이동
         searchAdapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
@@ -244,7 +256,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     override fun onClick(p0: Overlay): Boolean {
         bottomArrayList.clear()
         address = p0.tag.toString()
-        viewModel.getRecruitmentAddress(address)
+        viewModel.setList(listPage = listPage, type = "specific", address = address)
         binding.bottomList.bottomView.visibility = View.VISIBLE
         return true
     }
