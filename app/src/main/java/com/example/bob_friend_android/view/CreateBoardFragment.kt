@@ -139,7 +139,7 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
             }
 
             builder.setPositiveButton("예") { dialog, which ->
-                if(viewModel.validation(title, boardContent, count, locationName, dateTime)){
+                if(validateTitle() && validateContent() && validateCount() && viewModel.validation(locationName, dateTime)){
                     viewModel.createBoard(
                         title,
                         boardContent,
@@ -153,8 +153,6 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
                         ageRestrictionStart,
                         ageRestrictionEnd
                     )
-
-                    removeFragment()
                 }
             }
             builder.setNegativeButton("아니오") { dialog, which ->
@@ -256,7 +254,6 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
         val time = Calendar.getInstance()
         val hour = time.get(Calendar.HOUR_OF_DAY)
         val minute = time.get(Calendar.MINUTE)
-        val amPm = time.get(Calendar.AM_PM)
 
         val timeListener = object : TimePickerDialog.OnTimeSetListener{
             @SuppressLint("SetTextI18n")
@@ -294,8 +291,59 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
     private fun observeData() {
         with(viewModel) {
             errorMsg.observe(viewLifecycleOwner) {
-                showToast(it)
+                if(it == "약속 작성 성공") {
+                    showToast("약속이 작성되었습니다!")
+                    removeFragment()
+                }
+                else {
+                    showToast(it)
+                }
             }
+        }
+    }
+
+
+    private fun validateTitle(): Boolean {
+        val title: String = binding.createEditCreateTitle.text.toString()
+
+        return if (title.isEmpty()) {
+            binding.createEditCreateTitle.error = "약속 제목을 입력해주세요."
+            false
+        } else {
+            binding.createEditCreateTitle.error = null
+            true
+        }
+    }
+
+
+    private fun validateContent(): Boolean {
+        val content: String = binding.createEditCreateContent.text.toString()
+
+        return if (content.isEmpty()) {
+            binding.createEditCreateContent.error = "약속 내용을 입력해주세요."
+            false
+        } else {
+            binding.createEditCreateContent.error = null
+            true
+        }
+    }
+
+
+    private fun validateCount(): Boolean {
+        val count: String = binding.createEditPeopleCount.text.toString()
+
+        return if (count.isEmpty()) {
+            binding.createEditPeopleCount.error = "약속 인원을 입력해주세요."
+            false
+        } else if (count.toInt() > 4) {
+            binding.createEditPeopleCount.error = "거리두기 방침에 따라 4인 이하의 인원만 가능합니다."
+            false
+        } else if (count.toInt() < 2) {
+            binding.createEditPeopleCount.error = "2인 이하의 글은 작성할 수 없습니다."
+            false
+        } else {
+            binding.createEditPeopleCount.error = null
+            true
         }
     }
 

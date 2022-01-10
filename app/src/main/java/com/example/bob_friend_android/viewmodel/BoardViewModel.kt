@@ -33,38 +33,44 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
 
     fun createBoard(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String,
                     gender: String, ageRestrictionStart: Int?, ageRestrictionEnd: Int?) {
-        if(validation(title, content, count, locationName, time)) {
-            val board = Board(
-                title = title,
-                content = content,
-                totalNumberOfPeople = count.toInt(),
-                restaurantAddress = address,
-                restaurantName = locationName,
-                longitude = x,
-                latitude = y,
-                appointmentTime = time,
-                sexRestriction = gender,
-                ageRestrictionStart = ageRestrictionStart,
-                ageRestrictionEnd = ageRestrictionEnd
-            )
+        val board = Board(
+            title = title,
+            content = content,
+            totalNumberOfPeople = count.toInt(),
+            restaurantAddress = address,
+            restaurantName = locationName,
+            longitude = x,
+            latitude = y,
+            appointmentTime = time,
+            sexRestriction = gender,
+            ageRestrictionStart = ageRestrictionStart,
+            ageRestrictionEnd = ageRestrictionEnd
+        )
 
-            _progressVisible.postValue(true)
-            RetrofitBuilder.apiBob.addRecruitments(board).enqueue(object : Callback<Board> {
-                override fun onResponse(call: Call<Board>, response: Response<Board>) {
-                    val code = response.code()
-                    Log.d(TAG, "createBoard: title=$title, content=$content, responseCode: ${response.code()}, error : ${response.errorBody().toString()}")
-                    if (code == 200) {
-                        _msg.postValue("약속이 작성되었습니다!")
+        _progressVisible.postValue(true)
+        RetrofitBuilder.apiBob.addRecruitments(board).enqueue(object : Callback<Board> {
+            override fun onResponse(call: Call<Board>, response: Response<Board>) {
+                val code = response.code()
+                Log.d(TAG, "createBoard: title=$title, content=$content, responseCode: ${response.code()}, error : ${response.errorBody().toString()}")
+                when (code) {
+                    200 -> {
+                        _msg.postValue("약속 작성 성공")
                     }
-                    _progressVisible.postValue(false)
+                    403 -> {
+                        _msg.postValue("토큰이 만료되었습니다.")
+                    }
+                    else -> {
+                        _msg.postValue("다시 시도해주세요. ${response.errorBody()!!.string()}")
+                    }
                 }
+                _progressVisible.postValue(false)
+            }
 
-                override fun onFailure(call: Call<Board>, t: Throwable) {
-                    _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
-                    Log.e("AddViewModel!!!", t.message.toString())
-                }
-            })
-        }
+            override fun onFailure(call: Call<Board>, t: Throwable) {
+                _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
+                Log.e("AddViewModel!!!", t.message.toString())
+            }
+        })
     }
 
 
@@ -266,23 +272,15 @@ class BoardViewModel(application: Application): AndroidViewModel(application) {
     }
 
 
-    fun validation(title : String, content: String, count:String, locationName: String, time: String): Boolean {
-         if (title.isEmpty() || content.isEmpty()) {
-             _msg.postValue("약속 제목과 내용을 입력해주세요!")
-             return false
-         }
-         if (count == "0" || count.toString()=="") {
-             _msg.postValue("약속 인원의 수를 입력해주세요!")
-             return false
-         }
-         if (locationName.isEmpty()) {
-             _msg.postValue("약속 장소를 입력해주세요!")
-             return false
-         }
-         if (time.isEmpty()) {
+    fun validation(locationName: String, time: String): Boolean {
+        if (time.isEmpty()) {
              _msg.postValue("약속 시간을 입력해주세요!")
              return false
-         }
+        }
+        if (locationName.isEmpty()) {
+            _msg.postValue("약속 장소를 입력해주세요!")
+            return false
+        }
          return true
     }
 }
