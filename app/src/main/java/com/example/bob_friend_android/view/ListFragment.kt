@@ -129,7 +129,7 @@ class ListFragment : Fragment() {
         with(viewModel) {
             errorMsg.observe(viewLifecycleOwner) {
                 showToast(it)
-                if (it == "Forbidden") {
+                if (it == "Access Denied") {
                     viewModel.refreshToken(App.prefs.getString("token", "")!!, App.prefs.getString("refresh", "")!!)
                 }
             }
