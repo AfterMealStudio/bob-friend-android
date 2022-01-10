@@ -60,29 +60,20 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
             override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                 Log.d(TAG, "setList : ${response.body()}")
 
-                if(response.code() == 403) {
-                    val gson = GsonBuilder().create()
-                    try {
-                        val error = gson.fromJson<ErrorResponse>(response.errorBody()!!.string(), ErrorResponse::class.java)
-                        if (error.message == null){
-                            _msg.postValue(error.error)
-                        }
-                        else {
-                            _msg.postValue(error.message)
-                        }
-                    } catch (e : IOException) {
-                        return
-                    }
-                }
-                else if(response.body() != null) {
-                    element = response.body()!!.element
-                    lastPage = response.body()!!.last
-                    if(!lastPage||(element != 0 && lastPage)){
-                        for (document in response.body()!!.boardList) {
-                            Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                            _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                when(response.code()) {
+                    200 -> {
+                        element = response.body()!!.element
+                        lastPage = response.body()!!.last
+                        if(!lastPage||(element != 0 && lastPage)){
+                            for (document in response.body()!!.boardList) {
+                                Log.d(TAG, "setList : ${response.body()!!.boardList}")
+                                _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                            }
                         }
                     }
+                    403 -> checkTokenExpiration(response.errorBody()!!.string())
+                    500 -> _msg.postValue("서버 오류입니다.")
+                    else -> _msg.postValue("오류 : ${response.errorBody()!!.string()}")
                 }
 
                 _progressVisible.postValue(false)
@@ -106,29 +97,20 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                     Log.d(TAG, "setList : ${response.body()}")
 
-                    if(response.code() == 403) {
-                        val gson = GsonBuilder().create()
-                        try {
-                            val error = gson.fromJson<ErrorResponse>(response.errorBody()!!.string(), ErrorResponse::class.java)
-                            if (error.message == null){
-                                _msg.postValue(error.error)
-                            }
-                            else {
-                                _msg.postValue(error.message)
-                            }
-                        } catch (e : IOException) {
-                            return
-                        }
-                    }
-                    else if(response.body() != null) {
-                        element = response.body()!!.element
-                        lastPage = response.body()!!.last
-                        if(!lastPage||(element != 0 && lastPage)){
-                            for (document in response.body()!!.boardList) {
-                                Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                                _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                    when(response.code()) {
+                        200 -> {
+                            element = response.body()!!.element
+                            lastPage = response.body()!!.last
+                            if(!lastPage||(element != 0 && lastPage)){
+                                for (document in response.body()!!.boardList) {
+                                    Log.d(TAG, "setList : ${response.body()!!.boardList}")
+                                    _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                                }
                             }
                         }
+                        403 -> checkTokenExpiration(response.errorBody()!!.string())
+                        500 -> _msg.postValue("서버 오류입니다.")
+                        else -> _msg.postValue("오류 : ${response.errorBody()!!.string()}")
                     }
 
                     _progressVisible.postValue(false)
@@ -145,29 +127,20 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 override fun onResponse(call: Call<BoardList>, response: Response<BoardList>) {
                     Log.d(TAG, "setList : ${response.body()}")
 
-                    if(response.code() == 403) {
-                        val gson = GsonBuilder().create()
-                        try {
-                            val error = gson.fromJson<ErrorResponse>(response.errorBody()!!.string(), ErrorResponse::class.java)
-                            if (error.message == null){
-                                _msg.postValue(error.error)
-                            }
-                            else {
-                                _msg.postValue(error.message)
-                            }
-                        } catch (e : IOException) {
-                            return
-                        }
-                    }
-                    else if(response.body() != null) {
-                        element = response.body()!!.element
-                        lastPage = response.body()!!.last
-                        if(!lastPage||(element != 0 && lastPage)){
-                            for (document in response.body()!!.boardList) {
-                                Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                                _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                    when(response.code()) {
+                        200 -> {
+                            element = response.body()!!.element
+                            lastPage = response.body()!!.last
+                            if(!lastPage||(element != 0 && lastPage)){
+                                for (document in response.body()!!.boardList) {
+                                    Log.d(TAG, "setList : ${response.body()!!.boardList}")
+                                    _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                                }
                             }
                         }
+                        403 -> checkTokenExpiration(response.errorBody()!!.string())
+                        500 -> _msg.postValue("서버 오류입니다.")
+                        else -> _msg.postValue("오류 : ${response.errorBody()!!.string()}")
                     }
 
                     _progressVisible.postValue(false)
@@ -210,8 +183,9 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 override fun onResponse(call: Call<Token>, response: Response<Token>) {
                     when (response.code()) {
                         200 -> _refreshToken.postValue(response.body())
+                        403 -> _msg.postValue("로그인 실패 : 토큰 리프레쉬")
                         500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
-                        else -> _msg.postValue("자동 로그인에 실패했습니다. ${response.errorBody()?.toString()}")
+                        else -> _msg.postValue("자동 로그인에 실패했습니다. ${response.errorBody()?.string()}")
                     }
                     _progressVisible.postValue(false)
                 }
@@ -243,7 +217,12 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 call: Call<SearchKeyword>,
                 response: Response<SearchKeyword>
             ) {
-                _searchKeyword.postValue(response.body())
+                when(response.code()) {
+                    200 -> _searchKeyword.postValue(response.body())
+                    403 -> checkTokenExpiration(response.errorBody()!!.string())
+                    500 -> _msg.postValue("서버 오류입니다.")
+                    else -> _msg.postValue("오류 : ${response.errorBody()!!.string()}")
+                }
                 _progressVisible.postValue(false)
             }
 
@@ -252,5 +231,15 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                 Log.w(TAG, "통신 실패: ${t.message}")
             }
         })
+    }
+
+    fun checkTokenExpiration(msg: String) {
+        val gson = GsonBuilder().create()
+        try {
+            val error = gson.fromJson<ErrorResponse>(msg, ErrorResponse::class.java)
+            _msg.postValue(error.message)
+        } catch (e : IOException) {
+            return
+        }
     }
 }
