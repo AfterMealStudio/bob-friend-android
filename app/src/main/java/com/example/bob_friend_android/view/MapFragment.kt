@@ -243,11 +243,11 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
             }
 
             boardList.observe(viewLifecycleOwner) {
-                for(document in it) {
+                for(document in it.boardList) {
                     bottomArrayList.add(document)
                 }
                 bottomViewAdapter.addItems(bottomArrayList)
-                binding.bottomList.totalElements.text = "약속 ${it.size}개"
+                binding.bottomList.totalElements.text = "약속 ${it.totalElements}개"
             }
         }
     }
@@ -256,7 +256,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     override fun onClick(p0: Overlay): Boolean {
         bottomArrayList.clear()
         address = p0.tag.toString()
-        viewModel.setList(listPage = listPage, type = "specific", address = address)
+        viewModel.setList(listPage = 0, type = "specific", address = address)
         binding.bottomList.bottomView.visibility = View.VISIBLE
         return true
     }

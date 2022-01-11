@@ -135,7 +135,7 @@ class ListFragment : Fragment() {
             }
 
             boardList.observe(viewLifecycleOwner) {
-                for(document in it) {
+                for(document in it.boardList) {
                     boardArrayList.add(document)
                 }
                 boardAdapter.addItems(boardArrayList)

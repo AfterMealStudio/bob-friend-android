@@ -8,5 +8,7 @@ class BoardList(
     @SerializedName("last")
     val last : Boolean,
     @SerializedName("numberOfElements")
-    val element : Int
+    val element : Int,
+    @SerializedName("totalElements")
+    val totalElements : Int
 )
