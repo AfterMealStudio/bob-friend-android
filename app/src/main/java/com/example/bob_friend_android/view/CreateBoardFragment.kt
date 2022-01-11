@@ -3,12 +3,14 @@ package com.example.bob_friend_android.view
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
@@ -96,10 +98,12 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.createChoiceDate.setOnClickListener {
+            hideKeyboard()
             setCalenderDay()
         }
 
         binding.createChoiceTime.setOnClickListener {
+            hideKeyboard()
             setCalenderTime()
         }
         binding.createRangeSeekBar.setLabelFormatter { value: Float ->
@@ -199,9 +203,19 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
             binding.createLocation.visibility = View.VISIBLE
         }
 
+        binding.createLayout.setOnClickListener {
+            hideKeyboard()
+        }
+
         return binding.root
     }
 
+    private fun hideKeyboard(){
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.createEditCreateTitle.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.createEditCreateContent.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.createEditPeopleCount.windowToken, 0)
+    }
 
     private fun removeFragment() {
         val fragmentC = CreateBoardFragment()

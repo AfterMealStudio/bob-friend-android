@@ -44,6 +44,7 @@ class FindUserAccountActivity : AppCompatActivity() {
     private fun hideKeyboard(){
         val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.editTextEmail.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextEmail2.windowToken, 0)
         imm.hideSoftInputFromWindow(binding.editTextDateBirth.windowToken, 0)
     }
 }

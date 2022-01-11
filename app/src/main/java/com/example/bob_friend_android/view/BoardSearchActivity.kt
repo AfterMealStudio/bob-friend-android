@@ -152,11 +152,16 @@ class BoardSearchActivity : AppCompatActivity() {
             }
             else if(binding.searchSettingView.visibility == View.VISIBLE) {
                 binding.searchSettingView.visibility = View.GONE
+                hideKeyboard()
                 binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
             }
         }
 
         binding.searchSettingView.setOnClickListener {
+            hideKeyboard()
+        }
+
+        binding.searchLayout.setOnClickListener {
             hideKeyboard()
         }
 

@@ -173,6 +173,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
 
         observeData()
 
+        binding.mapLayout.setOnClickListener {
+            hideKeyboard()
+        }
+
         return binding.root
     }
 
@@ -205,6 +209,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
         naverMap.uiSettings.isLocationButtonEnabled = false
         naverMap.setOnMapClickListener { point, coord ->
             binding.bottomList.bottomView.visibility = View.GONE
+            hideKeyboard()
             binding.rvList.visibility = View.GONE
             val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
             val cameraPositionLongitude = naverMap.cameraPosition.target.longitude

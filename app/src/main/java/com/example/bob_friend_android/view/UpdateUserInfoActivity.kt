@@ -1,8 +1,10 @@
 package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -63,16 +65,16 @@ class UpdateUserInfoActivity: AppCompatActivity() {
                 builder.setTitle("회원정보수정")
                 builder.setMessage("이렇게 정보 변경을 진행할까요?")
 
-                if(binding.editTextTextNickname.text.isNotBlank()){
+                if(binding.editTextTextNickname.text!!.isNotBlank()){
                         nickname = binding.editTextTextNickname.text.toString().trim()
                 }
-                if (binding.editTextTextPassword.text.isNotBlank()){
+                if (binding.editTextTextPassword.text!!.isNotBlank()){
                     password = binding.editTextTextPassword.text.toString().trim()
                 }
-                if (binding.editTextTextPasswordCheck.text.isNotBlank()){
+                if (binding.editTextTextPasswordCheck.text!!.isNotBlank()){
                     passwordCheck = binding.editTextTextPasswordCheck.text.toString().trim()
                 }
-                if (binding.editTextTextBirth.text.isNotBlank()){
+                if (binding.editTextTextBirth.text!!.isNotBlank()){
                     dateBirth = binding.editTextTextBirth.text.toString().trim()
                 }
 
@@ -92,7 +94,21 @@ class UpdateUserInfoActivity: AppCompatActivity() {
                 }
                 builder.show()
         }
+
+        binding.updateLayout.setOnClickListener {
+            hideKeyboard()
+        }
     }
+
+
+    private fun hideKeyboard(){
+        val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.editTextTextBirth.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextTextNickname.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextTextPassword.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.editTextTextPasswordCheck.windowToken, 0)
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId

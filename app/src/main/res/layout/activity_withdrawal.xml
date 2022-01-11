@@ -12,6 +12,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/delete_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -53,14 +54,21 @@
                 android:padding="10dp"
                 android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/editTextTextPassword"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_marginTop="10dp"
-                android:hint="@string/setting_check_password"
-                android:inputType="textPassword" />
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/userPassword"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/delete_user_btn"
