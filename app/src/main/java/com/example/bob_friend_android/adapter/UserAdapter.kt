@@ -18,6 +18,8 @@ class UserAdapter(private var list: MutableList<UserItem>): RecyclerView.Adapter
         fun bind(data: UserItem, context: Context) {
             binding.userName.text = data.nickname
             binding.userRating.rating = data.rating.toFloat()
+            binding.userAge.text = data.age.toString()
+            binding.userGender.text = data.sex
 //            Glide.with(itemView).load(data.profileImg).into(profileImg)
             Log.d("UserAdapter", data.toString())
         }
