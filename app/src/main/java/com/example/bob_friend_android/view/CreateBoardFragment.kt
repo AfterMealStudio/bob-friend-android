@@ -98,10 +98,12 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.createChoiceDate.setOnClickListener {
+            hideKeyboard()
             setCalenderDay()
         }
 
         binding.createChoiceTime.setOnClickListener {
+            hideKeyboard()
             setCalenderTime()
         }
         binding.createRangeSeekBar.setLabelFormatter { value: Float ->
