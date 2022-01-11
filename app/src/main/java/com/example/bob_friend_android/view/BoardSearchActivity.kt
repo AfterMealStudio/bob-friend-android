@@ -305,7 +305,7 @@ class BoardSearchActivity : AppCompatActivity() {
             }
 
             boardList.observe(this@BoardSearchActivity) {
-                for(document in it) {
+                for(document in it.boardList) {
                     boardItems.add(document)
                 }
                 searchAdapter.addItems(boardItems)

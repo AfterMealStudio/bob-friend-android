@@ -26,8 +26,8 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
     val TAG = "ListViewModel"
     val API_KEY = "KakaoAK 81e4657cca25cf97b1cec85102769390"
 
-    private val _boardList = MutableLiveData<ArrayList<Board>>()
-    val boardList : MutableLiveData<ArrayList<Board>>
+    private val _boardList = MutableLiveData<BoardList>()
+    val boardList : MutableLiveData<BoardList>
         get() = _boardList
 
     private val _msg = MutableLiveData<String>()
@@ -67,7 +67,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                         if(!lastPage||(element != 0 && lastPage)){
                             for (document in response.body()!!.boardList) {
                                 Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                                _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                                _boardList.postValue(response.body())
                             }
                         }
                     }
@@ -104,7 +104,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                             if(!lastPage||(element != 0 && lastPage)){
                                 for (document in response.body()!!.boardList) {
                                     Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                                    _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                                    _boardList.postValue(response.body())
                                 }
                             }
                         }
@@ -134,7 +134,7 @@ class ListViewModel(application: Application) : AndroidViewModel(application) {
                             if(!lastPage||(element != 0 && lastPage)){
                                 for (document in response.body()!!.boardList) {
                                     Log.d(TAG, "setList : ${response.body()!!.boardList}")
-                                    _boardList.postValue(response.body()!!.boardList as ArrayList<Board>?)
+                                    _boardList.postValue(response.body())
                                 }
                             }
                         }
