@@ -12,6 +12,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/update_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -60,26 +61,21 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp">
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="0dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/update_nickname"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/update_nickname" />
-
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextTextNickname"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:ems="10"
-                        android:inputType="textPersonName"
-                        android:hint="@string/userName2" />
-                </LinearLayout>
+                        android:hint="@string/userName"
+                        android:maxLength="10"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
                     android:id="@+id/nickname_check"
@@ -89,47 +85,39 @@
                     android:text="@string/userEmailBtn"
                     android:textSize="16sp" />
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="0dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:passwordToggleEnabled="true"
+                    android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/update_password"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/update_password" />
-
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextTextPassword"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:ems="10"
-                        android:inputType="textPersonName"
-                        android:hint="@string/userPassword2" />
-                </LinearLayout>
+                        android:hint="@string/userPassword"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <LinearLayout
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="0dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1">
 
-                    <TextView
-                        android:id="@+id/update_password_check"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/update_password_check" />
-
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextTextPasswordCheck"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:ems="10"
-                        android:inputType="textPersonName"
-                        android:hint="@string/userPasswordCheck2" />
-                </LinearLayout>
+                        android:hint="@string/userPasswordCheck"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -172,27 +160,22 @@
                     </RadioGroup>
                 </LinearLayout>
 
-                <LinearLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    app:counterEnabled="true"
+                    app:counterMaxLength="8"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-                    <TextView
-                        android:id="@+id/update_birth"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:text="@string/update_birth" />
-
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editTextTextBirth"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="8"
-                        android:maxEms="8"
-                        android:inputType="textPersonName"
-                        android:hint="@string/userDateOfBirth2" />
-                </LinearLayout>
+                        android:maxLength="8"
+                        android:hint="@string/userDateOfBirth"
+                        android:inputType="date"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
             </LinearLayout>
 
             <Button

@@ -173,6 +173,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
 
         observeData()
 
+        binding.mapLayout.setOnClickListener {
+            hideKeyboard()
+        }
+
         return binding.root
     }
 

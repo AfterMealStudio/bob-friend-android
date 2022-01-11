@@ -1,9 +1,11 @@
 package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -40,13 +42,22 @@ class DeleteUserActivity : AppCompatActivity() {
         token = App.prefs.getString("token", "").toString()
 
         binding.deleteUserBtn.setOnClickListener {
-            viewModel.deleteUser(token, binding.editTextTextPassword.text.toString())
+            viewModel.deleteUser(token, binding.editTextPassword.text.toString())
             val editor = App.prefs.edit()
             editor.clear()
             editor.apply()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
+
+        binding.deleteLayout.setOnClickListener {
+            hideKeyboard()
+        }
+    }
+
+    private fun hideKeyboard(){
+        val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.editTextPassword.windowToken, 0)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
