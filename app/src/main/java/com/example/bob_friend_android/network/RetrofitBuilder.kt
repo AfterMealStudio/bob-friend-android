@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.network
 
 import com.example.bob_friend_android.App
+import com.example.bob_friend_android.SharedPref
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -18,10 +19,19 @@ object RetrofitBuilder {
 
     init {
         val client = OkHttpClient.Builder()
-        client.addInterceptor {
-            val request = it.request().newBuilder().addHeader("Authorization", App.prefs.getString("token", "")!!).build()
-            it.proceed(request)
-        }
+        client.addInterceptor(AuthInterceptor(SharedPref)).addInterceptor {
+            val request = it.request()
+            if (request.url().encodedPath().equals("/api/signup", true)
+                || request.url().encodedPath().equals("/api/signin", true)
+                || request.url().encodedPath().equals("/api/issue", true)
+            ) {
+                it.proceed(request)
+            } else {
+                it.proceed(request.newBuilder().apply {
+                    addHeader("Authorization", App.prefs.getString("token", "")!!)
+                }.build())
+            }
+        }.build()
 
         retrofitBob = Retrofit.Builder()
             .addConverterFactory(ScalarsConverterFactory.create())
