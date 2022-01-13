@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.FragmentHomeBinding
+import com.example.bob_friend_android.databinding.FragmentSetHomeBinding
 import com.example.bob_friend_android.viewmodel.UserViewModel
 
-class HomeFragment : Fragment() {
-    private lateinit var binding: FragmentHomeBinding
+class SetHomeFragment : Fragment() {
+    private lateinit var binding: FragmentSetHomeBinding
     private lateinit var viewModel: UserViewModel
     var flag:String = "map"
     var toast: Toast? = null
@@ -23,7 +23,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_home, container, false)
         viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         binding.lifecycleOwner = this
         binding.main = viewModel

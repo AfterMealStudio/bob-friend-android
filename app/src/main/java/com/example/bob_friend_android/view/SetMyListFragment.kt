@@ -21,16 +21,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
-import com.example.bob_friend_android.databinding.FragmentMyboardBinding
+import com.example.bob_friend_android.databinding.FragmentSetMyListBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import java.util.ArrayList
 
-class MyBoardFragment: Fragment() {
+class SetMyListFragment: Fragment() {
 
     var toast: Toast? = null
 
-    private lateinit var binding: FragmentMyboardBinding
+    private lateinit var binding: FragmentSetMyListBinding
     private lateinit var viewModel: ListViewModel
     private var listPage = 0 // 현재 페이지
 
@@ -43,7 +43,7 @@ class MyBoardFragment: Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_myboard, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_my_list, container, false)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.list = viewModel
@@ -85,10 +85,10 @@ class MyBoardFragment: Fragment() {
 
         boardAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
             override fun onItemClick(v: View, data: Board, pos: Int) {
-                val intent = Intent(requireContext(), DetailBoardActivity::class.java)
-                intent.putExtra("boardId", data.id)
-                intent.putExtra("userId", data.author!!.id)
-                startActivity(intent)
+//                val intent = Intent(requireContext(), DetailBoardActivity::class.java)
+//                intent.putExtra("boardId", data.id)
+//                intent.putExtra("userId", data.author!!.id)
+//                startActivity(intent)
             }
         })
 

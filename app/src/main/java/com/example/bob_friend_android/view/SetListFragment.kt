@@ -20,13 +20,13 @@ import com.example.bob_friend_android.App
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.FragmentListBinding
+import com.example.bob_friend_android.databinding.FragmentSetListBinding
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import java.util.*
 
 
-class ListFragment : Fragment() {
-    private lateinit var binding: FragmentListBinding
+class SetListFragment : Fragment() {
+    private lateinit var binding: FragmentSetListBinding
     private lateinit var viewModel: ListViewModel
 
     private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
@@ -40,7 +40,7 @@ class ListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_list, container, false)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.list = viewModel
@@ -94,18 +94,18 @@ class ListFragment : Fragment() {
         boardAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
             override fun onItemClick(v: View, data: Board, pos: Int) {
                 activity?.let {
-                    val intent = Intent(context, DetailBoardActivity::class.java)
-                    intent.putExtra("boardId", data.id)
-                    intent.putExtra("userId", data.author!!.id)
-                    getListResultLauncher.launch(intent)
+//                    val intent = Intent(context, DetailBoardActivity::class.java)
+//                    intent.putExtra("boardId", data.id)
+//                    intent.putExtra("userId", data.author!!.id)
+//                    getListResultLauncher.launch(intent)
                 }
             }
         })
 
         binding.mainToolbar.setOnClickListener {
             activity?.let {
-                val intent = Intent(context, BoardSearchActivity::class.java)
-                getListResultLauncher.launch(intent)
+//                val intent = Intent(context, BoardSearchActivity::class.java)
+//                getListResultLauncher.launch(intent)
             }
 
         }

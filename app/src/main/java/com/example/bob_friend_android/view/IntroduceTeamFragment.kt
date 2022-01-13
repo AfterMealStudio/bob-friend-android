@@ -9,12 +9,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.FragmentAboutBinding
+import com.example.bob_friend_android.databinding.FragmentIntroduceTeamBinding
 import com.example.bob_friend_android.viewmodel.ListViewModel
 
-class AboutFragment : Fragment() {
+class IntroduceTeamFragment : Fragment() {
 
-    private lateinit var binding: FragmentAboutBinding
+    private lateinit var binding: FragmentIntroduceTeamBinding
     private lateinit var viewModel: ListViewModel
 
     override fun onCreateView(
@@ -22,7 +22,7 @@ class AboutFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_about, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_introduce_team, container, false)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.list = viewModel

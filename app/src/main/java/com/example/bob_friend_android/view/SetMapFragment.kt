@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.ui.adapter.SearchAdapter
-import com.example.bob_friend_android.databinding.FragmentMapBinding
+import com.example.bob_friend_android.databinding.FragmentSetMapBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.model.SearchLocation
@@ -39,10 +39,10 @@ import com.naver.maps.map.overlay.Overlay
 import java.util.ArrayList
 
 
-class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
+class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     val TAG = "MapFragment"
 
-    private lateinit var binding: FragmentMapBinding
+    private lateinit var binding: FragmentSetMapBinding
     private lateinit var viewModel: ListViewModel
 
     private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
@@ -75,7 +75,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     ): View
     {
         Log.d(TAG, "onCreate")
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_map, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_map, container, false)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.map = viewModel
@@ -152,7 +152,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
         searchAdapter.setItemClickListener(object : SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
                 viewModel.setDataAtFragment(
-                    this@MapFragment,
+                    this@SetMapFragment,
                     listItems[position].name,
                     listItems[position].y,
                     listItems[position].x
@@ -164,10 +164,10 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
         bottomViewAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
             override fun onItemClick(v: View, data: Board, pos: Int) {
                 activity?.let {
-                    val intent = Intent(context, DetailBoardActivity::class.java)
-                    intent.putExtra("boardId", data.id)
-                    intent.putExtra("userId", data.author!!.id)
-                    getListResultLauncher.launch(intent)
+//                    val intent = Intent(context, DetailBoardActivity::class.java)
+//                    intent.putExtra("boardId", data.id)
+//                    intent.putExtra("userId", data.author!!.id)
+//                    getListResultLauncher.launch(intent)
                 }
             }
         })

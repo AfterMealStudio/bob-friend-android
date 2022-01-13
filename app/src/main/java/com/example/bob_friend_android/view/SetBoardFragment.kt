@@ -23,7 +23,7 @@ import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.adapter.CommentAdapter
 import com.example.bob_friend_android.ui.adapter.UserAdapter
-import com.example.bob_friend_android.databinding.FragmentDetailBoardBinding
+import com.example.bob_friend_android.databinding.FragmentSetBoardBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.UserItem
@@ -35,9 +35,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DetailBoardFragment : Fragment(), OnMapReadyCallback {
+class SetBoardFragment : Fragment(), OnMapReadyCallback {
     private val TAG = "DetailBoardActivity"
-    private lateinit var binding: FragmentDetailBoardBinding
+    private lateinit var binding: FragmentSetBoardBinding
     private lateinit var viewModel: BoardViewModel
 
     private var detailBoardId : Int = 0
@@ -68,7 +68,7 @@ class DetailBoardFragment : Fragment(), OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_board, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_board, container, false)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
         binding.lifecycleOwner = this
         binding.detail = viewModel

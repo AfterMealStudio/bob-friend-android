@@ -13,19 +13,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.FragmentSettingBinding
+import com.example.bob_friend_android.databinding.FragmentCheckInfoBinding
 import com.example.bob_friend_android.view.*
 import com.example.bob_friend_android.viewmodel.LoginViewModel
 
-class SettingFragment : Fragment() {
-    private lateinit var binding: FragmentSettingBinding
+class CheckInfoFragment : Fragment() {
+    private lateinit var binding: FragmentCheckInfoBinding
     private lateinit var viewModel: LoginViewModel
     var toast: Toast? = null
 
     @SuppressLint("CommitPrefEdits")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_setting, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_check_info, container, false)
         viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
         binding.lifecycleOwner = this
         binding.logout = viewModel

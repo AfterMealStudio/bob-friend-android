@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
-import com.example.bob_friend_android.databinding.FragmentBoardSearchBinding
+import com.example.bob_friend_android.databinding.FragmentSearchBoardBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.google.android.material.datepicker.CalendarConstraints
@@ -32,9 +32,9 @@ import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BoardSearchFragment : Fragment() {
+class SearchBoardFragment : Fragment() {
 
-    private lateinit var binding: FragmentBoardSearchBinding
+    private lateinit var binding: FragmentSearchBoardBinding
     private lateinit var viewModel: ListViewModel
 
     private val boardItems = arrayListOf<Board>()   // 리사이클러 뷰 아이템
@@ -57,7 +57,7 @@ class BoardSearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_board_search, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_board, container, false)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.boardsearch = viewModel
