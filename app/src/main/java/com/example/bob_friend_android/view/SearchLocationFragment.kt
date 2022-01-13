@@ -5,25 +5,27 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.adapter.SearchAdapter
-import com.example.bob_friend_android.databinding.ActivityLocationSearchBinding
+import com.example.bob_friend_android.ui.adapter.SearchAdapter
+import com.example.bob_friend_android.databinding.FragmentSearchLocationBinding
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
 
-class SearchLocationActivity: AppCompatActivity() {
+class SearchLocationFragment: Fragment() {
 
-    private lateinit var binding: ActivityLocationSearchBinding
+    private lateinit var binding: FragmentSearchLocationBinding
     private lateinit var viewModel: ListViewModel
 
     private val listItems = arrayListOf<SearchLocation>()
@@ -33,23 +35,28 @@ class SearchLocationActivity: AppCompatActivity() {
 
     var toast: Toast? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_location_search)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_location, container, false)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.boardsearch = viewModel
 
-        setSupportActionBar(binding.toolbarBoard)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        binding.searchRecyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        if(activity is AppCompatActivity){
+            (activity as AppCompatActivity).setSupportActionBar(binding.toolbarBoard)
+            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
+
+        binding.searchRecyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.searchRecyclerview.adapter = searchAdapter
 
-        binding.searchBackBtn.setOnClickListener {
-            onBackPressed()
-        }
+//        binding.searchBackBtn.setOnClickListener {
+//            onBackPressed()
+//        }
 
         binding.locationEditTextSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
@@ -74,37 +81,39 @@ class SearchLocationActivity: AppCompatActivity() {
                     putExtra("longitude", listItems[position].x)
                     putExtra("latitude", listItems[position].y)
                 }
-                setResult(RESULT_OK, intent)
-                if(!isFinishing) finish()
+//                setResult(RESULT_OK, intent)
+//                if(!isFinishing) finish()
             }
         })
 
         observeData()
+
+        return binding.root
     }
 
 
     @SuppressLint("ShowToast")
     private fun showToast(msg: String) {
         if (toast == null) {
-            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+//            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
         } else toast?.setText(msg)
         toast?.show()
     }
 
 
     fun hideKeyboard(){
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.locationEditTextSearch.windowToken, 0)
     }
 
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(this@SearchLocationActivity) {
+            errorMsg.observe(viewLifecycleOwner) {
                 showToast(it)
             }
 
-            searchKeyword.observe(this@SearchLocationActivity) {
+            searchKeyword.observe(viewLifecycleOwner) {
                 var count = 0
                 listItems.clear()
                 for(document in it.documents) {

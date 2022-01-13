@@ -7,7 +7,7 @@
     <data>
         <variable
             name="user"
-            type="com.example.bob_friend_android.view.FindUserAccountActivity" />
+            type="com.example.bob_friend_android.viewmodel.UserViewModel" />
     </data>
 
     <ScrollView

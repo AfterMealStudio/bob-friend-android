@@ -1,45 +1,40 @@
 package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
-import android.app.TimePickerDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.adapter.BoardAdapter
-import com.example.bob_friend_android.adapter.SearchAdapter
-import com.example.bob_friend_android.databinding.ActivityBoardSearchBinding
-import com.example.bob_friend_android.databinding.ActivityLocationSearchBinding
+import com.example.bob_friend_android.ui.adapter.BoardAdapter
+import com.example.bob_friend_android.databinding.FragmentBoardSearchBinding
 import com.example.bob_friend_android.model.Board
-import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.MaterialTimePicker.INPUT_MODE_KEYBOARD
 import com.google.android.material.timepicker.TimeFormat
-import kotlinx.android.synthetic.main.activity_board_search.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BoardSearchActivity : AppCompatActivity() {
+class BoardSearchFragment : Fragment() {
 
-    private lateinit var binding: ActivityBoardSearchBinding
+    private lateinit var binding: FragmentBoardSearchBinding
     private lateinit var viewModel: ListViewModel
 
     private val boardItems = arrayListOf<Board>()   // 리사이클러 뷰 아이템
@@ -58,18 +53,21 @@ class BoardSearchActivity : AppCompatActivity() {
     var startTime : String? = null
     var endTime : String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_board_search)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_board_search, container, false)
         viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         binding.lifecycleOwner = this
         binding.boardsearch = viewModel
 
-        setSupportActionBar(binding.toolbarBoard)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        if(activity is AppCompatActivity){
+            (activity as AppCompatActivity).setSupportActionBar(binding.toolbarBoard)
+            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
 
-        binding.searchRecyclerview.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.searchRecyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.searchRecyclerview.adapter = searchAdapter
 
         binding.searchBtn.setOnClickListener {
@@ -165,9 +163,9 @@ class BoardSearchActivity : AppCompatActivity() {
             hideKeyboard()
         }
 
-        binding.searchBackBtn.setOnClickListener {
-            onBackPressed()
-        }
+//        binding.searchBackBtn.setOnClickListener {
+//            onBackPressed()
+//        }
 
         binding.searchResetBtn.setOnClickListener {
             binding.searchRadioGroup.check(binding.radioButtonAll.id)
@@ -181,16 +179,18 @@ class BoardSearchActivity : AppCompatActivity() {
 
         searchAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
             override fun onItemClick(v: View, data: Board, pos: Int) {
-                val intent = Intent(this@BoardSearchActivity, DetailBoardActivity::class.java)
-                intent.putExtra("boardId", data.id)
-                intent.putExtra("userId", data.author!!.id)
-//                getListResultLauncher.launch(intent)
-                startActivity(intent)
+//                val intent = Intent(this@BoardSearchActivity, DetailBoardActivity::class.java)
+//                intent.putExtra("boardId", data.id)
+//                intent.putExtra("userId", data.author!!.id)
+////                getListResultLauncher.launch(intent)
+//                startActivity(intent)
 
             }
         })
 
         observeData()
+
+        return binding.root
     }
 
 
@@ -206,7 +206,7 @@ class BoardSearchActivity : AppCompatActivity() {
         builder.setCalendarConstraints(constraintsBuilder.build())
 
         val picker = builder.build()
-        picker.show(supportFragmentManager, picker.toString())
+        picker.show(requireActivity().supportFragmentManager, picker.toString())
         picker.addOnNegativeButtonClickListener{ picker.dismiss() }
         picker.addOnPositiveButtonClickListener {
             startDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.first)
@@ -229,7 +229,7 @@ class BoardSearchActivity : AppCompatActivity() {
                 .setHour(12)
                 .setMinute(10)
                 .build()
-        picker.show(supportFragmentManager, "tag");
+        picker.show(requireActivity().supportFragmentManager, "tag");
 
         picker.addOnPositiveButtonClickListener {
             var hour = picker.hour.toString()
@@ -289,7 +289,7 @@ class BoardSearchActivity : AppCompatActivity() {
 
 
     private fun hideKeyboard(){
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.editTextSearchBoard.windowToken, 0)
     }
 
@@ -297,7 +297,7 @@ class BoardSearchActivity : AppCompatActivity() {
     @SuppressLint("ShowToast")
     private fun showToast(msg: String) {
         if (toast == null) {
-            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+//            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
         } else toast?.setText(msg)
         toast?.show()
     }
@@ -305,11 +305,11 @@ class BoardSearchActivity : AppCompatActivity() {
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(this@BoardSearchActivity) {
+            errorMsg.observe(viewLifecycleOwner) {
                 showToast(it)
             }
 
-            boardList.observe(this@BoardSearchActivity) {
+            boardList.observe(viewLifecycleOwner) {
                 for(document in it.boardList) {
                     boardItems.add(document)
                 }

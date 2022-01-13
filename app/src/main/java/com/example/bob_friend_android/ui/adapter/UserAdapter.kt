@@ -1,15 +1,12 @@
-package com.example.bob_friend_android.adapter
+package com.example.bob_friend_android.ui.adapter
 
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.databinding.ItemUserBinding
 import com.example.bob_friend_android.model.Comment
-import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.model.UserItem
 
 class UserAdapter(private var list: MutableList<UserItem>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {

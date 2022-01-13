@@ -20,11 +20,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.adapter.BoardAdapter
-import com.example.bob_friend_android.adapter.SearchAdapter
+import com.example.bob_friend_android.ui.adapter.BoardAdapter
+import com.example.bob_friend_android.ui.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentMapBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Location
@@ -34,7 +36,6 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
-import com.naver.maps.map.util.FusedLocationSource
 import java.util.ArrayList
 
 
@@ -179,7 +180,6 @@ class MapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
 
         return binding.root
     }
-
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

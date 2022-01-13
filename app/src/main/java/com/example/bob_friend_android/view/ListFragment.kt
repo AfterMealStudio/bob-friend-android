@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.App
-import com.example.bob_friend_android.adapter.BoardAdapter
+import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.FragmentListBinding

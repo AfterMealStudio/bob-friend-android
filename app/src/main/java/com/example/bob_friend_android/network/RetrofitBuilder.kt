@@ -19,7 +19,8 @@ object RetrofitBuilder {
 
     init {
         val client = OkHttpClient.Builder()
-        client.addInterceptor(AuthInterceptor(SharedPref)).addInterceptor {
+        client
+            .addInterceptor {
             val request = it.request()
             if (request.url().encodedPath().equals("/api/signup", true)
                 || request.url().encodedPath().equals("/api/signin", true)
@@ -28,10 +29,11 @@ object RetrofitBuilder {
                 it.proceed(request)
             } else {
                 it.proceed(request.newBuilder().apply {
-                    addHeader("Authorization", App.prefs.getString("token", "")!!)
+                    addHeader("Authorization", App.prefs.getString("token", "token")!!)
                 }.build())
             }
         }.build()
+//            .addInterceptor(AuthInterceptor(SharedPref)).build()
 
         retrofitBob = Retrofit.Builder()
             .addConverterFactory(ScalarsConverterFactory.create())

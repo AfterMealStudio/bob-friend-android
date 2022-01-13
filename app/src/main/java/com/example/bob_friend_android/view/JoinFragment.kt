@@ -2,31 +2,33 @@ package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.ActivityJoinBinding
+import com.example.bob_friend_android.databinding.FragmentJoinBinding
 import com.example.bob_friend_android.viewmodel.UserViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
 
 
-class JoinActivity : AppCompatActivity() {
+class JoinFragment : Fragment() {
 
     val TAG = "JoinActivity"
 
-    private lateinit var binding: ActivityJoinBinding
+    private lateinit var binding: FragmentJoinBinding
     private lateinit var viewModel : UserViewModel
 
     var agreeAll by Delegates.notNull<Boolean>() //동의하기
@@ -46,12 +48,13 @@ class JoinActivity : AppCompatActivity() {
 
     var toast: Toast? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_join)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_join, container, false)
         viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
-        binding.join = this
+        binding.join = viewModel
         binding.lifecycleOwner = this
 
         gender = ""
@@ -97,7 +100,7 @@ class JoinActivity : AppCompatActivity() {
 
 
         binding.joinBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("회원가입")
             builder.setMessage("이렇게 회원가입을 진행할까요?")
 
@@ -167,22 +170,23 @@ class JoinActivity : AppCompatActivity() {
         })
 
         observeData()
+        return binding.root
     }
 
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(this@JoinActivity) {
+            errorMsg.observe(viewLifecycleOwner) {
                 showToast(it)
                 if (it == "회원가입에 성공했습니다."){
-                    val intent = Intent(this@JoinActivity, ExplainActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            startActivity(intent)
+//                    val intent = Intent(this@JoinActivity, ExplainActivity::class.java)
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//                            startActivity(intent)
                 }
             }
 
-            val dialog = LoadingDialog(this@JoinActivity)
-            progressVisible.observe(this@JoinActivity) {
+            val dialog = LoadingDialog(requireContext())
+            progressVisible.observe(viewLifecycleOwner) {
                 if (progressVisible.value!!) {
                     dialog.show()
                 }
@@ -295,13 +299,13 @@ class JoinActivity : AppCompatActivity() {
     @SuppressLint("ShowToast")
     private fun showToast(msg: String) {
         if (toast == null) {
-            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+//            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
         } else toast?.setText(msg)
         toast?.show()
     }
 
     private fun hideKeyboard(){
-        val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.editTextEmail.windowToken, 0)
         imm.hideSoftInputFromWindow(binding.editTextNickname.windowToken, 0)
         imm.hideSoftInputFromWindow(binding.editTextPassword.windowToken, 0)

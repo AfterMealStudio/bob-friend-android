@@ -58,8 +58,8 @@ class SettingFragment : Fragment() {
                     val editor = App.prefs.edit()
                     editor.clear()
                     editor.apply()
-                    val intent = Intent(requireContext(), LoginActivity::class.java)
-                    startActivity(intent)
+//                    val intent = Intent(requireContext(), LoginActivity::class.java)
+//                    startActivity(intent)
                 }
                 builder.setNegativeButton("아니오") { dialog, which ->
                     return@setNegativeButton
@@ -68,30 +68,30 @@ class SettingFragment : Fragment() {
             }
 
             binding.deleteUserBtn.setOnClickListener {
-                val intent = Intent(requireContext(), DeleteUserActivity::class.java)
-                startActivity(intent)
+//                val intent = Intent(requireContext(), DeleteUserActivity::class.java)
+//                startActivity(intent)
             }
 
             binding.myBoardList.setOnClickListener {
-                val intent = Intent(requireContext(), MyBoardActivity::class.java)
-                intent.putExtra("type", "owned")
-                startActivity(intent)
+//                val intent = Intent(requireContext(), MyBoardActivity::class.java)
+//                intent.putExtra("type", "owned")
+//                startActivity(intent)
             }
 
             binding.myAppointmentList.setOnClickListener {
-                val intent = Intent(requireContext(), MyBoardActivity::class.java)
-                intent.putExtra("type", "joined")
-                startActivity(intent)
+//                val intent = Intent(requireContext(), MyBoardActivity::class.java)
+//                intent.putExtra("type", "joined")
+//                startActivity(intent)
             }
 
             binding.settingAbout.setOnClickListener {
-                val intent = Intent(requireContext(), AboutActivity::class.java)
-                startActivity(intent)
+//                val intent = Intent(requireContext(), AboutActivity::class.java)
+//                startActivity(intent)
             }
 
             binding.updateUserInfo.setOnClickListener {
-                val intent = Intent(requireContext(), UpdateUserInfoActivity::class.java)
-                startActivity(intent)
+//                val intent = Intent(requireContext(), UpdateUserInfoActivity::class.java)
+//                startActivity(intent)
             }
 
             return binding.root

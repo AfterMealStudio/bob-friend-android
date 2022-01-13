@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.adapter
+package com.example.bob_friend_android.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View

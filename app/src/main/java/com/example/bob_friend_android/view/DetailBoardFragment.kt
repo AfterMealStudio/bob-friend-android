@@ -2,14 +2,11 @@ package com.example.bob_friend_android.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -17,15 +14,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.adapter.CommentAdapter
-import com.example.bob_friend_android.adapter.UserAdapter
-import com.example.bob_friend_android.databinding.ActivityDetailBoardBinding
+import com.example.bob_friend_android.ui.adapter.CommentAdapter
+import com.example.bob_friend_android.ui.adapter.UserAdapter
+import com.example.bob_friend_android.databinding.FragmentDetailBoardBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Comment
 import com.example.bob_friend_android.model.UserItem
@@ -33,14 +31,13 @@ import com.example.bob_friend_android.viewmodel.BoardViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.util.FusedLocationSource
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
+class DetailBoardFragment : Fragment(), OnMapReadyCallback {
     private val TAG = "DetailBoardActivity"
-    private lateinit var binding: ActivityDetailBoardBinding
+    private lateinit var binding: FragmentDetailBoardBinding
     private lateinit var viewModel: BoardViewModel
 
     private var detailBoardId : Int = 0
@@ -67,9 +64,11 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
     var toast: Toast? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_board)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail_board, container, false)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
         binding.lifecycleOwner = this
         binding.detail = viewModel
@@ -78,10 +77,12 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        if(activity is AppCompatActivity){
+            (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+            (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
 
         commentAdapter.commentClick = object : CommentAdapter.CommentClick {
             override fun onCommentClick(view: View, position: Int, comment: Comment) {
@@ -102,31 +103,31 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
 
         observeData()
 
-        if(intent.hasExtra("boardId")) {
-            detailBoardId = intent.getIntExtra("boardId", 0)
-            userId = intent.getIntExtra("userId", 0)
+//        if(intent.hasExtra("boardId")) {
+//            detailBoardId = intent.getIntExtra("boardId", 0)
+//            userId = intent.getIntExtra("userId", 0)
+//
+//            val swipe = binding.swipeLayout
+//            swipe.setOnRefreshListener {
+//                viewModel.readBoard(detailBoardId)
+//                swipe.isRefreshing = false
+//            }
+//
+//            binding.detailButton.setOnClickListener {
+//                if(binding.detailButton.text=="마감하기"){
+//                    viewModel.closeBoard(detailBoardId)
+//                }
+//                else {
+//                    viewModel.participateBoard(detailBoardId)
+//                }
+//            }
+//
+//            viewModel.readBoard(detailBoardId)
+//        }
 
-            val swipe = binding.swipeLayout
-            swipe.setOnRefreshListener {
-                viewModel.readBoard(detailBoardId)
-                swipe.isRefreshing = false
-            }
-
-            binding.detailButton.setOnClickListener {
-                if(binding.detailButton.text=="마감하기"){
-                    viewModel.closeBoard(detailBoardId)
-                }
-                else {
-                    viewModel.participateBoard(detailBoardId)
-                }
-            }
-
-            viewModel.readBoard(detailBoardId)
-        }
-
-        binding.backBtn.setOnClickListener {
-            onBackPressed()
-        }
+//        binding.backBtn.setOnClickListener {
+//            onBackPressed()
+//        }
 
         binding.editTextComment.setOnEditorActionListener{ textView, action, event ->
             var handled = false
@@ -139,10 +140,12 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
 
             handled
         }
+
+        return binding.root
     }
 
     private fun makeBuilder(title: String, content:String) {
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle(title)
         builder.setMessage(content)
 
@@ -151,8 +154,8 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
                 val intent = Intent().apply {
                     putExtra("CallType", "close")
                 }
-                setResult(RESULT_OK, intent)
-                if(!isFinishing) finish()
+//                setResult(RESULT_OK, intent)
+//                if(!isFinishing) finish()
             }
         }
         else {
@@ -163,17 +166,17 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
         builder.show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.option_menu, menu)
-        if (userId == App.prefs.getInt("id", 0)){
-            menu?.add(Menu.NONE, Menu.FIRST + 1, Menu.NONE, "삭제하기")
-        }
-        else {
-            Log.d(TAG, "userId: $userId")
-            menu?.add(Menu.NONE, Menu.FIRST + 2, Menu.NONE, "신고하기")
-        }
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.option_menu, menu)
+//        if (userId == App.prefs.getInt("id", 0)){
+//            menu?.add(Menu.NONE, Menu.FIRST + 1, Menu.NONE, "삭제하기")
+//        }
+//        else {
+//            Log.d(TAG, "userId: $userId")
+//            menu?.add(Menu.NONE, Menu.FIRST + 2, Menu.NONE, "신고하기")
+//        }
+//        return true
+//    }
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -183,8 +186,8 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
                 val intent = Intent().apply {
                     putExtra("CallType", "delete")
                 }
-                setResult(RESULT_OK, intent)
-                if(!isFinishing) finish()
+//                setResult(RESULT_OK, intent)
+//                if(!isFinishing) finish()
             }
             Menu.FIRST + 2 -> {
                 Log.d(TAG, "boardId: $detailBoardId")
@@ -218,7 +221,7 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
                     selectedId = position
                     binding.commentRecyclerview[position].setBackgroundColor(Color.parseColor("#DADAEC"))
 //                    binding.commentRecyclerview.setBackgroundColor(Color.WHITE)
-                    showSoftInput()
+//                    showSoftInput()
                     detailCommentId = commentId
                     flag = true
                 }
@@ -244,40 +247,40 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         })
-        dialog.show(supportFragmentManager, "CustomDialog")
+        dialog.show(requireActivity().supportFragmentManager, "CustomDialog")
     }
 
 
-    fun showSoftInput() {
-        val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        binding.editTextComment.requestFocus()
-        binding.editTextComment.postDelayed({
-            inputMethodManager.showSoftInput(binding.editTextComment, 0)
-        }, 100)
-    }
-
-    override fun onBackPressed() {
-        if (flag) {
-            Toast.makeText(this, "한번 더 클릭시 화면이 종료됩니다.", Toast.LENGTH_SHORT).show()
-            viewModel.readBoard(detailBoardId)
-            flag = false
-            return
-        }
-        else {
-            super.onBackPressed()
-        }
-    }
+//    fun showSoftInput() {
+//        val inputMethodManager =
+//            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//        binding.editTextComment.requestFocus()
+//        binding.editTextComment.postDelayed({
+//            inputMethodManager.showSoftInput(binding.editTextComment, 0)
+//        }, 100)
+//    }
+//
+//    override fun onBackPressed() {
+//        if (flag) {
+//            Toast.makeText(this, "한번 더 클릭시 화면이 종료됩니다.", Toast.LENGTH_SHORT).show()
+//            viewModel.readBoard(detailBoardId)
+//            flag = false
+//            return
+//        }
+//        else {
+//            super.onBackPressed()
+//        }
+//    }
 
 
     private fun observeData() {
         with(viewModel) {
-            result.observe(this@DetailBoardActivity, Observer { board ->
+            result.observe(viewLifecycleOwner, Observer { board ->
                 setBoard(board)
             })
 
-            val dialog = LoadingDialog(this@DetailBoardActivity)
-            progressVisible.observe(this@DetailBoardActivity) {
+            val dialog = LoadingDialog(requireContext())
+            progressVisible.observe(viewLifecycleOwner) {
                 if (progressVisible.value!!) {
                     dialog.show()
                 }
@@ -286,7 +289,7 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
 
-            errorMsg.observe(this@DetailBoardActivity) {
+            errorMsg.observe(viewLifecycleOwner) {
                 when (errorMsg.value) {
                     "접근할 수 없는 약속" -> {
                         makeBuilder("접근할 수 없는 약속", "마감되거나 삭제되어 접근 할 수 없는 약속입니다.")
@@ -311,7 +314,7 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     }
                     else -> {
-                        showToast(it)
+//                        showToast(it)
                     }
                 }
             }
@@ -319,13 +322,13 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-    @SuppressLint("ShowToast")
-    private fun showToast(msg: String) {
-        if (toast == null) {
-            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
-        } else toast?.setText(msg)
-        toast?.show()
-    }
+//    @SuppressLint("ShowToast")
+//    private fun showToast(msg: String) {
+//        if (toast == null) {
+//            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
+//        } else toast?.setText(msg)
+//        toast?.show()
+//    }
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
@@ -418,7 +421,7 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.detailCurrentComment.text = board.amountOfComments.toString()
 
         binding.commentRecyclerview.adapter = commentAdapter
-        val commentLayoutManager = LinearLayoutManager(this@DetailBoardActivity, RecyclerView.VERTICAL, false)
+        val commentLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
         binding.commentRecyclerview.layoutManager = commentLayoutManager
 
         binding.postComment.setOnClickListener {
@@ -439,7 +442,7 @@ class DetailBoardActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         binding.detailMember.layoutManager = LinearLayoutManager(
-            this@DetailBoardActivity,
+            requireContext(),
             RecyclerView.VERTICAL,
             false
         )
