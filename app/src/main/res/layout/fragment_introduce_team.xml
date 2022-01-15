@@ -7,7 +7,7 @@
 
     <data>
         <variable
-            name="list"
+            name="viewModel"
             type="com.example.bob_friend_android.viewmodel.ListViewModel" />
     </data>
 
@@ -43,7 +43,7 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_title"
@@ -51,7 +51,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/detail_line"
+                android:id="@+id/line_part1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
@@ -62,7 +62,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/header_layout" />
 
             <TextView
-                android:id="@+id/textView16"
+                android:id="@+id/tv_team"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_team"
@@ -70,7 +70,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/tv_android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_android"
@@ -78,7 +78,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView13"
+                android:id="@+id/tv_ios"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_ios"
@@ -86,7 +86,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/tv_server"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_server"
@@ -94,7 +94,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/tv_git"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_git"

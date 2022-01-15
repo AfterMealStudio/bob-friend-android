@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.bob_friend_android.base.BaseViewModel
 import com.example.bob_friend_android.model.DuplicatedCheck
 import com.example.bob_friend_android.model.User
 import com.example.bob_friend_android.network.RetrofitBuilder
@@ -12,7 +13,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UserViewModel(application: Application): AndroidViewModel(application) {
+class UserViewModel: BaseViewModel() {
 
     val TAG = "UserViewModel"
 

@@ -6,12 +6,12 @@
 
     <data>
         <variable
-            name="user"
+            name="viewModel"
             type="com.example.bob_friend_android.viewmodel.UserViewModel" />
     </data>
 
     <ScrollView
-        android:id="@+id/find_scroll"
+        android:id="@+id/sv_find"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbarStyle="outsideOverlay"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/find_layout"
+            android:id="@+id/layout_find"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="20dp"
@@ -34,7 +34,7 @@
             app:layout_constraintTop_toBottomOf="@+id/register_title">
 
             <TextView
-                android:id="@+id/find_title"
+                android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -50,7 +50,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/linearLayout4"
+                    android:id="@+id/layout_explain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_line"
@@ -63,7 +63,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/tv_explain_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/findExplain"
@@ -79,7 +79,7 @@
                     android:layout_weight="1">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_email"
+                        android:id="@+id/etv_email"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:ems="10"
@@ -88,7 +88,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/email_check"
+                    android:id="@+id/btn_email_check"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
@@ -105,7 +105,7 @@
                 android:layout_weight="1">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_email2"
+                    android:id="@+id/etv_email2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -122,7 +122,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_date_birth"
+                    android:id="@+id/etv_date_birth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="8"
@@ -131,7 +131,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/changePassword"
+                android:id="@+id/btn_change_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="60dp"

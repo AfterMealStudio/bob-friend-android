@@ -8,16 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.bob_friend_android.databinding.FragmentDialogCommentBinding
+import com.example.bob_friend_android.databinding.DialogSetOptionBinding
 import com.example.bob_friend_android.viewmodel.BoardViewModel
 
-class DialogCommentFragment(private val isWriter: Boolean, private val isComment:Boolean): DialogFragment() {
-    private var _binding: FragmentDialogCommentBinding? = null
+class SetOptionDialog(private val isWriter: Boolean, private val isComment:Boolean): DialogFragment() {
+    private var _binding: DialogSetOptionBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: BoardViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentDialogCommentBinding.inflate(inflater, container, false)
+        _binding = DialogSetOptionBinding.inflate(inflater, container, false)
         val view = binding.root
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
 
@@ -32,10 +32,10 @@ class DialogCommentFragment(private val isWriter: Boolean, private val isComment
         }
 
         if (!isComment){
-            binding.addReComment.visibility = View.GONE
+            binding.addRecomment.visibility = View.GONE
         }
 
-        binding.addReComment.setOnClickListener {
+        binding.addRecomment.setOnClickListener {
             buttonClickListener.onAddReCommentClicked()
             dismiss()    // 대화상자를 닫는 함수
         }

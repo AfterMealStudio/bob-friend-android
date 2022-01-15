@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="list"
+        <import
             type="com.example.bob_friend_android.viewmodel.ListViewModel" />
     </data>
 
@@ -19,15 +18,14 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:context=".view.ListFragment">
+            app:layout_constraintStart_toStartOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/main_toolbar"
+                android:id="@+id/tb_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/main_color1"
@@ -44,7 +42,7 @@
                     tools:layout_editor_absoluteY="3dp">
 
                     <ImageView
-                        android:id="@+id/rise"
+                        android:id="@+id/img_rice"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -54,7 +52,7 @@
                         app:tint="@color/white" />
 
                     <TextView
-                        android:id="@+id/main_editText_search"
+                        android:id="@+id/etv_search"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:background="@drawable/search_border"
@@ -69,20 +67,20 @@
                         android:textColor="@color/main_color1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/rise"
+                        app:layout_constraintStart_toEndOf="@+id/img_rice"
                         app:layout_constraintTop_toTopOf="parent">
                     </TextView>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
 
                 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                    android:id="@+id/list_swipe"
+                    android:id="@+id/layout_swipe"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/main_toolbar">
+                    app:layout_constraintTop_toBottomOf="@+id/tb_main">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerview"
@@ -97,17 +95,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/main_toolbar"
                         tools:listitem="@layout/item_board" />
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/search_list"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="230dp"-->
-<!--                    android:background="@color/white"-->
-<!--                    android:scrollbarThumbVertical="@color/main_color1"-->
-<!--                    android:scrollbarSize="10dp"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/main_toolbar"/>-->
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

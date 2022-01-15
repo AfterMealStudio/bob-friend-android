@@ -7,11 +7,11 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import com.example.bob_friend_android.R
 
-class LoadingDialog(context: Context) : Dialog(context){
+class SetLoadingDialog(context: Context) : Dialog(context){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_loading)
+        setContentView(R.layout.dialog_set_loading)
 
         // 취소 불가능
         setCancelable(false)

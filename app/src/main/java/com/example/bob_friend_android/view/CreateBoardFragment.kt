@@ -24,8 +24,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
+import com.example.bob_friend_android.databinding.FragmentSetMapBinding
 import com.example.bob_friend_android.viewmodel.BoardViewModel
+import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -35,10 +38,9 @@ import java.text.NumberFormat
 import java.util.*
 
 
-class CreateBoardFragment : Fragment(), OnMapReadyCallback {
-    private val TAG = "CreateBoardFragment"
-    private lateinit var binding : FragmentCreateBoardBinding
-    private lateinit var viewModel : BoardViewModel
+class CreateBoardFragment(override val viewModel: BoardViewModel) : BaseFragment<FragmentCreateBoardBinding, BoardViewModel>(
+    R.layout.fragment_create_board
+), OnMapReadyCallback {
     private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
 
     private lateinit var mapView: MapView
@@ -62,84 +64,77 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
     var ageRestrictionStart: Int? = null
     var ageRestrictionEnd: Int? = null
 
-    var toast: Toast? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_create_board,
-            container,
-            false
-        )
-        viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
-        binding.lifecycleOwner = this
-        binding.board = this
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_create_board, container, false)
 
-        mapView = binding.createMapView
+        mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
+        return binding.root
+    }
 
-        binding.createAgeGroup.setOnCheckedChangeListener { group, checkedId ->
+    override fun init() {
+        binding.rgAge.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
-                R.id.create_ageButton2 -> {
-                    binding.createRangeSeekBar.visibility = View.VISIBLE
-                    binding.createAgeFromTo.visibility = View.VISIBLE
+                R.id.rb_yes -> {
+                    binding.rsAge.visibility = View.VISIBLE
+                    binding.layoutAgeFromTo.visibility = View.VISIBLE
                 }
-                R.id.create_ageButton1 -> {
-                    binding.createRangeSeekBar.visibility = View.GONE
-                    binding.createAgeFromTo.visibility = View.GONE
+                R.id.rb_no -> {
+                    binding.rsAge.visibility = View.GONE
+                    binding.layoutAgeFromTo.visibility = View.GONE
                 }
             }
         }
 
-        binding.createChoiceDate.setOnClickListener {
+        binding.tvChoiceDate.setOnClickListener {
             hideKeyboard()
             setCalenderDay()
         }
 
-        binding.createChoiceTime.setOnClickListener {
+        binding.tvChoiceTime.setOnClickListener {
             hideKeyboard()
             setCalenderTime()
         }
-        binding.createRangeSeekBar.setLabelFormatter { value: Float ->
+        binding.rsAge.setLabelFormatter { value: Float ->
             val format = NumberFormat.getInstance(Locale.KOREAN)
             format.maximumFractionDigits = 0
             format.format(value.toDouble())
         }
 
-        binding.createRangeSeekBar.addOnChangeListener { slider, value, fromUser ->
+        binding.rsAge.addOnChangeListener { slider, value, fromUser ->
             val time = DecimalFormat("##0")
-            binding.createAgeFrom.text = time.format(slider.values[0])
-            binding.createAgeTo.text = time.format(slider.values[1])
+            binding.tvAgeFrom.text = time.format(slider.values[0])
+            binding.tvAgeTo.text = time.format(slider.values[1])
         }
 
-        binding.createGenderGroup.setOnCheckedChangeListener { group, checkedId ->
+        binding.rgGender.setOnCheckedChangeListener { group, checkedId ->
             gender = when(checkedId) {
-                R.id.create_genderButton -> "MALE"
-                R.id.create_genderButton2 -> "FEMALE"
-                R.id.create_genderButton3 -> "NONE"
+                R.id.btn_gender_male -> "MALE"
+                R.id.btn_gender_female -> "FEMALE"
+                R.id.btn_gender_none -> "NONE"
                 else -> ""
             }
         }
 
-        binding.createOkBtn.setOnClickListener {
+        binding.btnCreateOk.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("약속 작성하기")
             builder.setMessage("이렇게 글 작성을 진행할까요?")
 
-            val title = binding.createEditCreateTitle.text.toString().trim()
-            val boardContent = binding.createEditCreateContent.text.toString().trim()
-            val count = binding.createEditPeopleCount.text.toString()
+            val title = binding.etvTitle.text.toString().trim()
+            val boardContent = binding.etvContent.text.toString().trim()
+            val count = binding.etvPeopleCount.text.toString()
             val dateTime = "$appointmentDate$appointmentTime"
 
-            if (binding.createAgeGroup.checkedRadioButtonId == binding.createAgeButton2.id) {
-                ageRestrictionStart = binding.createAgeFrom.text.toString().toInt()
-                ageRestrictionEnd = binding.createAgeTo.text.toString().toInt()
+            if (binding.rgAge.checkedRadioButtonId == binding.rbYes.id) {
+                ageRestrictionStart = binding.tvAgeFrom.text.toString().toInt()
+                ageRestrictionEnd = binding.tvAgeTo.text.toString().toInt()
             }
 
             builder.setPositiveButton("예") { dialog, which ->
@@ -179,7 +174,7 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
                     longitude = result.data!!.getDoubleExtra("longitude", 0.0)
 
                     if (latitude != 0.0 && longitude != 0.0) {
-                        binding.createLocation.text = locationName
+                        binding.tvLocation.text = locationName
                         val marker = Marker()
                         marker.apply {
                             position = LatLng(latitude, longitude)
@@ -195,30 +190,28 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-        binding.createSearchBtn.setOnClickListener {
+        binding.btnSearch.setOnClickListener {
             activity?.let{
-                val intent = Intent(context, SearchLocationActivity::class.java)
-                getLocationResultText.launch(intent)
+//                val intent = Intent(context, SearchLocationActivity::class.java)
+//                getLocationResultText.launch(intent)
             }
-            binding.createLocation.visibility = View.VISIBLE
+//            binding.createLocation.visibility = View.VISIBLE
         }
 
-        binding.createLayout.setOnClickListener {
+        binding.layoutCreate.setOnClickListener {
             hideKeyboard()
         }
-
-        return binding.root
     }
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.createEditCreateTitle.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.createEditCreateContent.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.createEditPeopleCount.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.etvTitle.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.etvContent.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.etvPeopleCount.windowToken, 0)
     }
 
     private fun removeFragment() {
-        val fragmentC = CreateBoardFragment()
+        val fragmentC = CreateBoardFragment(viewModel)
         val mFragmentManager = requireActivity().supportFragmentManager
         val mFragmentTransaction = mFragmentManager.beginTransaction()
         mFragmentTransaction.replace(R.id.nav_host_fragment, fragmentC)
@@ -240,7 +233,7 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
                 monthDate: Int,
                 dayOfMonth: Int
             ) {
-                binding.createDate.text = "${yearDate}년 ${monthDate+1} 월 ${dayOfMonth}일"
+                binding.tvSetDate.text = "${yearDate}년 ${monthDate+1} 월 ${dayOfMonth}일"
                 thisMonth = "${monthDate+1}"
                 thisDay = "$dayOfMonth"
 
@@ -272,7 +265,7 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
         val timeListener = object : TimePickerDialog.OnTimeSetListener{
             @SuppressLint("SetTextI18n")
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                binding.createTime.text = "${hourOfDay}시 ${minute}분"
+                binding.tvSetTime.text = "${hourOfDay}시 ${minute}분"
 
                 thisHour = "$hourOfDay"
                 thisMinute = "$minute"
@@ -292,16 +285,6 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
         builder.show()
     }
 
-
-    @SuppressLint("ShowToast")
-    private fun showToast(msg: String) {
-        if (toast == null) {
-            toast = Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
-        } else toast?.setText(msg)
-        toast?.show()
-    }
-
-
     private fun observeData() {
         with(viewModel) {
             errorMsg.observe(viewLifecycleOwner) {
@@ -318,45 +301,45 @@ class CreateBoardFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun validateTitle(): Boolean {
-        val title: String = binding.createEditCreateTitle.text.toString()
+        val title: String = binding.etvTitle.text.toString()
 
         return if (title.isEmpty()) {
-            binding.createEditCreateTitle.error = "약속 제목을 입력해주세요."
+            binding.etvTitle.error = "약속 제목을 입력해주세요."
             false
         } else {
-            binding.createEditCreateTitle.error = null
+            binding.etvTitle.error = null
             true
         }
     }
 
 
     private fun validateContent(): Boolean {
-        val content: String = binding.createEditCreateContent.text.toString()
+        val content: String = binding.etvContent.text.toString()
 
         return if (content.isEmpty()) {
-            binding.createEditCreateContent.error = "약속 내용을 입력해주세요."
+            binding.etvContent.error = "약속 내용을 입력해주세요."
             false
         } else {
-            binding.createEditCreateContent.error = null
+            binding.etvContent.error = null
             true
         }
     }
 
 
     private fun validateCount(): Boolean {
-        val count: String = binding.createEditPeopleCount.text.toString()
+        val count: String = binding.etvPeopleCount.text.toString()
 
         return if (count.isEmpty()) {
-            binding.createEditPeopleCount.error = "약속 인원을 입력해주세요."
+            binding.etvPeopleCount.error = "약속 인원을 입력해주세요."
             false
         } else if (count.toInt() > 4) {
-            binding.createEditPeopleCount.error = "거리두기 방침에 따라 4인 이하의 인원만 가능합니다."
+            binding.etvPeopleCount.error = "거리두기 방침에 따라 4인 이하의 인원만 가능합니다."
             false
         } else if (count.toInt() < 2) {
-            binding.createEditPeopleCount.error = "2인 이하의 글은 작성할 수 없습니다."
+            binding.etvPeopleCount.error = "2인 이하의 글은 작성할 수 없습니다."
             false
         } else {
-            binding.createEditPeopleCount.error = null
+            binding.etvPeopleCount.error = null
             true
         }
     }

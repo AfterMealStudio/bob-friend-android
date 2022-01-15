@@ -1,4 +1,4 @@
-package com.example.bob_friend_android.base
+     package com.example.bob_friend_android.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,15 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.LayoutRes
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import com.example.bob_friend_android.model.SearchLocation
 
-abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel>(
+     abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel>(
     @LayoutRes val layoutId: Int
 ) : Fragment() {
     protected lateinit var binding: B
     protected abstract val viewModel: VM
+
+    lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,10 +35,31 @@ abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel>(
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
         init()
+        navController = Navigation.findNavController(view)
     }
 
     abstract fun init()
 
     protected fun showToast(msg: String) =
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+
+    protected fun goToNext(id: Int, type: String? = null, location: SearchLocation? = null, boardId: Int? = null) {
+        when {
+            type != null -> {
+                val bundle = bundleOf("type" to type)
+                navController.navigate(id, bundle)
+            }
+            location != null -> {
+                val bundle = bundleOf("location" to location.address, "name" to location.name, "longitude" to location.x, "latitude" to location.y)
+                navController.navigate(id, bundle)
+            }
+            boardId != null -> {
+                val bundle = bundleOf("boardId" to boardId)
+                navController.navigate(id, bundle)
+            }
+            else -> {
+                navController.navigate(id)
+            }
+        }
+    }
 }

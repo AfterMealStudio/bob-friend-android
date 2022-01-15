@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="boardsearch"
+            name="viewModel"
             type="com.example.bob_friend_android.viewmodel.ListViewModel" />
     </data>
 
@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar_board"
+            android:id="@+id/tb_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/main_color1"
@@ -32,7 +32,7 @@
                 tools:layout_editor_absoluteY="3dp">
 
                 <ImageView
-                    android:id="@+id/search_back_btn"
+                    android:id="@+id/btn_back"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -42,7 +42,7 @@
                     app:tint="@color/white" />
 
                 <EditText
-                    android:id="@+id/location_editText_search"
+                    android:id="@+id/etv_search_location"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@drawable/search_border"
@@ -61,19 +61,19 @@
                     android:layout_marginBottom="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/search_back_btn"
+                    app:layout_constraintStart_toEndOf="@+id/btn_back"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_recyclerview"
+            android:id="@+id/rv_search"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_board"
+            app:layout_constraintTop_toBottomOf="@+id/tb_search"
             tools:listitem="@layout/item_search" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

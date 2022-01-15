@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -18,13 +17,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.ui.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentSetMapBinding
@@ -39,11 +35,9 @@ import com.naver.maps.map.overlay.Overlay
 import java.util.ArrayList
 
 
-class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
-    val TAG = "MapFragment"
-
-    private lateinit var binding: FragmentSetMapBinding
-    private lateinit var viewModel: ListViewModel
+class SetMapFragment(override val viewModel: ListViewModel) : BaseFragment<FragmentSetMapBinding, ListViewModel>(
+    R.layout.fragment_set_map
+), OnMapReadyCallback, Overlay.OnClickListener {
 
     private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
 
@@ -67,19 +61,22 @@ class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     private val bottomViewAdapter = BoardAdapter()
     private var bottomArrayList : ArrayList<Board> = ArrayList()
 
-    var toast: Toast? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View
     {
-        Log.d(TAG, "onCreate")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_map, container, false)
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        binding.lifecycleOwner = this
-        binding.map = viewModel
 
+        mapView = binding.mapView
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
+
+        return binding.root
+    }
+
+    override fun init() {
         binding.rvList.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
@@ -88,28 +85,23 @@ class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
         binding.rvList.adapter = searchAdapter
         binding.rvList.visibility = View.GONE
 
-        binding.bottomList.recyclerviewBottom.layoutManager = LinearLayoutManager(requireActivity())
-        binding.bottomList.recyclerviewBottom.adapter = bottomViewAdapter
+        binding.rvBottom.layoutManager = LinearLayoutManager(requireActivity())
+        binding.rvBottom.adapter = bottomViewAdapter
 
         x = arguments?.getDouble("x")
         y = arguments?.getDouble("y")
         placeName = arguments?.getString("placeName")
         click = arguments?.getBoolean("click")
 
-        mapView = binding.mapView
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
-
-
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.mainToolbar)
+            (activity as AppCompatActivity).setSupportActionBar(binding.tbMap)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.mainEditTextSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+        binding.etvSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                    keyword = binding.mainEditTextSearch.text.toString()
+                    keyword = binding.etvSearch.text.toString()
                     pageNumber = 1
                     if(keyword!="") {
                         viewModel.searchKeywordMap(keyword)
@@ -137,11 +129,11 @@ class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
             }
         }
 
-        binding.bottomList.recyclerviewBottom.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        binding.rvBottom.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 // 스크롤이 끝에 도달했는지 확인
-                if (!binding.bottomList.recyclerviewBottom.canScrollVertically(1)) {
+                if (!binding.rvBottom.canScrollVertically(1)) {
                     listPage++
                     viewModel.setList(listPage = listPage, type = "specific", address = address)
                 }
@@ -168,22 +160,21 @@ class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
 //                    intent.putExtra("boardId", data.id)
 //                    intent.putExtra("userId", data.author!!.id)
 //                    getListResultLauncher.launch(intent)
+                    goToNext(R.id.action_setMapFragment_to_setBoardFragment, boardId = data.id)
                 }
             }
         })
 
         observeData()
 
-        binding.mapLayout.setOnClickListener {
+        binding.layoutMap.setOnClickListener {
             hideKeyboard()
         }
-
-        return binding.root
     }
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.mainEditTextSearch.windowToken, 0)
+        imm.hideSoftInputFromWindow(binding.etvSearch.windowToken, 0)
     }
 
     private fun addMarkers(item: Location) {
@@ -208,7 +199,7 @@ class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
         this.naverMap = naverMap
         naverMap.uiSettings.isLocationButtonEnabled = false
         naverMap.setOnMapClickListener { point, coord ->
-            binding.bottomList.bottomView.visibility = View.GONE
+            binding.rvBottom.visibility = View.GONE
             hideKeyboard()
             binding.rvList.visibility = View.GONE
             val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
@@ -252,7 +243,7 @@ class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
                     bottomArrayList.add(document)
                 }
                 bottomViewAdapter.addItems(bottomArrayList)
-                binding.bottomList.totalElements.text = "약속 ${it.totalElements}개"
+                binding.tvTotalElements.text = "약속 ${it.totalElements}개"
             }
         }
     }
@@ -262,7 +253,7 @@ class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
         bottomArrayList.clear()
         address = p0.tag.toString()
         viewModel.setList(listPage = 0, type = "specific", address = address)
-        binding.bottomList.bottomView.visibility = View.VISIBLE
+        binding.layoutBottom.visibility = View.VISIBLE
         return true
     }
 
@@ -299,14 +290,6 @@ class SetMapFragment : Fragment(), OnMapReadyCallback, Overlay.OnClickListener {
     override fun onStop() {
         super.onStop()
         mapView.onStop()
-    }
-
-    @SuppressLint("ShowToast")
-    private fun showToast(msg: String) {
-        if (toast == null) {
-            toast = Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
-        } else toast?.setText(msg)
-        toast?.show()
     }
 }
 

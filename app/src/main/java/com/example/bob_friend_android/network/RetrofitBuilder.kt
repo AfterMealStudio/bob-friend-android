@@ -22,9 +22,9 @@ object RetrofitBuilder {
         client
             .addInterceptor {
             val request = it.request()
-            if (request.url().encodedPath().equals("/api/signup", true)
-                || request.url().encodedPath().equals("/api/signin", true)
-                || request.url().encodedPath().equals("/api/issue", true)
+            if (request.url.encodedPath.equals("/api/signup", true)
+                || request.url.encodedPath.equals("/api/signin", true)
+                || request.url.encodedPath.equals("/api/issue", true)
             ) {
                 it.proceed(request)
             } else {

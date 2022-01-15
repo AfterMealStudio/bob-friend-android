@@ -1,12 +1,11 @@
 package com.example.bob_friend_android.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.bob_friend_android.App
+import com.example.bob_friend_android.base.BaseViewModel
 import com.example.bob_friend_android.model.Token
 import com.example.bob_friend_android.model.UserCheck
 import com.example.bob_friend_android.network.RetrofitBuilder
@@ -15,7 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LoginViewModel(application: Application): AndroidViewModel(application) {
+class LoginViewModel: BaseViewModel() {
 
     val TAG = "LoginViewModel"
 

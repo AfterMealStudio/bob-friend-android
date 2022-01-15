@@ -1,6 +1,5 @@
-package com.example.bob_friend_android.view
+      package com.example.bob_friend_android.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -42,7 +41,6 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
 
     private var detailBoardId : Int = 0
     private var detailCommentId : Int = 0
-    private var userId: Int = 0
 
     private val commentList : ArrayList<Comment> = ArrayList()
     private val userList : ArrayList<UserItem> = ArrayList()
@@ -71,16 +69,15 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_board, container, false)
         viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
         binding.lifecycleOwner = this
-        binding.detail = viewModel
 
-        mapView = binding.detailMapView
+        mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
         inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+            (activity as AppCompatActivity).setSupportActionBar(binding.tbBoard)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
@@ -129,12 +126,12 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
 //            onBackPressed()
 //        }
 
-        binding.editTextComment.setOnEditorActionListener{ textView, action, event ->
+        binding.etvComment.setOnEditorActionListener{ textView, action, event ->
             var handled = false
 
             if (action == EditorInfo.IME_ACTION_DONE) {
                 // 키보드 내리기
-                inputMethodManager!!.hideSoftInputFromWindow(binding.editTextComment.windowToken, 0)
+                inputMethodManager!!.hideSoftInputFromWindow(binding.etvComment.windowToken, 0)
                 handled = true
             }
 
@@ -210,16 +207,16 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
             writer = true
         }
 
-        val dialog = DialogCommentFragment(writer, Comment)
+        val dialog = SetOptionDialog(writer, Comment)
         // 버튼 클릭 이벤트 설정
-        dialog.setButtonClickListener(object : DialogCommentFragment.OnButtonClickListener {
+        dialog.setButtonClickListener(object : SetOptionDialog.OnButtonClickListener {
             override fun onAddReCommentClicked() {
                 if (position != null) {
                     if (selectedId!=null) {
-                        binding.commentRecyclerview[selectedId!!].setBackgroundColor(Color.parseColor("#FFFFFF"))
+                        binding.rvComment[selectedId!!].setBackgroundColor(Color.parseColor("#FFFFFF"))
                     }
                     selectedId = position
-                    binding.commentRecyclerview[position].setBackgroundColor(Color.parseColor("#DADAEC"))
+                    binding.rvComment[position].setBackgroundColor(Color.parseColor("#DADAEC"))
 //                    binding.commentRecyclerview.setBackgroundColor(Color.WHITE)
 //                    showSoftInput()
                     detailCommentId = commentId
@@ -279,7 +276,7 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
                 setBoard(board)
             })
 
-            val dialog = LoadingDialog(requireContext())
+            val dialog = SetLoadingDialog(requireContext())
             progressVisible.observe(viewLifecycleOwner) {
                 if (progressVisible.value!!) {
                     dialog.show()
@@ -371,14 +368,15 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
 
     private fun setBoard(board : Board) {
         detailBoardId = board.id
-        binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
-        binding.detailCurrentComment.text = board.amountOfComments.toString()
-        binding.readWriter.text = board.author?.nickname
-        binding.detailWriteTime.text = board.createdAt
-
-        binding.detailTitle.text = board.title
-        binding.detailContent.text = board.content
-        binding.readWriter.text = board.author!!.nickname
+        binding.tvCurrentMember.text = board.currentNumberOfPeople.toString()
+        binding.tvTotalMember.text = board.totalNumberOfPeople.toString()
+        binding.tvCurrentCommentCount.text = board.amountOfComments.toString()
+        binding.tvWriteTime.text = board.createdAt
+        binding.tvBoardMeetingTime.text = appointmentTime
+        binding.tvBoardPlaceName.text = board.restaurantName
+        binding.tvTitle.text = board.title
+        binding.tvContent.text = board.content
+        binding.tvWriter.text = board.author!!.nickname
 
         val marker = Marker()
         marker.position = LatLng(board.latitude!!, board.longitude!!)
@@ -391,21 +389,21 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
 
         if (board.ageRestrictionStart != null && board.ageRestrictionEnd != null) {
             val ageFilter = board.ageRestrictionStart.toString() + "부터 " + board.ageRestrictionEnd.toString() + "까지"
-            binding.detailAge2.text = ageFilter
+            binding.tvBoardAge.text = ageFilter
         }
         else {
-            binding.detailAgeLayout.visibility = View.GONE
+            binding.layoutAge.visibility = View.GONE
         }
 
         when (board.sexRestriction) {
             "NONE" -> {
-                binding.detailGenderLayout.visibility = View.GONE
+                binding.layoutGender.visibility = View.GONE
             }
             "FEMALE" -> {
-                binding.detailGender2.text = "여성"
+                binding.tvBoardGender.text = "여성"
             }
             "MALE" -> {
-                binding.detailGender2.text = "남성"
+                binding.tvBoardGender.text = "남성"
             }
         }
 
@@ -414,43 +412,38 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
             val created = createDay.split("T")
             appointmentTime = created[0] + ", " + created[1].substring(0, 5)
         }
-        binding.readMeetingTime2.text = appointmentTime
-        binding.detailCurrentMember.text = board.currentNumberOfPeople.toString()
-        binding.detailTotalMember.text = board.totalNumberOfPeople.toString()
-        binding.detailAppointmentPlaceName.text = board.restaurantName
-        binding.detailCurrentComment.text = board.amountOfComments.toString()
 
-        binding.commentRecyclerview.adapter = commentAdapter
+        binding.rvComment.adapter = commentAdapter
         val commentLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        binding.commentRecyclerview.layoutManager = commentLayoutManager
+        binding.rvComment.layoutManager = commentLayoutManager
 
-        binding.postComment.setOnClickListener {
-            if (binding.editTextComment.text.toString() != "" && !flag) {
+        binding.imgPostComment.setOnClickListener {
+            if (binding.etvComment.text.toString() != "" && !flag) {
                 viewModel.addComment(
                     detailBoardId,
-                    binding.editTextComment.text.toString()
+                    binding.etvComment.text.toString()
                 )
-                binding.editTextComment.text = null
-            } else if (binding.editTextComment.text.toString() != "" && flag) {
+                binding.etvComment.text = null
+            } else if (binding.etvComment.text.toString() != "" && flag) {
                 viewModel.addReComment(
                     detailBoardId,
                     detailCommentId,
-                    binding.editTextComment.text.toString()
+                    binding.etvComment.text.toString()
                 )
-                binding.editTextComment.text = null
+                binding.etvComment.text = null
                 flag = false
             }
         }
-        binding.detailMember.layoutManager = LinearLayoutManager(
+        binding.rvMember.layoutManager = LinearLayoutManager(
             requireContext(),
             RecyclerView.VERTICAL,
             false
         )
-        binding.detailMember.adapter = userAdapter
+        binding.rvMember.adapter = userAdapter
 
         if (board.author!!.id == App.prefs.getInt("id", -1)) {
             participate = "마감하기"
-            binding.detailButton.text = participate
+            binding.btnParticipate.text = participate
         }
         else {
             for (member in board.members!!) {
@@ -462,7 +455,7 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
                     participate = "참가하기"
                 }
             }
-            binding.detailButton.text = participate
+            binding.btnParticipate.text = participate
         }
 
         commentList.clear()

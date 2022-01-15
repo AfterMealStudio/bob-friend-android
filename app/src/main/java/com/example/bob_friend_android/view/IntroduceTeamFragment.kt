@@ -1,32 +1,15 @@
 package com.example.bob_friend_android.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentIntroduceTeamBinding
 import com.example.bob_friend_android.viewmodel.ListViewModel
 
-class IntroduceTeamFragment : Fragment() {
-
-    private lateinit var binding: FragmentIntroduceTeamBinding
-    private lateinit var viewModel: ListViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_introduce_team, container, false)
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        binding.lifecycleOwner = this
-        binding.list = viewModel
-
+class IntroduceTeamFragment(override val viewModel: ListViewModel) : BaseFragment<FragmentIntroduceTeamBinding, ListViewModel>(
+    R.layout.fragment_introduce_team
+) {
+    override fun init() {
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -34,7 +17,5 @@ class IntroduceTeamFragment : Fragment() {
         }
 
         binding.toolbar.title = "개발자 정보"
-
-        return binding.root
     }
 }

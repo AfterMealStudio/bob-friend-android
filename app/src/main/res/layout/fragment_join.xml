@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.JoinActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="join"
+        <import
             type="com.example.bob_friend_android.viewmodel.UserViewModel" />
     </data>
 
@@ -56,7 +54,7 @@
                     android:layout_weight="1">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_email"
+                        android:id="@+id/edit_text_email"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:ems="10"
@@ -82,7 +80,7 @@
                 android:layout_weight="1">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_password"
+                    android:id="@+id/edit_text_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -100,7 +98,7 @@
                 android:layout_weight="1">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_password_check"
+                    android:id="@+id/edit_text_password_check"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -121,7 +119,7 @@
                     android:layout_weight="1">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editText_nickname"
+                        android:id="@+id/edit_text_nickname"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -148,7 +146,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_date_birth"
+                    android:id="@+id/edit_text_date_birth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="8"

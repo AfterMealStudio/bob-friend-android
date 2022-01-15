@@ -1,6 +1,5 @@
 package com.example.bob_friend_android.ui.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.databinding.ItemBoardBinding
 import com.example.bob_friend_android.databinding.ItemLoadingBinding
-
 
 class BoardAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -18,12 +16,12 @@ class BoardAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     inner class BoardViewHolder(private val binding: ItemBoardBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Board) {
-            binding.boardTitle.text = item.title
-            binding.boardWriter.text = item.author?.nickname
-            binding.currentNumberOfParticipants.text = item.currentNumberOfPeople.toString()
-            binding.totalNumberOfParticipants.text = item.totalNumberOfPeople.toString()
-            binding.createDate.text = item.createdAt.toString()
-            binding.currentNumberOfComments.text = item.amountOfComments.toString()
+            binding.tvBoardTitle.text = item.title
+            binding.tvBoardWriter.text = item.author?.nickname
+            binding.tvCurrentMember.text = item.currentNumberOfPeople.toString()
+            binding.tvTotalMember.text = item.totalNumberOfPeople.toString()
+            binding.tvCreateDate.text = item.createdAt.toString()
+            binding.tvCurrentCommentCount.text = item.amountOfComments.toString()
 
             val pos = absoluteAdapterPosition
             if(pos!= RecyclerView.NO_POSITION)

@@ -32,29 +32,29 @@ class CommentAdapter(private var list: MutableList<Comment>, boardId: Int): Recy
 
     inner class CommentsViewHolder(private val binding: ItemBoardCommentsBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Comment, context: Context) {
-            binding.commentUserName.text = data.author?.nickname
-            binding.commentContents.text = data.content
+            binding.tvUsername.text = data.author?.nickname
+            binding.tvCommentContents.text = data.content
             if (data.createdAt != null) {
                 val createDay: String = data.createdAt!!
                 val created = createDay.split("T")
 
                 writeTime = created[0] + " " + created[1].substring(0, 5)
             }
-            binding.commentTimestamp.text = writeTime
+            binding.tvCommentTimestamp.text = writeTime
         }
     }
 
     inner class RecommentsViewHolder(private val binding: ItemBoardRecommmentsBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Comment, context: Context) {
-            binding.recommentUserName.text = data.author?.nickname
-            binding.recommentContents.text = data.content
+            binding.tvUsername.text = data.author?.nickname
+            binding.tvRecommentContents.text = data.content
             if (data.createdAt != null) {
                 val createDay: String = data.createdAt!!
                 val created = createDay.split("T")
 
                 writeTime = created[0] + " " +created[1].substring(0,5)
             }
-            binding.recommentTimestamp.text = writeTime
+            binding.tvRecommentTimestamp.text = writeTime
         }
     }
 
@@ -97,14 +97,14 @@ class CommentAdapter(private var list: MutableList<Comment>, boardId: Int): Recy
         when(holder){
             is CommentsViewHolder -> {
                 holder.bind(list[position], holder.itemView.context)
-                holder.itemView.comment_menu_btn.setOnClickListener {
+                holder.itemView.btn_comment_menu.setOnClickListener {
                     commentClick?.onCommentClick(it, position, list[position])
                 }
                 commentId = list[position].id
             }
             is RecommentsViewHolder -> {
                 holder.bind(list[position], holder.itemView.context)
-                holder.itemView.recomment_menu_btn.setOnClickListener {
+                holder.itemView.btn_recomment_menu.setOnClickListener {
                     reCommentClick?.onReCommentClick(it, position, commentId, list[position])
                 }
             }

@@ -16,7 +16,7 @@ internal class AuthInterceptor(
         val request = chain.request();
         val response = chain.proceed(request);
 
-        when (response.code()) {
+        when (response.code) {
             400 -> {
                 //Show Bad Request Error Message
             }

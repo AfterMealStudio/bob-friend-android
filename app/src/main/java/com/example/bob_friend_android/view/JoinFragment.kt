@@ -1,22 +1,14 @@
 package com.example.bob_friend_android.view
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentJoinBinding
 import com.example.bob_friend_android.viewmodel.UserViewModel
 import java.text.SimpleDateFormat
@@ -24,12 +16,10 @@ import java.util.*
 import kotlin.properties.Delegates
 
 
-class JoinFragment : Fragment() {
-
+class JoinFragment(override val viewModel: UserViewModel) : BaseFragment<FragmentJoinBinding, UserViewModel>(
+    R.layout.fragment_join
+) {
     val TAG = "JoinActivity"
-
-    private lateinit var binding: FragmentJoinBinding
-    private lateinit var viewModel : UserViewModel
 
     var agreeAll by Delegates.notNull<Boolean>() //동의하기
     var agree1 by Delegates.notNull<Boolean>()
@@ -46,17 +36,7 @@ class JoinFragment : Fragment() {
     var emailCheck = false
     var nicknameCheck = false
 
-    var toast: Toast? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_join, container, false)
-        viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
-        binding.join = viewModel
-        binding.lifecycleOwner = this
-
+    override fun init() {
         gender = ""
         binding.registerGenderGroup.setOnCheckedChangeListener { group, checkedId ->
             gender = when(checkedId) {
@@ -170,7 +150,6 @@ class JoinFragment : Fragment() {
         })
 
         observeData()
-        return binding.root
     }
 
 
@@ -179,13 +158,11 @@ class JoinFragment : Fragment() {
             errorMsg.observe(viewLifecycleOwner) {
                 showToast(it)
                 if (it == "회원가입에 성공했습니다."){
-//                    val intent = Intent(this@JoinActivity, ExplainActivity::class.java)
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//                            startActivity(intent)
+                    goToNext(R.id.action_joinFragment_to_explainJoinFragment)
                 }
             }
 
-            val dialog = LoadingDialog(requireContext())
+            val dialog = SetLoadingDialog(requireContext())
             progressVisible.observe(viewLifecycleOwner) {
                 if (progressVisible.value!!) {
                     dialog.show()
@@ -295,14 +272,6 @@ class JoinFragment : Fragment() {
         }
     }
 
-
-    @SuppressLint("ShowToast")
-    private fun showToast(msg: String) {
-        if (toast == null) {
-//            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
-        } else toast?.setText(msg)
-        toast?.show()
-    }
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

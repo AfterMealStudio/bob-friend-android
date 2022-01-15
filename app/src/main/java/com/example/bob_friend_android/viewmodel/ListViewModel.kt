@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.bob_friend_android.base.BaseViewModel
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.model.SearchKeyword
@@ -21,7 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class ListViewModel(application: Application) : AndroidViewModel(application) {
+class ListViewModel: BaseViewModel() {
 
     val TAG = "ListViewModel"
     val API_KEY = "KakaoAK 81e4657cca25cf97b1cec85102769390"

@@ -1,43 +1,23 @@
 package com.example.bob_friend_android.view
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentSetHomeBinding
 import com.example.bob_friend_android.viewmodel.UserViewModel
 
-class SetHomeFragment : Fragment() {
-    private lateinit var binding: FragmentSetHomeBinding
-    private lateinit var viewModel: UserViewModel
-    var flag:String = "map"
-    var toast: Toast? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_home, container, false)
-        viewModel = ViewModelProvider(this).get(UserViewModel::class.java)
-        binding.lifecycleOwner = this
-        binding.main = viewModel
-
+class SetHomeFragment(override val viewModel: UserViewModel) : BaseFragment<FragmentSetHomeBinding, UserViewModel>(
+    R.layout.fragment_set_home
+) {
+    override fun init() {
         viewModel.setUserInfo()
         observeData()
-
-        return binding.root
     }
 
     private fun observeData() {
         with(viewModel) {
             errorMsg.observe(viewLifecycleOwner) {
-//                showToast(it)
+                showToast(it)
             }
 
             userInfo.observe(viewLifecycleOwner, { user ->

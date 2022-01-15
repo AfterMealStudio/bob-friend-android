@@ -1,25 +1,18 @@
 package com.example.bob_friend_android.view
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.databinding.FragmentSearchBoardBinding
 import com.example.bob_friend_android.model.Board
@@ -32,11 +25,9 @@ import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SearchBoardFragment : Fragment() {
-
-    private lateinit var binding: FragmentSearchBoardBinding
-    private lateinit var viewModel: ListViewModel
-
+class SearchBoardFragment(override val viewModel: ListViewModel) : BaseFragment<FragmentSearchBoardBinding, ListViewModel>(
+    R.layout.fragment_search_board
+) {
     private val boardItems = arrayListOf<Board>()   // 리사이클러 뷰 아이템
     private val searchAdapter = BoardAdapter()    // 리사이클러 뷰 어댑터
     private var keyword = ""        // 검색 키워드
@@ -53,33 +44,26 @@ class SearchBoardFragment : Fragment() {
     var startTime : String? = null
     var endTime : String? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_board, container, false)
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        binding.lifecycleOwner = this
-        binding.boardsearch = viewModel
 
+    override fun init() {
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.toolbarBoard)
+            (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.searchRecyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.searchRecyclerview.adapter = searchAdapter
+        binding.rvSearch.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.rvSearch.adapter = searchAdapter
 
-        binding.searchBtn.setOnClickListener {
-            keyword = binding.editTextSearchBoard.text.toString()
+        binding.btnSearch.setOnClickListener {
+            keyword = binding.etvSearch.text.toString()
             searchList(keyword)
             hideKeyboard()
         }
 
-        binding.editTextSearchBoard.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+        binding.etvSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                    keyword = binding.editTextSearchBoard.text.toString()
+                    keyword = binding.etvSearch.text.toString()
                     searchList(keyword)
                     hideKeyboard()
                     return true
@@ -88,109 +72,98 @@ class SearchBoardFragment : Fragment() {
             }
         })
 
-        binding.searchRecyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        binding.rvSearch.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 // 스크롤이 끝에 도달했는지 확인
-                if (!binding.searchRecyclerview.canScrollVertically(1)) {
+                if (!binding.rvSearch.canScrollVertically(1)) {
                     listPage++
                     viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
                 }
             }
         })
 
-        binding.searchCheckTime.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.cbTimeLimit.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 showDateRangePicker()
-                binding.searchTime1.visibility = View.VISIBLE
+                binding.layoutTime.visibility = View.VISIBLE
             }
             else {
-                binding.searchTime1.visibility = View.GONE
+                binding.layoutTime.visibility = View.GONE
             }
         }
 
-        binding.searchRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+        binding.rgSearch.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
-                R.id.radioButton_all -> {
-                    binding.radioButtonAll.setTextColor(Color.parseColor("#FFFFFF"))
-                    binding.radioButtonTitle.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonContent.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonPlace.setTextColor(Color.parseColor("#000000"))
+                R.id.rb_all -> {
+                    binding.rbAll.setTextColor(Color.parseColor("#FFFFFF"))
+                    binding.rbTitle.setTextColor(Color.parseColor("#000000"))
+                    binding.rbContent.setTextColor(Color.parseColor("#000000"))
+                    binding.rbPlace.setTextColor(Color.parseColor("#000000"))
                     category = "all"
 
                 }
-                R.id.radioButton_title -> {
-                    binding.radioButtonAll.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonContent.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonPlace.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonTitle.setTextColor(Color.parseColor("#FFFFFF"))
+                R.id.rb_title -> {
+                    binding.rbAll.setTextColor(Color.parseColor("#000000"))
+                    binding.rbTitle.setTextColor(Color.parseColor("#FFFFFF"))
+                    binding.rbContent.setTextColor(Color.parseColor("#000000"))
+                    binding.rbPlace.setTextColor(Color.parseColor("#000000"))
                     category = "title"
                 }
-                R.id.radioButton_content -> {
-                    binding.radioButtonAll.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonTitle.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonPlace.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonContent.setTextColor(Color.parseColor("#FFFFFF"))
+                R.id.rb_content -> {
+                    binding.rbAll.setTextColor(Color.parseColor("#000000"))
+                    binding.rbTitle.setTextColor(Color.parseColor("#000000"))
+                    binding.rbContent.setTextColor(Color.parseColor("#FFFFFF"))
+                    binding.rbPlace.setTextColor(Color.parseColor("#000000"))
                     category = "content"
                 }
-                R.id.radioButton_place -> {
-                    binding.radioButtonAll.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonTitle.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonContent.setTextColor(Color.parseColor("#000000"))
-                    binding.radioButtonPlace.setTextColor(Color.parseColor("#FFFFFF"))
+                R.id.rb_place -> {
+                    binding.rbAll.setTextColor(Color.parseColor("#000000"))
+                    binding.rbTitle.setTextColor(Color.parseColor("#000000"))
+                    binding.rbContent.setTextColor(Color.parseColor("#000000"))
+                    binding.rbPlace.setTextColor(Color.parseColor("#FFFFFF"))
                     category = "place"
                 }
             }
         }
 
-        binding.searchSettingOnOffBtn.setOnClickListener {
-            if (binding.searchSettingView.visibility == View.GONE){
-                binding.searchSettingView.visibility = View.VISIBLE
-                binding.searchSettingOnOffBtn.setImageResource(R.drawable.up_arrow)
+        binding.btnSettingOnOff.setOnClickListener {
+            if (binding.layoutSetting.visibility == View.GONE){
+                binding.layoutSetting.visibility = View.VISIBLE
+                binding.btnSettingOnOff.setImageResource(R.drawable.up_arrow)
             }
-            else if(binding.searchSettingView.visibility == View.VISIBLE) {
-                binding.searchSettingView.visibility = View.GONE
+            else if(binding.layoutSetting.visibility == View.VISIBLE) {
+                binding.layoutSetting.visibility = View.GONE
                 hideKeyboard()
-                binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
+                binding.btnSettingOnOff.setImageResource(R.drawable.down_arrow)
             }
         }
 
-        binding.searchSettingView.setOnClickListener {
+        binding.layoutSetting.setOnClickListener {
             hideKeyboard()
         }
 
-        binding.searchLayout.setOnClickListener {
+        binding.layoutSearch.setOnClickListener {
             hideKeyboard()
         }
 
-//        binding.searchBackBtn.setOnClickListener {
-//            onBackPressed()
-//        }
-
-        binding.searchResetBtn.setOnClickListener {
-            binding.searchRadioGroup.check(binding.radioButtonAll.id)
-            binding.radioButtonAll.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.radioButtonTitle.setTextColor(Color.parseColor("#000000"))
-            binding.radioButtonContent.setTextColor(Color.parseColor("#000000"))
-            binding.radioButtonPlace.setTextColor(Color.parseColor("#000000"))
-            binding.searchCheckTime.isChecked = false
-            binding.searchCheckCondition.isChecked = false
+        binding.btnSearchReset.setOnClickListener {
+            binding.rgSearch.check(binding.rbAll.id)
+            binding.rbAll.setTextColor(Color.parseColor("#FFFFFF"))
+            binding.rbTitle.setTextColor(Color.parseColor("#000000"))
+            binding.rbContent.setTextColor(Color.parseColor("#000000"))
+            binding.rbPlace.setTextColor(Color.parseColor("#000000"))
+            binding.cbTimeLimit.isChecked = false
+            binding.cbCondition.isChecked = false
         }
 
         searchAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
             override fun onItemClick(v: View, data: Board, pos: Int) {
-//                val intent = Intent(this@BoardSearchActivity, DetailBoardActivity::class.java)
-//                intent.putExtra("boardId", data.id)
-//                intent.putExtra("userId", data.author!!.id)
-////                getListResultLauncher.launch(intent)
-//                startActivity(intent)
-
+                goToNext(R.id.action_searchBoardFragment_to_setBoardFragment, boardId = data.id)
             }
         })
 
         observeData()
-
-        return binding.root
     }
 
 
@@ -213,8 +186,8 @@ class SearchBoardFragment : Fragment() {
             start = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(it.first)
             endDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.second)
             end = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(it.second)
-            binding.startDate.text = startDate
-            binding.endDate.text = endDate
+            binding.tvStartDate.text = startDate
+            binding.tvEndDate.text = endDate
             Log.d("test", "startDate: $start, endDate : $end")
 
             setCalenderTime(false)
@@ -246,13 +219,13 @@ class SearchBoardFragment : Fragment() {
             if (!endFlag) {
                 start = start + hour + minute
                 startTime = "$hour:$minute"
-                binding.startTime.text = startTime
+                binding.tvStartTime.text = startTime
                 setCalenderTime(true)
             }
             else if (endFlag) {
                 end = end + hour + minute
                 endTime = "$hour:$minute"
-                binding.endTime.text = endTime
+                binding.tvEndTime.text = endTime
             }
         }
     }
@@ -270,7 +243,7 @@ class SearchBoardFragment : Fragment() {
 
                 if(startDate == endDate && before.toInt() > after.toInt()){
                     showToast("시간 형식이 잘못되었습니다.")
-                    binding.searchCheckTime.isChecked = false
+                    binding.cbTimeLimit.isChecked = false
                 }
                 else {
                     viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
@@ -279,8 +252,8 @@ class SearchBoardFragment : Fragment() {
             else {
                 viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
             }
-            binding.searchSettingView.visibility = View.GONE
-            binding.searchSettingOnOffBtn.setImageResource(R.drawable.down_arrow)
+            binding.layoutSetting.visibility = View.GONE
+            binding.btnSettingOnOff.setImageResource(R.drawable.down_arrow)
         }
         else {
             showToast("검색어를 입력해주세요.")
@@ -290,16 +263,7 @@ class SearchBoardFragment : Fragment() {
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.editTextSearchBoard.windowToken, 0)
-    }
-
-
-    @SuppressLint("ShowToast")
-    private fun showToast(msg: String) {
-        if (toast == null) {
-//            toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
-        } else toast?.setText(msg)
-        toast?.show()
+        imm.hideSoftInputFromWindow(binding.etvSearch.windowToken, 0)
     }
 
 

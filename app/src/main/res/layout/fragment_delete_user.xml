@@ -7,12 +7,12 @@
 
     <data>
         <variable
-            name="list"
+            name="viewModel"
             type="com.example.bob_friend_android.viewmodel.UserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/delete_layout"
+        android:id="@+id/layout_delete"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -44,7 +44,7 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/tv_explain"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="회원 탈퇴를 하면 며칠 동안 어쩌고 저쩌고, 날린 정보는 어쩌고 저쩌고 우리가 책임지지 않는다는 내용"
@@ -62,7 +62,7 @@
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editText_password"
+                    android:id="@+id/etv_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -71,7 +71,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
-                android:id="@+id/delete_user_btn"
+                android:id="@+id/btn_delete_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/setting_del_user"
