@@ -7,18 +7,22 @@ import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentJoinBinding
+import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.example.bob_friend_android.viewmodel.UserViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
 
 
-class JoinFragment(override val viewModel: UserViewModel) : BaseFragment<FragmentJoinBinding, UserViewModel>(
+class JoinFragment : BaseFragment<FragmentJoinBinding>(
     R.layout.fragment_join
 ) {
+    private val viewModel by activityViewModels<UserViewModel>()
+
     val TAG = "JoinActivity"
 
     var agreeAll by Delegates.notNull<Boolean>() //동의하기

@@ -8,6 +8,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
@@ -16,9 +17,10 @@ import com.example.bob_friend_android.databinding.FragmentSearchLocationBinding
 import com.example.bob_friend_android.model.SearchLocation
 import com.example.bob_friend_android.viewmodel.ListViewModel
 
-class SearchLocationFragment(override val viewModel: ListViewModel) : BaseFragment<FragmentSearchLocationBinding, ListViewModel>(
+class SearchLocationFragment : BaseFragment<FragmentSearchLocationBinding>(
     R.layout.fragment_search_location
 ) {
+    private val viewModel by activityViewModels<ListViewModel>()
 
     private val listItems = arrayListOf<SearchLocation>()
     private val searchAdapter = SearchAdapter(listItems)

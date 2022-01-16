@@ -12,6 +12,7 @@ import com.example.bob_friend_android.databinding.DialogSetOptionBinding
 import com.example.bob_friend_android.viewmodel.BoardViewModel
 
 class SetOptionDialog(private val isWriter: Boolean, private val isComment:Boolean): DialogFragment() {
+
     private var _binding: DialogSetOptionBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: BoardViewModel

@@ -2,6 +2,7 @@ package com.example.bob_friend_android.view
 
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
@@ -11,9 +12,11 @@ import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import java.util.ArrayList
 
-class SetMyListFragment(override val viewModel: ListViewModel) : BaseFragment<FragmentSetMyListBinding, ListViewModel>(
+class SetMyListFragment : BaseFragment<FragmentSetMyListBinding>(
     R.layout.fragment_set_my_list
 ) {
+    private val viewModel by activityViewModels<ListViewModel>()
+
     private var listPage = 0 // 현재 페이지
     private var type : String = ""
 

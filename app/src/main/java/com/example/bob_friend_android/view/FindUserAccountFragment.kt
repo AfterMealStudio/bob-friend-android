@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
@@ -16,9 +17,11 @@ import com.example.bob_friend_android.databinding.FragmentFindUserAccountBinding
 import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.example.bob_friend_android.viewmodel.UserViewModel
 
-class FindUserAccountFragment(override val viewModel: UserViewModel) : BaseFragment<FragmentFindUserAccountBinding, UserViewModel>(
+class FindUserAccountFragment : BaseFragment<FragmentFindUserAccountBinding>(
     R.layout.fragment_find_user_account
 ) {
+    private val viewModel by activityViewModels<UserViewModel>()
+
     override fun init() {
         binding.btnEmailCheck.setOnClickListener {
 

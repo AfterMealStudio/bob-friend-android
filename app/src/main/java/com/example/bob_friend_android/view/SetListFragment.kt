@@ -2,6 +2,7 @@
 
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.App
@@ -11,11 +12,14 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentSetListBinding
 import com.example.bob_friend_android.viewmodel.ListViewModel
+import com.example.bob_friend_android.viewmodel.UserViewModel
 import java.util.*
 
-class SetListFragment(override val viewModel: ListViewModel) : BaseFragment<FragmentSetListBinding, ListViewModel>(
+class SetListFragment : BaseFragment<FragmentSetListBinding>(
     R.layout.fragment_set_list
 ) {
+    private val viewModel by activityViewModels<ListViewModel>()
+
     private lateinit var boardAdapter: BoardAdapter
     private var boardArrayList : ArrayList<Board> = ArrayList()
     private var listPage = 0 // 현재 페이지

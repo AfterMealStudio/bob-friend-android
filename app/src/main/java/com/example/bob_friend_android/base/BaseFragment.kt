@@ -12,15 +12,15 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.example.bob_friend_android.model.SearchLocation
 
-     abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel>(
+     abstract class BaseFragment<B : ViewDataBinding>(
     @LayoutRes val layoutId: Int
 ) : Fragment() {
     protected lateinit var binding: B
-    protected abstract val viewModel: VM
 
-    lateinit var navController: NavController
+//    lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +35,7 @@ import com.example.bob_friend_android.model.SearchLocation
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
         init()
-        navController = Navigation.findNavController(view)
+//        navController = Navigation.findNavController(view)
     }
 
     abstract fun init()
@@ -47,18 +47,18 @@ import com.example.bob_friend_android.model.SearchLocation
         when {
             type != null -> {
                 val bundle = bundleOf("type" to type)
-                navController.navigate(id, bundle)
+                findNavController().navigate(id, bundle)
             }
             location != null -> {
                 val bundle = bundleOf("location" to location.address, "name" to location.name, "longitude" to location.x, "latitude" to location.y)
-                navController.navigate(id, bundle)
+                findNavController().navigate(id, bundle)
             }
             boardId != null -> {
                 val bundle = bundleOf("boardId" to boardId)
-                navController.navigate(id, bundle)
+                findNavController().navigate(id, bundle)
             }
             else -> {
-                navController.navigate(id)
+                findNavController().navigate(id)
             }
         }
     }

@@ -3,15 +3,18 @@ package com.example.bob_friend_android.view
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentDeleteUserBinding
+import com.example.bob_friend_android.viewmodel.BoardViewModel
 import com.example.bob_friend_android.viewmodel.UserViewModel
 
-class DeleteUserFragment(override val viewModel: UserViewModel) : BaseFragment<FragmentDeleteUserBinding, UserViewModel>(
+class DeleteUserFragment : BaseFragment<FragmentDeleteUserBinding>(
     R.layout.fragment_delete_user
 ) {
+    private val viewModel by activityViewModels<UserViewModel>()
     private lateinit var token: String
 
     override fun init() {

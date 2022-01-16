@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
@@ -29,6 +30,7 @@ import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
 import com.example.bob_friend_android.databinding.FragmentSetMapBinding
 import com.example.bob_friend_android.viewmodel.BoardViewModel
 import com.example.bob_friend_android.viewmodel.ListViewModel
+import com.example.bob_friend_android.viewmodel.LoginViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -38,9 +40,10 @@ import java.text.NumberFormat
 import java.util.*
 
 
-class CreateBoardFragment(override val viewModel: BoardViewModel) : BaseFragment<FragmentCreateBoardBinding, BoardViewModel>(
+class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
     R.layout.fragment_create_board
 ), OnMapReadyCallback {
+    private val viewModel by activityViewModels<BoardViewModel>()
     private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
 
     private lateinit var mapView: MapView
@@ -211,7 +214,7 @@ class CreateBoardFragment(override val viewModel: BoardViewModel) : BaseFragment
     }
 
     private fun removeFragment() {
-        val fragmentC = CreateBoardFragment(viewModel)
+        val fragmentC = CreateBoardFragment()
         val mFragmentManager = requireActivity().supportFragmentManager
         val mFragmentTransaction = mFragmentManager.beginTransaction()
         mFragmentTransaction.replace(R.id.nav_host_fragment, fragmentC)

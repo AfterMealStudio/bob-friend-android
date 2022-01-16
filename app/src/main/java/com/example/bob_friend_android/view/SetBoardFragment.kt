@@ -59,9 +59,6 @@ class SetBoardFragment : Fragment(), OnMapReadyCallback {
     var selectedId: Int? = null
     var flag: Boolean = false
 
-    var toast: Toast? = null
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

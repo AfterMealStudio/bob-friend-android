@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.view
 
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
@@ -8,9 +9,10 @@ import com.example.bob_friend_android.databinding.FragmentCheckInfoBinding
 import com.example.bob_friend_android.view.*
 import com.example.bob_friend_android.viewmodel.LoginViewModel
 
-class CheckInfoFragment(override val viewModel: LoginViewModel) : BaseFragment<FragmentCheckInfoBinding, LoginViewModel>(
+class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
     R.layout.fragment_check_info
 ) {
+    private val viewModel by activityViewModels<LoginViewModel>()
 
     override fun init() {
         observeData()

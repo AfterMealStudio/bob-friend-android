@@ -17,6 +17,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
@@ -35,9 +36,11 @@ import com.naver.maps.map.overlay.Overlay
 import java.util.ArrayList
 
 
-class SetMapFragment(override val viewModel: ListViewModel) : BaseFragment<FragmentSetMapBinding, ListViewModel>(
+class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
     R.layout.fragment_set_map
 ), OnMapReadyCallback, Overlay.OnClickListener {
+
+    private val viewModel by activityViewModels<ListViewModel>()
 
     private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
 

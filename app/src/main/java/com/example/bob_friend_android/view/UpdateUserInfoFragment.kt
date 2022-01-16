@@ -4,15 +4,19 @@ import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentUpdateUserInfoBinding
+import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.example.bob_friend_android.viewmodel.UserViewModel
 
-class UpdateUserInfoFragment(override val viewModel: UserViewModel) : BaseFragment<FragmentUpdateUserInfoBinding, UserViewModel>(
+class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
     R.layout.fragment_update_user_info
 ) {
+    private val viewModel by activityViewModels<UserViewModel>()
+
     private var nickname: String? = null
     private var password: String? = null
     private var passwordCheck: String? = null

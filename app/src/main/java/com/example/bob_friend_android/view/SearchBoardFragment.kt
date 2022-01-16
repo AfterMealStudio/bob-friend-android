@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.R
@@ -17,6 +18,7 @@ import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.databinding.FragmentSearchBoardBinding
 import com.example.bob_friend_android.model.Board
 import com.example.bob_friend_android.viewmodel.ListViewModel
+import com.example.bob_friend_android.viewmodel.UserViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -25,9 +27,11 @@ import com.google.android.material.timepicker.TimeFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-class SearchBoardFragment(override val viewModel: ListViewModel) : BaseFragment<FragmentSearchBoardBinding, ListViewModel>(
+class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
     R.layout.fragment_search_board
 ) {
+    private val viewModel by activityViewModels<ListViewModel>()
+
     private val boardItems = arrayListOf<Board>()   // 리사이클러 뷰 아이템
     private val searchAdapter = BoardAdapter()    // 리사이클러 뷰 어댑터
     private var keyword = ""        // 검색 키워드

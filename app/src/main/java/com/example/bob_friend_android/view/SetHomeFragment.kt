@@ -1,14 +1,18 @@
 package com.example.bob_friend_android.view
 
+import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentSetHomeBinding
+import com.example.bob_friend_android.viewmodel.ListViewModel
 import com.example.bob_friend_android.viewmodel.UserViewModel
 
-class SetHomeFragment(override val viewModel: UserViewModel) : BaseFragment<FragmentSetHomeBinding, UserViewModel>(
+class SetHomeFragment : BaseFragment<FragmentSetHomeBinding>(
     R.layout.fragment_set_home
 ) {
+    private val viewModel by activityViewModels<UserViewModel>()
+
     override fun init() {
         viewModel.setUserInfo()
         observeData()
