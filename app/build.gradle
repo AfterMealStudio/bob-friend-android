@@ -10,7 +10,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.aftermeal.bob_friend_android"
+        applicationId "com.example.bob_friend_android"
         minSdkVersion 25
         targetSdkVersion 30
         versionCode 1

@@ -1,14 +1,16 @@
 package com.example.bob_friend_android.view
 
 import android.content.Context
-import android.content.Intent
+import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
@@ -54,14 +56,20 @@ class SearchLocationFragment : BaseFragment<FragmentSearchLocationBinding>(
             }
         })
 
+        observeData()
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         searchAdapter.setItemClickListener(object: SearchAdapter.OnItemClickListener {
             override fun onClick(v: View, position: Int) {
-                goToNext(R.id.action_searchBoardFragment_to_setBoardFragment, location = listItems[position])
+//                goToNext(R.id.action_searchBoardFragment_to_setBoardFragment, location = listItems[position])
+                val action = SearchLocationFragmentDirections.actionSearchLocationFragmentToCreateBoardFragment(listItems[position])
+                findNavController().navigate(action)
             }
         })
-
-        observeData()
     }
 
 

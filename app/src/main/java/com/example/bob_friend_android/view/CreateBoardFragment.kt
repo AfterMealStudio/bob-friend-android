@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,28 +11,19 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.DatePicker
 import android.widget.TimePicker
-import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
+import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
-import com.example.bob_friend_android.databinding.FragmentSetMapBinding
 import com.example.bob_friend_android.viewmodel.BoardViewModel
-import com.example.bob_friend_android.viewmodel.ListViewModel
-import com.example.bob_friend_android.viewmodel.LoginViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.util.FusedLocationSource
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -44,7 +33,6 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
     R.layout.fragment_create_board
 ), OnMapReadyCallback {
     private val viewModel by activityViewModels<BoardViewModel>()
-    private lateinit var  getLocationResultText: ActivityResultLauncher<Intent>
 
     private lateinit var mapView: MapView
     private lateinit var naverMap: NaverMap
@@ -57,6 +45,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
     var longitude: Double = 0.0
     var appointmentDate: String = ""
     var appointmentTime: String = ""
+    var dateTime: String = ""
 
     var thisYear =""
     var thisMonth = ""
@@ -133,7 +122,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
             val title = binding.etvTitle.text.toString().trim()
             val boardContent = binding.etvContent.text.toString().trim()
             val count = binding.etvPeopleCount.text.toString()
-            val dateTime = "$appointmentDate$appointmentTime"
+            dateTime = "$appointmentDate$appointmentTime"
 
             if (binding.rgAge.checkedRadioButtonId == binding.rbYes.id) {
                 ageRestrictionStart = binding.tvAgeFrom.text.toString().toInt()
@@ -166,39 +155,20 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
 
         observeData()
 
-        getLocationResultText = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
-            if(result.resultCode == AppCompatActivity.RESULT_OK) {
-                if(result.data != null) {
-                    address = result.data?.getStringExtra("location").toString()
-                    locationName = result.data?.getStringExtra("name").toString()
-                    latitude = result.data!!.getDoubleExtra("latitude", 0.0)
-                    longitude = result.data!!.getDoubleExtra("longitude", 0.0)
-
-                    if (latitude != 0.0 && longitude != 0.0) {
-                        binding.tvLocation.text = locationName
-                        val marker = Marker()
-                        marker.apply {
-                            position = LatLng(latitude, longitude)
-                            map = naverMap
-                            val cameraPosition = CameraPosition( // 카메라 위치 변경
-                                LatLng(latitude, longitude),  // 위치 지정
-                                15.0 // 줌 레벨
-                            )
-                            naverMap.cameraPosition = cameraPosition
-                        }
-                    }
-                }
-            }
-        }
-
         binding.btnSearch.setOnClickListener {
             activity?.let{
-//                val intent = Intent(context, SearchLocationActivity::class.java)
-//                getLocationResultText.launch(intent)
+                val editor = App.prefs.edit()
+                editor.putString("title", binding.etvTitle.text.toString())
+                editor.putString("content", binding.etvContent.text.toString())
+                editor.putString("count", binding.etvPeopleCount.text.toString())
+                editor.putString("date", binding.tvSetDate.text.toString())
+                editor.putString("time", binding.tvSetTime.text.toString())
+                editor.putString("appointmentDate", appointmentDate)
+                editor.putString("appointmentTime", appointmentTime)
+                editor.apply()
+
+                goToNext(R.id.action_createBoardFragment_to_searchLocationFragment)
             }
-//            binding.createLocation.visibility = View.VISIBLE
         }
 
         binding.layoutCreate.setOnClickListener {
@@ -206,19 +176,26 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
         }
     }
 
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(viewLifecycleOwner) {
+                if(it == "약속 작성 성공") {
+                    showToast("약속이 작성되었습니다!")
+                    goToNext(R.id.action_createBoardFragment_self)
+                }
+                else {
+                    showToast(it)
+                }
+            }
+        }
+    }
+
+
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.etvTitle.windowToken, 0)
         imm.hideSoftInputFromWindow(binding.etvContent.windowToken, 0)
         imm.hideSoftInputFromWindow(binding.etvPeopleCount.windowToken, 0)
-    }
-
-    private fun removeFragment() {
-        val fragmentC = CreateBoardFragment()
-        val mFragmentManager = requireActivity().supportFragmentManager
-        val mFragmentTransaction = mFragmentManager.beginTransaction()
-        mFragmentTransaction.replace(R.id.nav_host_fragment, fragmentC)
-        mFragmentTransaction.commit()
     }
 
 
@@ -255,7 +232,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
         val datePicker = DatePickerDialog(requireContext(), dateListener, year, month, day)
             .apply {
                 datePicker.minDate = System.currentTimeMillis()
-        }
+            }
         datePicker.show()
     }
 
@@ -286,20 +263,6 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
         }
         val builder = TimePickerDialog(requireContext(), timeListener, hour, minute, false)
         builder.show()
-    }
-
-    private fun observeData() {
-        with(viewModel) {
-            errorMsg.observe(viewLifecycleOwner) {
-                if(it == "약속 작성 성공") {
-                    showToast("약속이 작성되었습니다!")
-                    removeFragment()
-                }
-                else {
-                    showToast(it)
-                }
-            }
-        }
     }
 
 
@@ -350,6 +313,37 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
 
     override fun onMapReady(@NonNull naverMap: NaverMap) {
         this.naverMap = naverMap
+
+        val args : CreateBoardFragmentArgs by navArgs()
+        val item = args.item
+
+        if(item != null) {
+            address = item.address.toString()
+            locationName = item.name.toString()
+            latitude = item.y
+            longitude = item.x
+
+            if (latitude != 0.0 && longitude != 0.0) {
+                binding.tvLocation.text = locationName
+                val marker = Marker()
+                marker.apply {
+                    position = LatLng(latitude, longitude)
+                    map = naverMap
+                    val cameraPosition = CameraPosition( // 카메라 위치 변경
+                        LatLng(latitude, longitude),  // 위치 지정
+                        15.0 // 줌 레벨
+                    )
+                    naverMap.cameraPosition = cameraPosition
+                }
+            }
+
+            binding.etvTitle.setText(App.prefs.getString("title", ""))
+            binding.etvContent.setText(App.prefs.getString("content", ""))
+            binding.etvPeopleCount.setText(App.prefs.getString("count", ""))
+            binding.tvSetDate.text = App.prefs.getString("date", "")
+            binding.tvSetTime.text = App.prefs.getString("time", "")
+            dateTime = "${App.prefs.getString("appointmentDate", "")}${App.prefs.getString("appointmentTime", "")}"
+        }
     }
 
     override fun onStart() {

@@ -17,10 +17,11 @@
             android:layout_height="wrap_content"
             bind:layout_constraintBottom_toBottomOf="parent">
 
-            <com.naver.maps.map.MapView
-                android:id="@+id/map_view"
+            <fragment
+                android:id="@+id/map_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:name="com.naver.maps.map.MapFragment" />
         </FrameLayout>
 
         <androidx.appcompat.widget.Toolbar

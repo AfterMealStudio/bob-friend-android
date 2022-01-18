@@ -14,6 +14,5 @@ interface KakaoAPI {
         @Query("query") query: String             // 검색을 원하는 질의어 [필수]
         // 매개변수 추가 가능
         // @Query("category_group_code") category: String
-
     ): Call<SearchKeyword>    // 받아온 정보가 ResultSearchKeyword 클래스의 구조로 담김
 }

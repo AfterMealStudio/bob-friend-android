@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/setMap"
+        android:id="@+id/setMapFragment"
         android:title="@string/set_map"
         android:icon="@drawable/map">
     </item>
     <item
-        android:id="@+id/setList"
+        android:id="@+id/setListFragment"
         android:title="@string/set_list"
         android:icon="@drawable/list">
     </item>
     <item
-        android:id="@+id/addBoard"
+        android:id="@+id/createBoardFragment"
         android:title="@string/add_board"
         android:icon="@drawable/add">
     </item>
     <item
-        android:id="@+id/userSetting"
+        android:id="@+id/checkInfoFragment"
         android:title="@string/user_info"
         android:icon="@drawable/user">
     </item>

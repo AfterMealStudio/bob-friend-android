@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -52,7 +51,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
     private var address: String = ""
     private var listPage = 0 // 현재 페이지
 
-    lateinit var mapView: MapView
+//    lateinit var mapView: MapView
     private lateinit var naverMap: NaverMap
 
     //지도 검색 기능
@@ -72,9 +71,9 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
     {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_map, container, false)
 
-        mapView = binding.mapView
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
+//        mapView = binding.mapFragment
+//        mapView.onCreate(savedInstanceState)
+//        mapView.getMapAsync(this)
 
         return binding.root
     }
@@ -90,6 +89,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 
         binding.rvBottom.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvBottom.adapter = bottomViewAdapter
+        binding.layoutBottom.visibility = View.GONE
 
         x = arguments?.getDouble("x")
         y = arguments?.getDouble("y")
@@ -148,7 +148,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
             override fun onClick(v: View, position: Int) {
                 viewModel.setDataAtFragment(
                     this@SetMapFragment,
-                    listItems[position].name,
+                    listItems[position].name!!,
                     listItems[position].y,
                     listItems[position].x
                 )
@@ -258,41 +258,6 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
         viewModel.setList(listPage = 0, type = "specific", address = address)
         binding.layoutBottom.visibility = View.VISIBLE
         return true
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mapView.onStop()
     }
 }
 

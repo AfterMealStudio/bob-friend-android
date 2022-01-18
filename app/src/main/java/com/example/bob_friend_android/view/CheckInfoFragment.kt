@@ -46,7 +46,7 @@ class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
                 val editor = App.prefs.edit()
                 editor.clear()
                 editor.apply()
-                goToNext(R.id.action_checkInfoFragment_to_loginFragment)
+//                goToNext(R.id.action_checkInfoFragment_to_loginFragment)
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton
@@ -67,13 +67,12 @@ class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
         }
 
         binding.btnIntroduceTeam.setOnClickListener {
-            goToNext(R.id.action_checkInfoFragment_to_loginFragment)
+            goToNext(R.id.action_checkInfoFragment_to_introduceTeamFragment)
         }
 
         binding.btnUpdateUserInfo.setOnClickListener {
             goToNext(R.id.action_checkInfoFragment_to_updateUserInfoFragment)
         }
-
     }
 
     private fun observeData() {

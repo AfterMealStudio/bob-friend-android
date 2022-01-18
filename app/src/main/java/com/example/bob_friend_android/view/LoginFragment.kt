@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.view
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -62,6 +63,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             errorMsg.observe(viewLifecycleOwner) {
                 showToast(it)
                 if (it == "자동 로그인"){
+                    val intent = Intent(context, SetHomeActivity::class.java)
+                    startActivity(intent)
                 }
             }
 
@@ -72,7 +75,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 editor.putBoolean("checked", checked)
                 editor.apply()
 
-                goToNext(R.id.action_loginFragment_to_homeFragment)
+                val intent = Intent(context, SetHomeActivity::class.java)
+                startActivity(intent)
+//                goToNext(R.id.action_loginFragment_to_homeFragment)
             }
 
             refreshToken.observe(viewLifecycleOwner) {
@@ -82,7 +87,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 editor.putBoolean("checked", true)
                 editor.apply()
 
-                goToNext(R.id.action_loginFragment_to_homeFragment)
+                val intent = Intent(context, SetHomeActivity::class.java)
+                startActivity(intent)
+//                goToNext(R.id.action_loginFragment_to_homeFragment)
             }
 
             val dialog = SetLoadingDialog(requireContext())
