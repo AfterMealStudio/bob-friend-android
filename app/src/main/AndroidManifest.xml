@@ -19,7 +19,7 @@
             android:value="r4vtvdrth1" />
 
         <activity
-            android:name=".view.MainActivity"
+            android:name=".ui.view.MainActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.SetHomeActivity"/>
+        <activity android:name=".ui.view.SetHomeActivity"/>
     </application>
 
 </manifest>

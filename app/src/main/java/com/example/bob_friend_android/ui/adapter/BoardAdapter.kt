@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bob_friend_android.model.Board
+import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.databinding.ItemBoardBinding
 import com.example.bob_friend_android.databinding.ItemLoadingBinding
 

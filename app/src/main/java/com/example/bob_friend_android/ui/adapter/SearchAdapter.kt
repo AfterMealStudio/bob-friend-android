@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bob_friend_android.model.SearchLocation
+import com.example.bob_friend_android.data.entity.SearchLocation
 import com.example.bob_friend_android.R
 import kotlin.collections.ArrayList
 

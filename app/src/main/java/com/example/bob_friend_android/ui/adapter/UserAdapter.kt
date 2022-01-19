@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.databinding.ItemUserBinding
-import com.example.bob_friend_android.model.Comment
-import com.example.bob_friend_android.model.UserItem
+import com.example.bob_friend_android.data.entity.Comment
+import com.example.bob_friend_android.data.entity.UserItem
 
 class UserAdapter(private var list: MutableList<UserItem>): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

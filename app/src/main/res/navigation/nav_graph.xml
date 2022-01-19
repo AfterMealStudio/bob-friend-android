@@ -7,7 +7,7 @@
 
      <fragment
          android:id="@+id/loginFragment"
-         android:name="com.example.bob_friend_android.view.LoginFragment"
+         android:name="com.example.bob_friend_android.ui.view.LoginFragment"
          android:label="LoginFragment"
          tools:layout="@layout/fragment_login">
       <action
@@ -19,7 +19,7 @@
      </fragment>
      <fragment
          android:id="@+id/joinFragment"
-         android:name="com.example.bob_friend_android.view.JoinFragment"
+         android:name="com.example.bob_friend_android.ui.view.JoinFragment"
          android:label="JoinFragment"
          tools:layout="@layout/fragment_join">
       <action
@@ -28,7 +28,7 @@
      </fragment>
     <fragment
         android:id="@+id/findUserAccountFragment"
-        android:name="com.example.bob_friend_android.view.FindUserAccountFragment"
+        android:name="com.example.bob_friend_android.ui.view.FindUserAccountFragment"
         android:label="FindUserAccountFragment"
         tools:layout="@layout/fragment_find_user_account">
      <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/explainJoinFragment"
-        android:name="com.example.bob_friend_android.view.ExplainJoinFragment"
+        android:name="com.example.bob_friend_android.ui.view.ExplainJoinFragment"
         android:label="ExplainJoinFragment"
         tools:layout="@layout/fragment_explain_join">
      <action

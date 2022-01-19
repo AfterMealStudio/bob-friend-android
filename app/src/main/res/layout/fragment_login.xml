@@ -6,7 +6,7 @@
     <data>
         <variable
             name="login"
-            type="com.example.bob_friend_android.viewmodel.LoginViewModel" />
+            type="com.example.bob_friend_android.ui.viewmodel.LoginViewModel" />
     </data>
 
     <ScrollView

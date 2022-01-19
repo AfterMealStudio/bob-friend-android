@@ -5,7 +5,7 @@
 
     <data>
         <import
-            type="com.example.bob_friend_android.viewmodel.ListViewModel" />
+            type="com.example.bob_friend_android.ui.viewmodel.ListViewModel" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"

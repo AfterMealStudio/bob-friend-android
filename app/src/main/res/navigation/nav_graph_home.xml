@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/setListFragment"
-        android:name="com.example.bob_friend_android.view.SetListFragment"
+        android:name="com.example.bob_friend_android.ui.view.SetListFragment"
         android:label="SetListFragment"
         tools:layout="@layout/fragment_set_list">
         <action
@@ -15,60 +15,75 @@
             app:destination="@id/searchBoardFragment" />
         <action
             android:id="@+id/action_setListFragment_to_setBoardFragment"
-            app:destination="@id/setBoardFragment" />
+            app:destination="@id/setBoardFragment"
+            app:popUpTo="@id/setBoardFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
         android:id="@+id/setBoardFragment"
-        android:name="com.example.bob_friend_android.view.SetBoardFragment"
+        android:name="com.example.bob_friend_android.ui.view.SetBoardFragment"
         android:label="SetBoardFragment"
         tools:layout="@layout/fragment_set_board">
+
+        <argument
+            android:name="boardId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"/>
     </fragment>
 
     <fragment
         android:id="@+id/searchBoardFragment"
-        android:name="com.example.bob_friend_android.view.SearchBoardFragment"
+        android:name="com.example.bob_friend_android.ui.view.SearchBoardFragment"
         android:label="BoardSearchFragment"
         tools:layout="@layout/fragment_search_board">
         <action
             android:id="@+id/action_searchBoardFragment_to_setBoardFragment"
-            app:destination="@id/setBoardFragment" />
+            app:destination="@id/setBoardFragment"
+            app:popUpTo="@id/setBoardFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
         android:id="@+id/createBoardFragment"
-        android:name="com.example.bob_friend_android.view.CreateBoardFragment"
+        android:name="com.example.bob_friend_android.ui.view.CreateBoardFragment"
         android:label="CreateBoardFragment"
         tools:layout="@layout/fragment_create_board">
         <action
             android:id="@+id/action_createBoardFragment_to_searchLocationFragment"
-            app:destination="@id/searchLocationFragment" />
+            app:destination="@id/searchLocationFragment"
+            app:popUpTo="@id/searchLocationFragment"
+            app:popUpToInclusive="true"/>
         <argument
             android:name="item"
-            app:argType="com.example.bob_friend_android.model.SearchLocation"
-            app:nullable="true"
-            android:defaultValue="@null"/>
+            app:argType="com.example.bob_friend_android.data.entity.SearchLocation"
+            app:nullable="true" />
         <action
             android:id="@+id/action_createBoardFragment_self"
-            app:destination="@id/createBoardFragment" />
+            app:destination="@id/createBoardFragment"
+            app:popUpTo="@id/createBoardFragment"
+            app:popUpToInclusive="true"/>
         <!--        <argument-->
 <!--            android:name="item"-->
 <!--            app:nullable="true"-->
-<!--            app:argType="com.example.bob_friend_android.model.SearchLocation"-->
+<!--            app:argType="com.example.bob_friend_android.data.entity.SearchLocation"-->
 <!--            android:defaultValue="@null"/>-->
     </fragment>
     <fragment
         android:id="@+id/setMapFragment"
-        android:name="com.example.bob_friend_android.view.SetMapFragment"
+        android:name="com.example.bob_friend_android.ui.view.SetMapFragment"
         android:label="SetMapFragment"
         tools:layout="@layout/fragment_set_map">
         <action
             android:id="@+id/action_setMapFragment_to_setBoardFragment"
-            app:destination="@id/setBoardFragment" />
+            app:destination="@id/setBoardFragment"
+            app:popUpTo="@id/setBoardFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/checkInfoFragment"
-        android:name="com.example.bob_friend_android.view.CheckInfoFragment"
+        android:name="com.example.bob_friend_android.ui.view.CheckInfoFragment"
         android:label="CheckInfoFragment"
         tools:layout="@layout/fragment_check_info">
         <action
@@ -86,12 +101,12 @@
     </fragment>
     <fragment
         android:id="@+id/introduceTeamFragment"
-        android:name="com.example.bob_friend_android.view.IntroduceTeamFragment"
+        android:name="com.example.bob_friend_android.ui.view.IntroduceTeamFragment"
         android:label="IntroduceTeamFragment"
         tools:layout="@layout/fragment_introduce_team"/>
     <fragment
         android:id="@+id/deleteUserFragment"
-        android:name="com.example.bob_friend_android.view.DeleteUserFragment"
+        android:name="com.example.bob_friend_android.ui.view.DeleteUserFragment"
         android:label="DeleteUserFragment"
         tools:layout="@layout/fragment_delete_user">
         <action
@@ -100,23 +115,25 @@
     </fragment>
     <fragment
         android:id="@+id/setMyListFragment"
-        android:name="com.example.bob_friend_android.view.SetMyListFragment"
+        android:name="com.example.bob_friend_android.ui.view.SetMyListFragment"
         android:label="SetMyListFragment"
         tools:layout="@layout/fragment_set_my_list">
         <action
             android:id="@+id/action_setMyListFragment_to_setBoardFragment"
-            app:destination="@id/setBoardFragment" />
+            app:destination="@id/setBoardFragment"
+            app:popUpTo="@id/setBoardFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/updateUserInfoFragment"
-        android:name="com.example.bob_friend_android.view.UpdateUserInfoFragment"
+        android:name="com.example.bob_friend_android.ui.view.UpdateUserInfoFragment"
         android:label="UpdateUserInfoFragment"
         tools:layout="@layout/fragment_update_user_info">
     </fragment>
 
     <fragment
         android:id="@+id/searchLocationFragment"
-        android:name="com.example.bob_friend_android.view.SearchLocationFragment"
+        android:name="com.example.bob_friend_android.ui.view.SearchLocationFragment"
         android:label="SearchLocationFragment"
         tools:layout="@layout/fragment_search_location">
 

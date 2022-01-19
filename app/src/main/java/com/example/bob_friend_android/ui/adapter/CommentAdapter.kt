@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.databinding.ItemBoardCommentsBinding
 import com.example.bob_friend_android.databinding.ItemBoardRecommmentsBinding
-import com.example.bob_friend_android.model.Comment
+import com.example.bob_friend_android.data.entity.Comment
 import kotlinx.android.synthetic.main.item_board_comments.view.*
 import kotlinx.android.synthetic.main.item_board_recommments.view.*
 

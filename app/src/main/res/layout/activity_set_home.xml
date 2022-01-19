@@ -7,7 +7,7 @@
     <data>
         <variable
             name="main"
-            type="com.example.bob_friend_android.viewmodel.UserViewModel" />
+            type="com.example.bob_friend_android.ui.viewmodel.UserViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
