@@ -58,7 +58,8 @@
         <argument
             android:name="item"
             app:argType="com.example.bob_friend_android.data.entity.SearchLocation"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="@null"/>
         <action
             android:id="@+id/action_createBoardFragment_self"
             app:destination="@id/createBoardFragment"

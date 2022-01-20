@@ -33,9 +33,10 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
 
-
+@AndroidEntryPoint
 class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
     R.layout.fragment_set_map
 ), OnMapReadyCallback, Overlay.OnClickListener {
@@ -127,7 +128,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                     val callType = result.data?.getStringExtra("CallType")
                     if (callType == "delete" || callType == "close"){
                         bottomArrayList.clear()
-                        viewModel.setList(listPage = listPage, type = "specific", address = address)
+                        viewModel.setAppointmentList(page = listPage, type = "specific", address = address)
                     }
                 }
             }
@@ -139,7 +140,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                 // 스크롤이 끝에 도달했는지 확인
                 if (!binding.rvBottom.canScrollVertically(1)) {
                     listPage++
-                    viewModel.setList(listPage = listPage, type = "specific", address = address)
+                    viewModel.setAppointmentList(page = listPage, type = "specific", address = address)
                 }
             }
         })
@@ -240,7 +241,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                 }
             }
 
-            boardList.observe(viewLifecycleOwner) {
+            appointmentList.observe(viewLifecycleOwner) {
                 for(document in it.boardList) {
                     bottomArrayList.add(document)
                 }
@@ -254,7 +255,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
     override fun onClick(p0: Overlay): Boolean {
         bottomArrayList.clear()
         address = p0.tag.toString()
-        viewModel.setList(listPage = 0, type = "specific", address = address)
+        viewModel.setAppointmentList(page = 0, type = "specific", address = address)
         binding.layoutBottom.visibility = View.VISIBLE
         return true
     }

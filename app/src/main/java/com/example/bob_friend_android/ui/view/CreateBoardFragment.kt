@@ -21,20 +21,22 @@ import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
-import com.example.bob_friend_android.ui.viewmodel.BoardViewModel
+import com.example.bob_friend_android.ui.viewmodel.AppointmentViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 
-
+@AndroidEntryPoint
 class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
     R.layout.fragment_create_board
 ), OnMapReadyCallback {
-    private val viewModel by activityViewModels<BoardViewModel>()
+    private val viewModel by activityViewModels<AppointmentViewModel>()
 
+    private val args : CreateBoardFragmentArgs by navArgs()
     private lateinit var mapView: MapView
     private lateinit var naverMap: NaverMap
 
@@ -131,7 +133,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
 
             builder.setPositiveButton("예") { dialog, which ->
                 if(validateTitle() && validateContent() && validateEtc()){
-                    viewModel.createBoard(
+                    viewModel.createAppointment(
                         title,
                         boardContent,
                         count,
@@ -315,8 +317,6 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
 
     override fun onMapReady(@NonNull naverMap: NaverMap) {
         this.naverMap = naverMap
-
-        val args : CreateBoardFragmentArgs by navArgs()
         val item = args.item
 
         if(item != null) {

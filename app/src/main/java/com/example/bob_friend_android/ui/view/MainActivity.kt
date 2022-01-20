@@ -3,7 +3,9 @@ package com.example.bob_friend_android.ui.view
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseActivity
 import com.example.bob_friend_android.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     var backKeyPressedTime: Long = 0
 

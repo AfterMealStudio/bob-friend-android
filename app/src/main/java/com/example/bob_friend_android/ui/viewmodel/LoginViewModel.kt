@@ -1,22 +1,21 @@
 package com.example.bob_friend_android.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.ui.view.base.BaseViewModel
 import com.example.bob_friend_android.data.entity.Token
-import com.example.bob_friend_android.data.entity.UserCheck
-import com.example.bob_friend_android.di.ApiModule
+import com.example.bob_friend_android.data.network.NetworkResponse
+import com.example.bob_friend_android.data.repository.login.LoginRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import javax.inject.Inject
 
-class LoginViewModel: BaseViewModel() {
-
-    val TAG = "LoginViewModel"
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val repository: LoginRepository
+): BaseViewModel() {
 
     private val _msg = MutableLiveData<String>()
     val errorMsg : LiveData<String>
@@ -26,14 +25,6 @@ class LoginViewModel: BaseViewModel() {
     val token : LiveData<Token>
         get() = _token
 
-    private val _refreshToken = MutableLiveData<Token>()
-    val refreshToken : LiveData<Token>
-        get() = _refreshToken
-
-    private val _progressVisible = MutableLiveData<Boolean>()
-    val progressVisible : LiveData<Boolean>
-        get() = _progressVisible
-
 
     fun login(email: String, password: String) {
         if(validation(email, password)) {
@@ -41,75 +32,78 @@ class LoginViewModel: BaseViewModel() {
             user["email"] = email
             user["password"] = password
 
-            Log.d(TAG, user.toString())
-
-            _progressVisible.postValue(true)
-            ApiModule.apiBob.getLoginResponse(user).enqueue(object : Callback<Token> {
-                override fun onResponse(call: Call<Token>, response: Response<Token>) {
-                    when (response.code()) {
-                        200 -> _token.postValue(response.body())
-                        405 -> _msg.postValue("로그인 실패 : 아이디나 비번이 올바르지 않습니다!")
-                        500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
-                        else -> _msg.postValue("로그인에 실패했습니다. ${response.errorBody()?.toString()}")
+            showProgress()
+            viewModelScope.launch {
+                val response = repository.signIn(user)
+                when(response) {
+                    is NetworkResponse.Success -> {
+                        _token.postValue(response.body)
                     }
-
-                    _progressVisible.postValue(false)
+                    is NetworkResponse.ApiError -> {
+                        _msg.postValue("Api 오류 : 로그인에 실패했습니다.")
+                    }
+                    is NetworkResponse.NetworkError -> {
+                        _msg.postValue("서버 오류 : 로그인에 실패했습니다.")
+                    }
+                    is NetworkResponse.UnknownError -> {
+                        _msg.postValue("알 수 없는 오류 : 로그인에 실패했습니다.")
+                    }
                 }
-                override fun onFailure(call: Call<Token>, t: Throwable) {
-                    _msg.postValue("서버에 연결이 되지 않았습니다.")
-                    Log.e(TAG, t.message.toString())
-                    _progressVisible.postValue(false)
-                }
-            })
+                hideProgress()
+            }
         }
     }
 
 
     fun refreshToken(access: String, refresh: String) {
         val token = Token(access, refresh)
-        _progressVisible.postValue(true)
+        showProgress()
         viewModelScope.launch {
-            ApiModule.apiBob.refreshToken(token).enqueue(object : Callback<Token> {
-                override fun onResponse(call: Call<Token>, response: Response<Token>) {
-                    when (response.code()) {
-                        200 -> _refreshToken.postValue(response.body())
-                        500 -> _msg.postValue("로그인 실패 : 서버 오류입니다.")
-                        else -> _msg.postValue("자동 로그인에 실패했습니다. ${response.errorBody()?.string()}")
-                    }
-                    _progressVisible.postValue(false)
+            val response = repository.refreshToken(token)
+            when(response) {
+                is NetworkResponse.Success -> {
+                    _token.postValue(response.body)
                 }
-
-                override fun onFailure(call: Call<Token>, t: Throwable) {
-                    _msg.postValue("서버에 연결이 되지 않았습니다.")
-                    Log.d(TAG, "ttt: $t")
+                is NetworkResponse.ApiError -> {
+                    _msg.postValue("Api 오류 : 로그인 연장에 실패했습니다.")
                 }
-            })
+                is NetworkResponse.NetworkError -> {
+                    _msg.postValue("서버 오류 : 로그인 연장에 실패했습니다.")
+                }
+                is NetworkResponse.UnknownError -> {
+                    _msg.postValue("알 수 없는 오류 : 로그인 연장에 실패했습니다.")
+                }
+            }
+            hideProgress()
         }
     }
 
 
     fun validateUser() {
-        _progressVisible.postValue(true)
+        showProgress()
         viewModelScope.launch {
-            ApiModule.apiBob.getToken().enqueue(object : Callback<UserCheck> {
-                override fun onResponse(call: Call<UserCheck>, response: Response<UserCheck>) {
-                    Log.d(TAG, "validateUser: ${response.body()}")
-                    if (response.body() != null) {
-                        if (response.body()!!.isValid) {
-                            _msg.postValue("자동 로그인")
-                        }
-                        else {
-                            refreshToken(App.prefs.getString("token","token")!!, App.prefs.getString("refresh", "")!!)
-                        }
+            val response = repository.validateToken()
+            when(response) {
+                is NetworkResponse.Success -> {
+                    if (response.body.isValid){
+                        _msg.postValue("자동 로그인")
                     }
-                    _progressVisible.postValue(false)
+                    else {
+                        refreshToken(App.prefs.getString("token","token")!!, App.prefs.getString("refresh", "")!!)
+                    }
                 }
+                is NetworkResponse.ApiError -> {
+                    _msg.postValue("Api 오류 : 토큰 인증에 실패했습니다.")
+                }
+                is NetworkResponse.NetworkError -> {
+                    _msg.postValue("서버 오류 : 토큰 인증에 실패했습니다.")
+                }
+                is NetworkResponse.UnknownError -> {
+                    _msg.postValue("알 수 없는 오류 : 토큰 인증에 실패했습니다.")
+                }
+            }
 
-                override fun onFailure(call: Call<UserCheck>, t: Throwable) {
-                    _msg.postValue("서버에 연결이 되지 않았습니다.")
-                    Log.d(TAG, "ttt: $t")
-                }
-            })
+            hideProgress()
         }
     }
 

@@ -7,7 +7,9 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentCheckInfoBinding
 import com.example.bob_friend_android.ui.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
     R.layout.fragment_check_info
 ) {

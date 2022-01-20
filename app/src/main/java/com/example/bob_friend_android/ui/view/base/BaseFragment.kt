@@ -1,4 +1,4 @@
-     package com.example.bob_friend_android.ui.view.base
+package com.example.bob_friend_android.ui.view.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.bob_friend_android.data.entity.SearchLocation
 
-     abstract class BaseFragment<B : ViewDataBinding>(
+abstract class BaseFragment<B : ViewDataBinding>(
     @LayoutRes val layoutId: Int
 ) : Fragment() {
     protected lateinit var binding: B

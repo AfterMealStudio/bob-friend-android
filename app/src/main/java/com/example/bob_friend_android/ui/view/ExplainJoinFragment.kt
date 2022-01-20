@@ -6,7 +6,9 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentExplainJoinBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ExplainJoinFragment : BaseFragment<FragmentExplainJoinBinding>(
     R.layout.fragment_explain_join
 ) {

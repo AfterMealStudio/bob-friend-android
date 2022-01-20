@@ -12,11 +12,12 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentJoinBinding
 import com.example.bob_friend_android.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
 
-
+@AndroidEntryPoint
 class JoinFragment : BaseFragment<FragmentJoinBinding>(
     R.layout.fragment_join
 ) {
@@ -102,7 +103,7 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
                     return@setPositiveButton
                 }
                 else {
-                    viewModel.joinUser(
+                    viewModel.signUp(
                         password,
                         nickname,
                         email,
@@ -166,11 +167,11 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
             }
 
             val dialog = SetLoadingDialog(requireContext())
-            progressVisible.observe(viewLifecycleOwner) {
-                if (progressVisible.value!!) {
+            isLoading.observe(viewLifecycleOwner) {
+                if (isLoading.value!!) {
                     dialog.show()
                 }
-                else if (!progressVisible.value!!) {
+                else if (!isLoading.value!!) {
                     dialog.dismiss()
                 }
             }

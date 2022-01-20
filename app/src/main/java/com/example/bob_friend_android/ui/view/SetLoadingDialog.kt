@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import com.example.bob_friend_android.R
+import dagger.hilt.android.AndroidEntryPoint
 
 class SetLoadingDialog(context: Context) : Dialog(context){
 

@@ -25,20 +25,21 @@ import com.example.bob_friend_android.databinding.FragmentSetBoardBinding
 import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.data.entity.Comment
 import com.example.bob_friend_android.data.entity.UserItem
-import com.example.bob_friend_android.ui.viewmodel.BoardViewModel
+import com.example.bob_friend_android.ui.viewmodel.AppointmentViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+@AndroidEntryPoint
 class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
     R.layout.fragment_set_board
 ), OnMapReadyCallback {
-    private val viewModel by activityViewModels<BoardViewModel>()
+    private val viewModel by activityViewModels<AppointmentViewModel>()
 
-    val args : SetBoardFragmentArgs by navArgs()
+    private val args : SetBoardFragmentArgs by navArgs()
     private var detailBoardId : Int = 0
     private var detailCommentId : Int = 0
 
@@ -106,20 +107,20 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
 
             val swipe = binding.layoutSwipe
             swipe.setOnRefreshListener {
-                viewModel.readBoard(detailBoardId)
+                viewModel.setAppointment(detailBoardId)
                 swipe.isRefreshing = false
             }
 
             binding.btnParticipate.setOnClickListener {
                 if(binding.btnParticipate.text=="마감하기"){
-                    viewModel.closeBoard(detailBoardId)
+                    viewModel.closeAppointment(detailBoardId)
                 }
                 else {
-                    viewModel.participateBoard(detailBoardId)
+                    viewModel.joinAppointment(detailBoardId)
                 }
             }
 
-            viewModel.readBoard(detailBoardId)
+            viewModel.setAppointment(detailBoardId)
         }
 
 //        binding.backBtn.setOnClickListener {
@@ -177,7 +178,7 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             Menu.FIRST + 1 -> {
-                viewModel.deleteBoard(detailBoardId)
+                viewModel.deleteAppointment(detailBoardId)
 //                val intent = Intent().apply {
 //                    putExtra("CallType", "delete")
 //                }
@@ -185,7 +186,7 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
 //                if(!isFinishing) finish()
             }
             Menu.FIRST + 2 -> {
-                viewModel.reportBoard(detailBoardId)
+                viewModel.reportAppointment(detailBoardId)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -226,7 +227,7 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
                     viewModel.reportComment(detailBoardId, commentId)
                 } else {
                     if (recommentId != null) {
-                        viewModel.reportReComment(detailBoardId, commentId, recommentId)
+                        viewModel.reportComment(detailBoardId, commentId, recommentId)
                     }
                 }
             }
@@ -236,7 +237,7 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
                     viewModel.deleteComment(detailBoardId, commentId)
                 } else {
                     if (recommentId != null) {
-                        viewModel.deleteReComment(detailBoardId, commentId, recommentId)
+                        viewModel.deleteComment(detailBoardId, commentId, recommentId)
                     }
                 }
             }
@@ -252,11 +253,11 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
             })
 
             val dialog = SetLoadingDialog(requireContext())
-            progressVisible.observe(viewLifecycleOwner) {
-                if (progressVisible.value!!) {
+            isLoading.observe(viewLifecycleOwner) {
+                if (isLoading.value!!) {
                     dialog.show()
                 }
-                else if (!progressVisible.value!!) {
+                else if (!isLoading.value!!) {
                     dialog.dismiss()
                 }
             }
@@ -267,7 +268,7 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
                         makeBuilder("접근할 수 없는 약속", "마감되거나 삭제되어 접근 할 수 없는 약속입니다.")
                     }
                     "댓글이 삭제되었습니다." -> {
-                        readBoard(detailBoardId)
+                        setAppointment(detailBoardId)
                     }
                     "참가할 수 없는 약속" -> {
                         makeBuilder("참가할 수 없는 약속", "참가 조건이 맞지 않아 참가할 수 없는 약속입니다.")
@@ -376,16 +377,16 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
 
         binding.imgPostComment.setOnClickListener {
             if (binding.etvComment.text.toString() != "" && !flag) {
-                viewModel.addComment(
+                viewModel.createComment(
                     detailBoardId,
                     binding.etvComment.text.toString()
                 )
                 binding.etvComment.text = null
             } else if (binding.etvComment.text.toString() != "" && flag) {
-                viewModel.addReComment(
+                viewModel.createComment(
                     detailBoardId,
-                    detailCommentId,
-                    binding.etvComment.text.toString()
+                    binding.etvComment.text.toString(),
+                    detailCommentId
                 )
                 binding.etvComment.text = null
                 flag = false

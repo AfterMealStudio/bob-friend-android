@@ -9,18 +9,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.bob_friend_android.databinding.DialogSetOptionBinding
-import com.example.bob_friend_android.ui.viewmodel.BoardViewModel
+import com.example.bob_friend_android.ui.viewmodel.AppointmentViewModel
 
 class SetOptionDialog(private val isWriter: Boolean, private val isComment:Boolean): DialogFragment() {
 
     private var _binding: DialogSetOptionBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: BoardViewModel
+    private lateinit var viewModel: AppointmentViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = DialogSetOptionBinding.inflate(inflater, container, false)
         val view = binding.root
-        viewModel = ViewModelProvider(this).get(BoardViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(AppointmentViewModel::class.java)
 
         // 레이아웃 배경을 투명하게 해줌, 필수 아님
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

@@ -10,7 +10,9 @@ import com.example.bob_friend_android.SharedPref
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentLoginBinding
 import com.example.bob_friend_android.ui.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(
     R.layout.fragment_login
 ) {
@@ -69,32 +71,22 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 val editor = App.prefs.edit()
                 editor.putString("token", it.accessToken)
                 editor.putString("refresh", it.refreshToken)
-                editor.putBoolean("checked", checked)
+                val check = App.prefs.getBoolean("checked", false)
+                if (!check) {
+                    editor.putBoolean("checked", checked)
+                }
                 editor.apply()
 
                 val intent = Intent(context, SetHomeActivity::class.java)
                 startActivity(intent)
-//                goToNext(R.id.action_loginFragment_to_homeFragment)
-            }
-
-            refreshToken.observe(viewLifecycleOwner) {
-                val editor = App.prefs.edit()
-                editor.putString("token", it.accessToken)
-                editor.putString("refresh", it.refreshToken)
-                editor.putBoolean("checked", true)
-                editor.apply()
-
-                val intent = Intent(context, SetHomeActivity::class.java)
-                startActivity(intent)
-//                goToNext(R.id.action_loginFragment_to_homeFragment)
             }
 
             val dialog = SetLoadingDialog(requireContext())
-            progressVisible.observe(viewLifecycleOwner) {
-                if (progressVisible.value!!) {
+            isLoading.observe(viewLifecycleOwner) {
+                if (isLoading.value!!) {
                     dialog.show()
                 }
-                else if (!progressVisible.value!!) {
+                else if (!isLoading.value!!) {
                     dialog.dismiss()
                 }
             }

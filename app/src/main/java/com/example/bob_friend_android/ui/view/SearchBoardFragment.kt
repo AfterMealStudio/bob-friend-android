@@ -24,9 +24,11 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
 
+@AndroidEntryPoint
 class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
     R.layout.fragment_search_board
 ) {
@@ -82,7 +84,7 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
                 // 스크롤이 끝에 도달했는지 확인
                 if (!binding.rvSearch.canScrollVertically(1)) {
                     listPage++
-                    viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
+                    viewModel.searchAppointmentList(page = listPage, keyword = keyword, category = category, start = start, end = end)
                 }
             }
         })
@@ -252,11 +254,11 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
                     binding.cbTimeLimit.isChecked = false
                 }
                 else {
-                    viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
+                    viewModel.searchAppointmentList(page = listPage, keyword = keyword, category = category, start = start, end = end)
                 }
             }
             else {
-                viewModel.searchList(listPage = listPage, keyword = keyword, category = category, start = start, end = end)
+                viewModel.searchAppointmentList(page = listPage, keyword = keyword, category = category, start = start, end = end)
             }
             binding.layoutSetting.visibility = View.GONE
             binding.btnSettingOnOff.setImageResource(R.drawable.down_arrow)
@@ -279,7 +281,7 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
                 showToast(it)
             }
 
-            boardList.observe(viewLifecycleOwner) {
+            appointmentList.observe(viewLifecycleOwner) {
                 for(document in it.boardList) {
                     boardItems.add(document)
                 }

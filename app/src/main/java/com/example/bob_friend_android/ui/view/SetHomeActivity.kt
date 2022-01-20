@@ -11,7 +11,9 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseActivity
 import com.example.bob_friend_android.databinding.ActivitySetHomeBinding
 import com.example.bob_friend_android.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SetHomeActivity : BaseActivity<ActivitySetHomeBinding>(
     R.layout.activity_set_home
 ) {

@@ -7,7 +7,9 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentFindUserAccountBinding
 import com.example.bob_friend_android.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FindUserAccountFragment : BaseFragment<FragmentFindUserAccountBinding>(
     R.layout.fragment_find_user_account
 ) {

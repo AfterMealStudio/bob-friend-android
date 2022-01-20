@@ -17,7 +17,9 @@ import com.example.bob_friend_android.ui.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentSearchLocationBinding
 import com.example.bob_friend_android.data.entity.SearchLocation
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchLocationFragment : BaseFragment<FragmentSearchLocationBinding>(
     R.layout.fragment_search_location
 ) {

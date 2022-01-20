@@ -9,7 +9,9 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentDeleteUserBinding
 import com.example.bob_friend_android.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DeleteUserFragment : BaseFragment<FragmentDeleteUserBinding>(
     R.layout.fragment_delete_user
 ) {

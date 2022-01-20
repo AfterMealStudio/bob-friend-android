@@ -6,7 +6,9 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentIntroduceTeamBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class IntroduceTeamFragment : BaseFragment<FragmentIntroduceTeamBinding>(
     R.layout.fragment_introduce_team
 ) {

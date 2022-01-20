@@ -15,8 +15,10 @@ import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentSetListBinding
 import com.example.bob_friend_android.data.entity.Token
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
+@AndroidEntryPoint
 class SetListFragment : BaseFragment<FragmentSetListBinding>(
     R.layout.fragment_set_list
 ) {
@@ -31,7 +33,7 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
         swipe.setOnRefreshListener {
             listPage = 0
             boardArrayList.clear()
-            viewModel.setList(listPage)
+            viewModel.setAppointmentList(listPage)
             swipe.isRefreshing = false
         }
 
@@ -39,7 +41,7 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
         boardAdapter = BoardAdapter()
         binding.recyclerview.adapter = boardAdapter
 
-        viewModel.setList(listPage)
+        viewModel.setAppointmentList(listPage)
 
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(binding.tbMain)
@@ -52,7 +54,7 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
                 // 스크롤이 끝에 도달했는지 확인
                 if (!binding.recyclerview.canScrollVertically(1)) {
                     listPage++
-                    viewModel.setList(listPage)
+                    viewModel.setAppointmentList(listPage)
                 }
             }
         })
@@ -84,7 +86,7 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
             errorMsg.observe(this@SetListFragment, object : Observer<String> {
                 override fun onChanged(t: String?) {
                     if (t == "Access Denied") {
-                        viewModel.refreshToken(App.prefs.getString("token", "")!!, App.prefs.getString("refresh", "")!!)
+//                        viewModel.refreshToken(App.prefs.getString("token", "")!!, App.prefs.getString("refresh", "")!!)
                     }
                     if (t != null) {
                         showToast(t)
@@ -92,7 +94,7 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
                 }
             })
 
-            boardList.observe(viewLifecycleOwner) {
+            appointmentList.observe(viewLifecycleOwner) {
                 for(document in it.boardList) {
                     boardArrayList.add(document)
                 }
@@ -110,11 +112,11 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
             })
 
             val dialog = SetLoadingDialog(requireContext())
-            progressVisible.observe(viewLifecycleOwner) {
-                if (progressVisible.value!!) {
+            isLoading.observe(viewLifecycleOwner) {
+                if (isLoading.value!!) {
                     dialog.show()
                 }
-                else if (!progressVisible.value!!) {
+                else if (!isLoading.value!!) {
                     dialog.dismiss()
                 }
             }

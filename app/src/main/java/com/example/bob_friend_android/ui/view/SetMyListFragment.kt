@@ -11,8 +11,10 @@ import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.databinding.FragmentSetMyListBinding
 import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
 
+@AndroidEntryPoint
 class SetMyListFragment : BaseFragment<FragmentSetMyListBinding>(
     R.layout.fragment_set_my_list
 ) {
@@ -77,7 +79,7 @@ class SetMyListFragment : BaseFragment<FragmentSetMyListBinding>(
                 showToast(it)
             }
 
-            boardList.observe(viewLifecycleOwner) {
+            appointmentList.observe(viewLifecycleOwner) {
                 for(document in it.boardList) {
                     boardArrayList.add(document)
                 }
@@ -85,11 +87,11 @@ class SetMyListFragment : BaseFragment<FragmentSetMyListBinding>(
             }
 
             val dialog = SetLoadingDialog(requireContext())
-            progressVisible.observe(viewLifecycleOwner) {
-                if (progressVisible.value!!) {
+            isLoading.observe(viewLifecycleOwner) {
+                if (isLoading.value!!) {
                     dialog.show()
                 }
-                else if (!progressVisible.value!!) {
+                else if (!isLoading.value!!) {
                     dialog.dismiss()
                 }
             }

@@ -12,7 +12,9 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentUpdateUserInfoBinding
 import com.example.bob_friend_android.ui.viewmodel.UserViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
     R.layout.fragment_update_user_info
 ) {
