@@ -4,18 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="board"
-            type="com.example.bob_friend_android.view.CreateBoardFragment" />
+        <import
+            type="com.example.bob_friend_android.ui.viewmodel.AppointmentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".view.CreateBoardActivity">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/create_toolbar"
+            android:id="@+id/tb_create"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/main_color1"
@@ -31,7 +29,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center">
                 <ImageView
-                    android:id="@+id/create_back_btn"
+                    android:id="@+id/btn_back"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     app:srcCompat="@drawable/refresh"
@@ -40,7 +38,7 @@
                     app:tint="@color/white" />
 
                 <TextView
-                    android:id="@+id/create_board"
+                    android:id="@+id/tv_create_board"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -51,7 +49,7 @@
                     android:textSize="18sp"/>
 
                 <ImageView
-                    android:id="@+id/create_ok_btn"
+                    android:id="@+id/btn_create_ok"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_gravity="center"
@@ -62,7 +60,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <ScrollView
-            android:id="@+id/create_scrollView2"
+            android:id="@+id/sv_create"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbarStyle="outsideOverlay"
@@ -71,10 +69,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/create_toolbar">
+            app:layout_constraintTop_toBottomOf="@+id/tb_create">
 
             <LinearLayout
-                android:id="@+id/create_layout"
+                android:id="@+id/layout_create"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:padding="20dp"
@@ -86,7 +84,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/create_editCreateTitle"
+                        android:id="@+id/etv_title"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:ems="10"
@@ -100,7 +98,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/create_editCreateContent"
+                        android:id="@+id/etv_content"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:ems="10"
@@ -117,7 +115,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/create_editPeopleCount"
+                        android:id="@+id/etv_people_count"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="3"
@@ -126,7 +124,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
-                    android:id="@+id/create_textView8"
+                    android:id="@+id/tv_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
@@ -134,7 +132,7 @@
                     android:textColor="@color/main_color1" />
 
                 <Button
-                    android:id="@+id/create_choice_date"
+                    android:id="@+id/tv_choice_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/main_color3"
@@ -143,7 +141,7 @@
                     android:textStyle="bold" />
 
                 <Button
-                    android:id="@+id/create_choice_time"
+                    android:id="@+id/tv_choice_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/main_color3"
@@ -158,14 +156,14 @@
                     android:layout_marginBottom="10dp">
 
                     <TextView
-                        android:id="@+id/create_date"
+                        android:id="@+id/tv_set_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textColor="@color/main_color1" />
 
                     <TextView
-                        android:id="@+id/create_time"
+                        android:id="@+id/tv_set_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -173,7 +171,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/create_textView9"
+                    android:id="@+id/tv_place"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -181,13 +179,13 @@
                     android:textColor="@color/main_color1" />
 
                 <com.naver.maps.map.MapView
-                    android:id="@+id/create_map_view"
+                    android:id="@+id/map_view"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
                     android:visibility="visible"/>
 
                 <Button
-                    android:id="@+id/create_search_btn"
+                    android:id="@+id/btn_search"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -197,7 +195,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/create_location"
+                    android:id="@+id/tv_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/main_color1" />
@@ -214,7 +212,7 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/create_write_age"
+                            android:id="@+id/tv_age"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -222,20 +220,20 @@
                             android:textColor="@color/main_color1" />
 
                         <RadioGroup
-                            android:id="@+id/create_age_group"
+                            android:id="@+id/rg_age"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <RadioButton
-                                android:id="@+id/create_ageButton2"
+                                android:id="@+id/rb_yes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/write_yes" />
 
                             <RadioButton
-                                android:id="@+id/create_ageButton1"
+                                android:id="@+id/rb_no"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -246,7 +244,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.slider.RangeSlider
-                    android:id="@+id/create_range_seek_bar"
+                    android:id="@+id/rs_age"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:valueFrom="0"
@@ -255,7 +253,7 @@
                     android:visibility="gone"/>
 
                 <LinearLayout
-                    android:id="@+id/create_ageFromTo"
+                    android:id="@+id/layout_age_from_to"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="20dp"
@@ -265,30 +263,30 @@
                     android:visibility="gone">
 
                     <TextView
-                        android:id="@+id/create_age_from"
+                        android:id="@+id/tv_age_from"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/write_minAge"
                         android:textColor="@color/main_color1" />
 
                     <TextView
-                        android:id="@+id/create_age_from2"
+                        android:id="@+id/tv_age_from_frame"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginEnd="5dp"
                         android:text="@string/write_ageFrom"
                         android:textColor="@color/main_color1" />
 
                     <TextView
-                        android:id="@+id/create_age_to"
+                        android:id="@+id/tv_age_to"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:text="@string/write_maxAge"
                         android:textColor="@color/main_color1" />
 
                     <TextView
-                        android:id="@+id/create_age_to2"
+                        android:id="@+id/tv_age_to_frame"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/write_ageTo"
@@ -297,35 +295,35 @@
 
 
                 <TextView
-                    android:id="@+id/create_gender"
+                    android:id="@+id/tv_gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/gender"
                     android:textColor="@color/main_color1" />
 
                 <RadioGroup
-                    android:id="@+id/create_gender_group"
+                    android:id="@+id/rg_gender"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:orientation="horizontal">
 
                     <RadioButton
-                        android:id="@+id/create_genderButton"
+                        android:id="@+id/btn_gender_male"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/onlyMale" />
 
                     <RadioButton
-                        android:id="@+id/create_genderButton2"
+                        android:id="@+id/btn_gender_female"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/onlyFemale" />
 
                     <RadioButton
-                        android:id="@+id/create_genderButton3"
+                        android:id="@+id/btn_gender_none"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

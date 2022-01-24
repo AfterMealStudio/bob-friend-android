@@ -3,8 +3,7 @@ package com.example.bob_friend_android
 import android.content.Context
 import android.content.SharedPreferences
 
-import android.util.Log
-import com.example.bob_friend_android.model.Token
+import com.example.bob_friend_android.data.entity.Token
 
 object SharedPref {
     val LOGIN_SESSION = "login.session"
