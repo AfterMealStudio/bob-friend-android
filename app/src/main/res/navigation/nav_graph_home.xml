@@ -22,9 +22,9 @@
 
     <fragment
         android:id="@+id/setBoardFragment"
-        android:name="com.example.bob_friend_android.ui.view.SetBoardFragment"
+        android:name="com.example.bob_friend_android.ui.view.BoardFragment"
         android:label="SetBoardFragment"
-        tools:layout="@layout/fragment_set_board">
+        tools:layout="@layout/fragment_board">
 
         <argument
             android:name="boardId"

@@ -48,6 +48,9 @@ class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
                 editor.clear()
                 editor.apply()
 //                goToNext(R.id.action_checkInfoFragment_to_loginFragment)
+                val intent = Intent(requireContext(), MainActivity::class.java)
+                startActivity(intent)
+                activity?.finish()
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton

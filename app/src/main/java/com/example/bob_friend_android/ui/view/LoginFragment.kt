@@ -64,6 +64,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 if (it == "자동 로그인"){
                     val intent = Intent(context, SetHomeActivity::class.java)
                     startActivity(intent)
+                    activity?.finish()
                 }
             }
 
@@ -79,6 +80,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
                 val intent = Intent(context, SetHomeActivity::class.java)
                 startActivity(intent)
+                activity?.finish()
             }
 
             val dialog = SetLoadingDialog(requireContext())

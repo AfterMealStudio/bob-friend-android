@@ -241,20 +241,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/header_layout" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/user_info_agree_btn"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:backgroundTint="@color/white"
-                    android:text="@string/setting_user_info_agree_btn"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/header_layout" />
+<!--                <androidx.appcompat.widget.AppCompatButton-->
+<!--                    android:id="@+id/user_info_agree_btn"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="65dp"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginRight="10dp"-->
+<!--                    style="@style/Widget.AppCompat.Button.Borderless"-->
+<!--                    android:backgroundTint="@color/white"-->
+<!--                    android:text="@string/setting_user_info_agree_btn"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="16sp"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/header_layout" />-->
 
 <!--                <androidx.appcompat.widget.AppCompatButton-->
 <!--                    android:id="@+id/setting_notification"-->
