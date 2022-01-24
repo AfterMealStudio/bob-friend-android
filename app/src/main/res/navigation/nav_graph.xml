@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+   <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+     <fragment
+         android:id="@+id/loginFragment"
+         android:name="com.example.bob_friend_android.ui.view.LoginFragment"
+         android:label="LoginFragment"
+         tools:layout="@layout/fragment_login">
+      <action
+          android:id="@+id/action_loginFragment_to_joinFragment"
+          app:destination="@id/joinFragment" />
+      <action
+          android:id="@+id/action_loginFragment_to_findUserAccountFragment"
+          app:destination="@id/findUserAccountFragment" />
+     </fragment>
+     <fragment
+         android:id="@+id/joinFragment"
+         android:name="com.example.bob_friend_android.ui.view.JoinFragment"
+         android:label="JoinFragment"
+         tools:layout="@layout/fragment_join">
+      <action
+          android:id="@+id/action_joinFragment_to_explainJoinFragment"
+          app:destination="@id/explainJoinFragment" />
+     </fragment>
+    <fragment
+        android:id="@+id/findUserAccountFragment"
+        android:name="com.example.bob_friend_android.ui.view.FindUserAccountFragment"
+        android:label="FindUserAccountFragment"
+        tools:layout="@layout/fragment_find_user_account">
+     <action
+         android:id="@+id/action_findUserAccountFragment_to_loginFragment"
+         app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/explainJoinFragment"
+        android:name="com.example.bob_friend_android.ui.view.ExplainJoinFragment"
+        android:label="ExplainJoinFragment"
+        tools:layout="@layout/fragment_explain_join">
+     <action
+         android:id="@+id/action_explainJoinFragment_to_loginFragment"
+         app:destination="@id/loginFragment" />
+    </fragment>
+</navigation>

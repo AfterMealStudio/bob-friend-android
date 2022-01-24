@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import
+            type="com.example.bob_friend_android.ui.viewmodel.ListViewModel" />
+    </data>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/layout_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            bind:layout_constraintBottom_toBottomOf="parent">
+
+            <fragment
+                android:id="@+id/map_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:name="com.naver.maps.map.MapFragment" />
+        </FrameLayout>
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_map"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/main_color1"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="3dp">
+
+                <ImageView
+                    android:id="@+id/img_rice"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintStart_toStartOf="parent"
+                    bind:layout_constraintTop_toTopOf="parent"
+                    bind:srcCompat="@drawable/rice"
+                    bind:tint="@color/white" />
+
+                <EditText
+                    android:id="@+id/etv_search"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/search_border"
+                    android:ems="12"
+                    android:hint="@string/map_search"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/main_color1"
+                    android:textColorHint="@color/main_color1"
+                    android:textSize="15sp"
+                    bind:layout_constraintBottom_toBottomOf="parent"
+                    bind:layout_constraintEnd_toEndOf="parent"
+                    bind:layout_constraintStart_toEndOf="@+id/img_rice"
+                    bind:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:background="@color/white"
+            android:layout_marginTop="60dp"
+            android:scrollbarThumbVertical="@color/main_color1"
+            android:scrollbarSize="10dp"
+            bind:layout_constraintEnd_toEndOf="parent"
+            bind:layout_constraintStart_toStartOf="parent"
+            bind:layout_constraintTop_toBottomOf="@+id/main_toolbar"/>
+
+        <LinearLayout
+            android:id="@+id/layout_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="bottom">
+            <TextView
+                android:id="@+id/tv_total_elements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textColor="@color/main_color1"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/line_part1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/grey"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_board"
+                tools:itemCount="2"/>
+        </LinearLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

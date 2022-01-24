@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:minHeight="70dp"
     android:orientation="vertical"
     android:background="@drawable/recomment_background"
@@ -17,7 +17,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/recomment_user_name"
+            android:id="@+id/tv_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/read_writer"
@@ -33,7 +33,7 @@
             android:layout_gravity="end">
 
             <TextView
-                android:id="@+id/recomment_timestamp"
+                android:id="@+id/tv_recomment_timestamp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -41,7 +41,7 @@
                 android:text="@string/userDateOfBirth2" />
 
             <ImageView
-                android:id="@+id/recomment_menu_btn"
+                android:id="@+id/btn_recomment_menu"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="10dp"
@@ -54,7 +54,7 @@
 
 
     <TextView
-        android:id="@+id/recomment_contents"
+        android:id="@+id/tv_recomment_contents"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:minHeight="20dp"
