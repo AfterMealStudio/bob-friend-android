@@ -126,12 +126,13 @@
                         android:text="@string/read_appointment_place_and_time"
                         android:textColor="@color/main_color1" />
 
-                    <com.naver.maps.map.MapView
-                        android:id="@+id/map_view"
+                    <fragment
+                        android:id="@+id/map"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:background="@drawable/border_line" >
-                    </com.naver.maps.map.MapView>
+                        android:background="@drawable/border_line"
+                        android:name="com.naver.maps.map.MapFragment">
+                    </fragment>
 
                     <TextView
                         android:id="@+id/line_part2"

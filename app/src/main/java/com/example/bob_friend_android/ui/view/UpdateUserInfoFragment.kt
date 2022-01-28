@@ -3,12 +3,15 @@
 package com.example.bob_friend_android.ui.view
 
 import android.content.Context
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentUpdateUserInfoBinding
 import com.example.bob_friend_android.ui.viewmodel.UserViewModel
@@ -26,19 +29,27 @@ class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
     private var dateBirth: String? = null
     private var gender : String? = null
 
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentUpdateUserInfoBinding {
+        return FragmentUpdateUserInfoBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
 
     override fun init() {
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+            (activity as AppCompatActivity).setSupportActionBar(requireDataBinding().toolbar)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
             (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         }
 
-        binding.toolbar.title = "회원정보수정"
+        requireDataBinding().toolbar.title = "회원정보수정"
 
         observeData()
 
-        binding.rgGender.setOnCheckedChangeListener { group, checkedId ->
+        requireDataBinding().rgGender.setOnCheckedChangeListener { group, checkedId ->
             gender = when(checkedId) {
                 R.id.male -> "MALE"
                 R.id.female -> "FEMALE"
@@ -48,28 +59,28 @@ class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
         }
 
         var nicknameCheck = false
-        binding.etvNickname.setOnClickListener {
-            nickname = binding.etvNickname.text.toString().trim()
+        requireDataBinding().etvNickname.setOnClickListener {
+            nickname = requireDataBinding().etvNickname.text.toString().trim()
             viewModel.checkUserNickname(nickname!!)
             nicknameCheck = true
         }
 
-        binding.btnUpdateUserInfo.setOnClickListener {
+        requireDataBinding().btnUpdateUserInfo.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("회원정보수정")
             builder.setMessage("이렇게 정보 변경을 진행할까요?")
 
-            if(binding.etvNickname.text!!.isNotBlank()){
-                nickname = binding.etvNickname.text.toString().trim()
+            if(requireDataBinding().etvNickname.text!!.isNotBlank()){
+                nickname = requireDataBinding().etvNickname.text.toString().trim()
             }
-            if (binding.etvPassword.text!!.isNotBlank()){
-                password = binding.etvPassword.text.toString().trim()
+            if (requireDataBinding().etvPassword.text!!.isNotBlank()){
+                password = requireDataBinding().etvPassword.text.toString().trim()
             }
-            if (binding.etvPasswordCheck.text!!.isNotBlank()){
-                passwordCheck = binding.etvPasswordCheck.text.toString().trim()
+            if (requireDataBinding().etvPasswordCheck.text!!.isNotBlank()){
+                passwordCheck = requireDataBinding().etvPasswordCheck.text.toString().trim()
             }
-            if (binding.etvDateBirth.text!!.isNotBlank()){
-                dateBirth = binding.etvDateBirth.text.toString().trim()
+            if (requireDataBinding().etvDateBirth.text!!.isNotBlank()){
+                dateBirth = requireDataBinding().etvDateBirth.text.toString().trim()
             }
 
             builder.setPositiveButton("예") { dialog, which ->
@@ -88,7 +99,7 @@ class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
             builder.show()
         }
 
-        binding.layoutUpdate.setOnClickListener {
+        requireDataBinding().layoutUpdate.setOnClickListener {
             hideKeyboard()
         }
     }
@@ -96,10 +107,10 @@ class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etvNickname.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.etvPassword.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.etvPasswordCheck.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.etvDateBirth.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvNickname.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvPassword.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvPasswordCheck.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvDateBirth.windowToken, 0)
     }
 
 

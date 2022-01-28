@@ -4,11 +4,14 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.CompoundButton
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentJoinBinding
 import com.example.bob_friend_android.ui.viewmodel.UserViewModel
@@ -40,9 +43,18 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
     var emailCheck = false
     var nicknameCheck = false
 
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentJoinBinding {
+        return FragmentJoinBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
+
     override fun init() {
         gender = ""
-        binding.registerGenderGroup.setOnCheckedChangeListener { group, checkedId ->
+        requireDataBinding().registerGenderGroup.setOnCheckedChangeListener { group, checkedId ->
             gender = when(checkedId) {
                 R.id.male -> "MALE"
                 R.id.female -> "FEMALE"
@@ -55,48 +67,48 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
             if (isChecked) {
                 when(buttonView.id) {
                     R.id.agree_all -> {
-                        binding.agree1.isChecked = true
-                        binding.agree2.isChecked = true
-                        binding.agree3.isChecked = true
+                        requireDataBinding().agree1.isChecked = true
+                        requireDataBinding().agree2.isChecked = true
+                        requireDataBinding().agree3.isChecked = true
                     }
-                    R.id.agree1 -> if (binding.agree1.isChecked && binding.agree2.isChecked && binding.agree3.isChecked) binding.agreeAll.isChecked =
+                    R.id.agree1 -> if (requireDataBinding().agree1.isChecked && requireDataBinding().agree2.isChecked && requireDataBinding().agree3.isChecked) requireDataBinding().agreeAll.isChecked =
                         true
-                    R.id.agree2 -> if (binding.agree1.isChecked && binding.agree2.isChecked && binding.agree3.isChecked) binding.agreeAll.isChecked =
+                    R.id.agree2 -> if (requireDataBinding().agree1.isChecked && requireDataBinding().agree2.isChecked && requireDataBinding().agree3.isChecked) requireDataBinding().agreeAll.isChecked =
                         true
-                    R.id.agree3 -> if (binding.agree1.isChecked && binding.agree2.isChecked && binding.agree3.isChecked) binding.agreeAll.isChecked =
+                    R.id.agree3 -> if (requireDataBinding().agree1.isChecked && requireDataBinding().agree2.isChecked && requireDataBinding().agree3.isChecked) requireDataBinding().agreeAll.isChecked =
                         true
                 }
             }
 
             else {
                 when(buttonView.id) {
-                    R.id.agree1 -> binding.agreeAll.isChecked = false
-                    R.id.agree2 -> binding.agreeAll.isChecked = false
-                    R.id.agree3 -> binding.agreeAll.isChecked = false
+                    R.id.agree1 -> requireDataBinding().agreeAll.isChecked = false
+                    R.id.agree2 -> requireDataBinding().agreeAll.isChecked = false
+                    R.id.agree3 -> requireDataBinding().agreeAll.isChecked = false
                 }
             }
         }
 
-        binding.agreeAll.setOnCheckedChangeListener(checkListener)
-        binding.agree1.setOnCheckedChangeListener(checkListener)
-        binding.agree2.setOnCheckedChangeListener(checkListener)
-        binding.agree3.setOnCheckedChangeListener(checkListener)
+        requireDataBinding().agreeAll.setOnCheckedChangeListener(checkListener)
+        requireDataBinding().agree1.setOnCheckedChangeListener(checkListener)
+        requireDataBinding().agree2.setOnCheckedChangeListener(checkListener)
+        requireDataBinding().agree3.setOnCheckedChangeListener(checkListener)
 
 
-        binding.joinBtn.setOnClickListener {
+        requireDataBinding().joinBtn.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("회원가입")
             builder.setMessage("이렇게 회원가입을 진행할까요?")
 
-            nickname = binding.editTextNickname.text.toString().trim()
-            password = binding.editTextPassword.text.toString().trim()
-            passwordCheck = binding.editTextPasswordCheck.text.toString().trim()
-            email = binding.editTextEmail.text.toString().trim()
-            dateBirth = binding.editTextDateBirth.text.toString().trim()
-            agreeAll = binding.agreeAll.isChecked
-            agree1 = binding.agree1.isChecked
-            agree2 = binding.agree2.isChecked
-            agreeChoice = binding.agree3.isChecked
+            nickname = requireDataBinding().editTextNickname.text.toString().trim()
+            password = requireDataBinding().editTextPassword.text.toString().trim()
+            passwordCheck = requireDataBinding().editTextPasswordCheck.text.toString().trim()
+            email = requireDataBinding().editTextEmail.text.toString().trim()
+            dateBirth = requireDataBinding().editTextDateBirth.text.toString().trim()
+            agreeAll = requireDataBinding().agreeAll.isChecked
+            agree1 = requireDataBinding().agree1.isChecked
+            agree2 = requireDataBinding().agree2.isChecked
+            agreeChoice = requireDataBinding().agree3.isChecked
 
             builder.setPositiveButton("예") { dialog, which ->
                 if (!validateEmail() || !validateNickname() || !validatePassword() || !validateDateBirth() || !validateOther()){
@@ -119,25 +131,25 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
             builder.show()
         }
 
-        binding.emailCheck.setOnClickListener {
-            email = binding.editTextEmail.text.toString().trim()
+        requireDataBinding().emailCheck.setOnClickListener {
+            email = requireDataBinding().editTextEmail.text.toString().trim()
             Log.d(TAG, "email: $email")
             viewModel.checkUserEmail(email)
             emailCheck = true
         }
 
-        binding.nicknameCheck.setOnClickListener {
-            nickname = binding.editTextNickname.text.toString().trim()
+        requireDataBinding().nicknameCheck.setOnClickListener {
+            nickname = requireDataBinding().editTextNickname.text.toString().trim()
             Log.d(TAG, "nickname: $nickname")
             viewModel.checkUserNickname(nickname)
             nicknameCheck = true
         }
 
-        binding.joinLayout.setOnClickListener {
+        requireDataBinding().joinLayout.setOnClickListener {
             hideKeyboard()
         }
 
-        binding.editTextEmail.addTextChangedListener(object : TextWatcher {
+        requireDataBinding().editTextEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
@@ -145,7 +157,7 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
             }
         })
 
-        binding.editTextNickname.addTextChangedListener(object : TextWatcher {
+        requireDataBinding().editTextNickname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
@@ -180,82 +192,82 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
 
 
     private fun validateEmail(): Boolean {
-        val value: String = binding.editTextEmail.text.toString()
+        val value: String = requireDataBinding().editTextEmail.text.toString()
         val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
 
         return if (value.isEmpty()) {
-            binding.editTextEmail.error = "이메일을 입력해주세요."
+            requireDataBinding().editTextEmail.error = "이메일을 입력해주세요."
             false
         } else if (!value.matches(emailPattern.toRegex())) {
-            binding.editTextEmail.error = "이메일 형식이 잘못되었습니다."
+            requireDataBinding().editTextEmail.error = "이메일 형식이 잘못되었습니다."
             false
         } else if (!emailCheck) {
-            binding.editTextEmail.error = "이메일 중복확인을 해주세요."
+            requireDataBinding().editTextEmail.error = "이메일 중복확인을 해주세요."
             false
         } else {
-            binding.editTextEmail.error = null
+            requireDataBinding().editTextEmail.error = null
             true
         }
     }
 
 
     private fun validateNickname(): Boolean {
-        val value: String = binding.editTextNickname.text.toString()
+        val value: String = requireDataBinding().editTextNickname.text.toString()
 
         return if (value.isEmpty()) {
-            binding.editTextNickname.error = "닉네임을 입력해주세요."
+            requireDataBinding().editTextNickname.error = "닉네임을 입력해주세요."
             false
         }  else if (!nicknameCheck) {
-            binding.editTextNickname.error = "닉네임 중복확인을 해주세요."
+            requireDataBinding().editTextNickname.error = "닉네임 중복확인을 해주세요."
             false
         } else {
-            binding.editTextNickname.error = null
+            requireDataBinding().editTextNickname.error = null
             true
         }
     }
 
 
     private fun validatePassword(): Boolean {
-        val value: String = binding.editTextPassword.text.toString()
-        val valueCheck: String = binding.editTextPasswordCheck.text.toString()
+        val value: String = requireDataBinding().editTextPassword.text.toString()
+        val valueCheck: String = requireDataBinding().editTextPasswordCheck.text.toString()
 
         return if (value.isEmpty()) {
-            binding.editTextPassword.error = "비밀번호를 입력해주세요."
+            requireDataBinding().editTextPassword.error = "비밀번호를 입력해주세요."
             false
         } else if (valueCheck.isEmpty()) {
-            binding.editTextPasswordCheck.error = "비밀번호 확인을 입력해주세요."
+            requireDataBinding().editTextPasswordCheck.error = "비밀번호 확인을 입력해주세요."
             false
         } else if (value != valueCheck) {
-            binding.editTextPassword.error = "비밀번호와 비밀번호 확인이 다릅니다."
-            binding.editTextPasswordCheck.error = "비밀번호와 비밀번호 확인이 다릅니다."
+            requireDataBinding().editTextPassword.error = "비밀번호와 비밀번호 확인이 다릅니다."
+            requireDataBinding().editTextPasswordCheck.error = "비밀번호와 비밀번호 확인이 다릅니다."
             false
         } else {
-            binding.editTextPassword.error = null
+            requireDataBinding().editTextPassword.error = null
             true
         }
     }
 
 
     private fun validateDateBirth(): Boolean {
-        val value: String = binding.editTextDateBirth.text.toString()
+        val value: String = requireDataBinding().editTextDateBirth.text.toString()
 
         val currentDate = Calendar.getInstance().time
         val format = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         val currentDateFormat = format.format(currentDate)
 
-        var age = value.substring(0,4).toInt() - currentDateFormat.substring(0,4).toInt()
-        if (value.substring(5,8).toInt() - currentDateFormat.substring(5,8).toInt() > 0) {
+        var age = currentDateFormat.substring(0,4).toInt() - value.substring(0,4).toInt()
+        if (currentDateFormat.substring(5,8).toInt() - value.substring(5,8).toInt() > 0) {
             age += 1
         }
 
         return if (value.isEmpty()) {
-            binding.editTextDateBirth.error = "생년월일을 입력해주세요."
+            requireDataBinding().editTextDateBirth.error = "생년월일을 입력해주세요."
             false
         } else if(age < 15) {
-            binding.editTextDateBirth.error = "만 14세 미만의 이용자는 해당 서비스를 이용할 수 없습니다."
+            requireDataBinding().editTextDateBirth.error = "만 14세 미만의 이용자는 해당 서비스를 이용할 수 없습니다."
             false
         } else {
-            binding.editTextDateBirth.error = null
+            requireDataBinding().editTextDateBirth.error = null
             true
         }
     }
@@ -279,10 +291,10 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.editTextEmail.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.editTextNickname.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.editTextPassword.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.editTextPasswordCheck.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.editTextDateBirth.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().editTextEmail.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().editTextNickname.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().editTextPassword.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().editTextPasswordCheck.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().editTextDateBirth.windowToken, 0)
     }
 }

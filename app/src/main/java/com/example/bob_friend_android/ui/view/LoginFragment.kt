@@ -2,11 +2,14 @@ package com.example.bob_friend_android.ui.view
 
 import android.content.Context
 import android.content.Intent
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.SharedPref
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentLoginBinding
 import com.example.bob_friend_android.ui.viewmodel.LoginViewModel
@@ -19,6 +22,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     private val viewModel by activityViewModels<LoginViewModel>()
     private var checked = false
 
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentLoginBinding {
+        return FragmentLoginBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
 
     override fun init() {
         SharedPref.openSharedPrep(requireContext())
@@ -28,23 +39,23 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             viewModel.validateUser()
         }
 
-        binding.btnLogin.setOnClickListener {
-            val email = binding.editTextEmail.text.toString().trim()
-            val password = binding.editTextPassword.text.toString().trim()
-            checked = binding.checkBoxAutoLogin.isChecked
+        requireDataBinding().btnLogin.setOnClickListener {
+            val email = requireDataBinding().editTextEmail.text.toString().trim()
+            val password = requireDataBinding().editTextPassword.text.toString().trim()
+            checked = requireDataBinding().checkBoxAutoLogin.isChecked
 
             viewModel.login(email ,password)
         }
 
-        binding.btnRegister.setOnClickListener {
+        requireDataBinding().btnRegister.setOnClickListener {
             goToNext(R.id.action_loginFragment_to_joinFragment)
         }
 
-        binding.btnFindUserAccount.setOnClickListener {
+        requireDataBinding().btnFindUserAccount.setOnClickListener {
             goToNext(R.id.action_loginFragment_to_findUserAccountFragment)
         }
 
-        binding.loginLayout.setOnClickListener {
+        requireDataBinding().loginLayout.setOnClickListener {
             hideKeyboard()
         }
 
@@ -53,8 +64,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.editTextEmail.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.editTextPassword.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().editTextEmail.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().editTextPassword.windowToken, 0)
     }
 
     private fun observeData() {
@@ -64,6 +75,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 if (it == "자동 로그인"){
                     val intent = Intent(context, SetHomeActivity::class.java)
                     startActivity(intent)
+                    activity?.finish()
                 }
             }
 
@@ -79,6 +91,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
                 val intent = Intent(context, SetHomeActivity::class.java)
                 startActivity(intent)
+                activity?.finish()
             }
 
             val dialog = SetLoadingDialog(requireContext())

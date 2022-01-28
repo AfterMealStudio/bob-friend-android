@@ -178,11 +178,13 @@
                     android:text="@string/write_appointment_place"
                     android:textColor="@color/main_color1" />
 
-                <com.naver.maps.map.MapView
-                    android:id="@+id/map_view"
+                <fragment
+                    android:id="@+id/map"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:visibility="visible"/>
+                    android:background="@drawable/border_line"
+                    android:name="com.naver.maps.map.MapFragment">
+                </fragment>
 
                 <Button
                     android:id="@+id/btn_search"

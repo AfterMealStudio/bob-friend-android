@@ -3,7 +3,9 @@ package com.example.bob_friend_android.ui.view
 import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
@@ -16,6 +18,7 @@ import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.ui.adapter.SearchAdapter
 import com.example.bob_friend_android.databinding.FragmentSearchLocationBinding
 import com.example.bob_friend_android.data.entity.SearchLocation
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,23 +33,32 @@ class SearchLocationFragment : BaseFragment<FragmentSearchLocationBinding>(
     private var keyword = ""
     private var listPage = 0
 
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSearchLocationBinding {
+        return FragmentSearchLocationBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
+
     override fun init() {
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.tbSearch)
+            (activity as AppCompatActivity).setSupportActionBar(requireDataBinding().tbSearch)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.rvSearch.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.rvSearch.adapter = searchAdapter
+        requireDataBinding().rvSearch.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        requireDataBinding().rvSearch.adapter = searchAdapter
 
 //        binding.searchBackBtn.setOnClickListener {
 //            onBackPressed()
 //        }
 
-        binding.etvSearchLocation.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+        requireDataBinding().etvSearchLocation.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                    keyword = binding.etvSearchLocation.text.toString()
+                    keyword = requireDataBinding().etvSearchLocation.text.toString()
                     if(keyword!="") {
                         viewModel.searchKeywordMap(keyword)
                     }
@@ -79,7 +91,7 @@ class SearchLocationFragment : BaseFragment<FragmentSearchLocationBinding>(
 
     fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etvSearchLocation.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvSearchLocation.windowToken, 0)
     }
 
 

@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
@@ -18,6 +20,7 @@ import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.databinding.FragmentSearchBoardBinding
 import com.example.bob_friend_android.data.entity.Board
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -39,8 +42,6 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
     private var keyword = ""        // 검색 키워드
     private var listPage = 0 // 현재 페이지
 
-    var toast: Toast? = null
-
     var category = "all"
     var start: String? = null
     var end : String? = null
@@ -50,26 +51,34 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
     var startTime : String? = null
     var endTime : String? = null
 
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSearchBoardBinding {
+        return FragmentSearchBoardBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
 
     override fun init() {
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.toolbar)
+            (activity as AppCompatActivity).setSupportActionBar(requireDataBinding().toolbar)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.rvSearch.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        binding.rvSearch.adapter = searchAdapter
+        requireDataBinding().rvSearch.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        requireDataBinding().rvSearch.adapter = searchAdapter
 
-        binding.btnSearch.setOnClickListener {
-            keyword = binding.etvSearch.text.toString()
+        requireDataBinding().btnSearch.setOnClickListener {
+            keyword = requireDataBinding().etvSearch.text.toString()
             searchList(keyword)
             hideKeyboard()
         }
 
-        binding.etvSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+        requireDataBinding().etvSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                    keyword = binding.etvSearch.text.toString()
+                    keyword = requireDataBinding().etvSearch.text.toString()
                     searchList(keyword)
                     hideKeyboard()
                     return true
@@ -78,89 +87,89 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
             }
         })
 
-        binding.rvSearch.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        requireDataBinding().rvSearch.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 // 스크롤이 끝에 도달했는지 확인
-                if (!binding.rvSearch.canScrollVertically(1)) {
+                if (!requireDataBinding().rvSearch.canScrollVertically(1)) {
                     listPage++
                     viewModel.searchAppointmentList(page = listPage, keyword = keyword, category = category, start = start, end = end)
                 }
             }
         })
 
-        binding.cbTimeLimit.setOnCheckedChangeListener { buttonView, isChecked ->
+        requireDataBinding().cbTimeLimit.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 showDateRangePicker()
-                binding.layoutTime.visibility = View.VISIBLE
+                requireDataBinding().layoutTime.visibility = View.VISIBLE
             }
             else {
-                binding.layoutTime.visibility = View.GONE
+                requireDataBinding().layoutTime.visibility = View.GONE
             }
         }
 
-        binding.rgSearch.setOnCheckedChangeListener { group, checkedId ->
+        requireDataBinding().rgSearch.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.rb_all -> {
-                    binding.rbAll.setTextColor(Color.parseColor("#FFFFFF"))
-                    binding.rbTitle.setTextColor(Color.parseColor("#000000"))
-                    binding.rbContent.setTextColor(Color.parseColor("#000000"))
-                    binding.rbPlace.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbAll.setTextColor(Color.parseColor("#FFFFFF"))
+                    requireDataBinding().rbTitle.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbContent.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbPlace.setTextColor(Color.parseColor("#000000"))
                     category = "all"
 
                 }
                 R.id.rb_title -> {
-                    binding.rbAll.setTextColor(Color.parseColor("#000000"))
-                    binding.rbTitle.setTextColor(Color.parseColor("#FFFFFF"))
-                    binding.rbContent.setTextColor(Color.parseColor("#000000"))
-                    binding.rbPlace.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbAll.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbTitle.setTextColor(Color.parseColor("#FFFFFF"))
+                    requireDataBinding().rbContent.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbPlace.setTextColor(Color.parseColor("#000000"))
                     category = "title"
                 }
                 R.id.rb_content -> {
-                    binding.rbAll.setTextColor(Color.parseColor("#000000"))
-                    binding.rbTitle.setTextColor(Color.parseColor("#000000"))
-                    binding.rbContent.setTextColor(Color.parseColor("#FFFFFF"))
-                    binding.rbPlace.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbAll.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbTitle.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbContent.setTextColor(Color.parseColor("#FFFFFF"))
+                    requireDataBinding().rbPlace.setTextColor(Color.parseColor("#000000"))
                     category = "content"
                 }
                 R.id.rb_place -> {
-                    binding.rbAll.setTextColor(Color.parseColor("#000000"))
-                    binding.rbTitle.setTextColor(Color.parseColor("#000000"))
-                    binding.rbContent.setTextColor(Color.parseColor("#000000"))
-                    binding.rbPlace.setTextColor(Color.parseColor("#FFFFFF"))
+                    requireDataBinding().rbAll.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbTitle.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbContent.setTextColor(Color.parseColor("#000000"))
+                    requireDataBinding().rbPlace.setTextColor(Color.parseColor("#FFFFFF"))
                     category = "place"
                 }
             }
         }
 
-        binding.btnSettingOnOff.setOnClickListener {
-            if (binding.layoutSetting.visibility == View.GONE){
-                binding.layoutSetting.visibility = View.VISIBLE
-                binding.btnSettingOnOff.setImageResource(R.drawable.up_arrow)
+        requireDataBinding().btnSettingOnOff.setOnClickListener {
+            if (requireDataBinding().layoutSetting.visibility == View.GONE){
+                requireDataBinding().layoutSetting.visibility = View.VISIBLE
+                requireDataBinding().btnSettingOnOff.setImageResource(R.drawable.up_arrow)
             }
-            else if(binding.layoutSetting.visibility == View.VISIBLE) {
-                binding.layoutSetting.visibility = View.GONE
+            else if(requireDataBinding().layoutSetting.visibility == View.VISIBLE) {
+                requireDataBinding().layoutSetting.visibility = View.GONE
                 hideKeyboard()
-                binding.btnSettingOnOff.setImageResource(R.drawable.down_arrow)
+                requireDataBinding().btnSettingOnOff.setImageResource(R.drawable.down_arrow)
             }
         }
 
-        binding.layoutSetting.setOnClickListener {
+        requireDataBinding().layoutSetting.setOnClickListener {
             hideKeyboard()
         }
 
-        binding.layoutSearch.setOnClickListener {
+        requireDataBinding().layoutSearch.setOnClickListener {
             hideKeyboard()
         }
 
-        binding.btnSearchReset.setOnClickListener {
-            binding.rgSearch.check(binding.rbAll.id)
-            binding.rbAll.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.rbTitle.setTextColor(Color.parseColor("#000000"))
-            binding.rbContent.setTextColor(Color.parseColor("#000000"))
-            binding.rbPlace.setTextColor(Color.parseColor("#000000"))
-            binding.cbTimeLimit.isChecked = false
-            binding.cbCondition.isChecked = false
+        requireDataBinding().btnSearchReset.setOnClickListener {
+            requireDataBinding().rgSearch.check(requireDataBinding().rbAll.id)
+            requireDataBinding().rbAll.setTextColor(Color.parseColor("#FFFFFF"))
+            requireDataBinding().rbTitle.setTextColor(Color.parseColor("#000000"))
+            requireDataBinding().rbContent.setTextColor(Color.parseColor("#000000"))
+            requireDataBinding().rbPlace.setTextColor(Color.parseColor("#000000"))
+            requireDataBinding().cbTimeLimit.isChecked = false
+            requireDataBinding().cbCondition.isChecked = false
         }
 
         searchAdapter.setOnItemClickListener(object : BoardAdapter.OnItemClickListener{
@@ -194,8 +203,8 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
             start = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(it.first)
             endDate = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault()).format(it.second)
             end = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(it.second)
-            binding.tvStartDate.text = startDate
-            binding.tvEndDate.text = endDate
+            requireDataBinding().tvStartDate.text = startDate
+            requireDataBinding().tvEndDate.text = endDate
             Log.d("test", "startDate: $start, endDate : $end")
 
             setCalenderTime(false)
@@ -227,13 +236,13 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
             if (!endFlag) {
                 start = start + hour + minute
                 startTime = "$hour:$minute"
-                binding.tvStartTime.text = startTime
+                requireDataBinding().tvStartTime.text = startTime
                 setCalenderTime(true)
             }
             else if (endFlag) {
                 end = end + hour + minute
                 endTime = "$hour:$minute"
-                binding.tvEndTime.text = endTime
+                requireDataBinding().tvEndTime.text = endTime
             }
         }
     }
@@ -251,7 +260,7 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
 
                 if(startDate == endDate && before.toInt() > after.toInt()){
                     showToast("시간 형식이 잘못되었습니다.")
-                    binding.cbTimeLimit.isChecked = false
+                    requireDataBinding().cbTimeLimit.isChecked = false
                 }
                 else {
                     viewModel.searchAppointmentList(page = listPage, keyword = keyword, category = category, start = start, end = end)
@@ -260,8 +269,8 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
             else {
                 viewModel.searchAppointmentList(page = listPage, keyword = keyword, category = category, start = start, end = end)
             }
-            binding.layoutSetting.visibility = View.GONE
-            binding.btnSettingOnOff.setImageResource(R.drawable.down_arrow)
+            requireDataBinding().layoutSetting.visibility = View.GONE
+            requireDataBinding().btnSettingOnOff.setImageResource(R.drawable.down_arrow)
         }
         else {
             showToast("검색어를 입력해주세요.")
@@ -271,7 +280,7 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etvSearch.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvSearch.windowToken, 0)
     }
 
 

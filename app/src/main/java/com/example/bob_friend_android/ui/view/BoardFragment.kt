@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.UiThread
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
@@ -21,25 +23,25 @@ import com.example.bob_friend_android.R
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.ui.adapter.CommentAdapter
 import com.example.bob_friend_android.ui.adapter.UserAdapter
-import com.example.bob_friend_android.databinding.FragmentSetBoardBinding
 import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.data.entity.Comment
 import com.example.bob_friend_android.data.entity.UserItem
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.viewmodel.AppointmentViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.coroutineScope
 import java.util.*
 import kotlin.collections.ArrayList
 
 @AndroidEntryPoint
-class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
-    R.layout.fragment_set_board
+class BoardFragment : BaseFragment<FragmentBoardBinding>(
+    R.layout.fragment_board
 ), OnMapReadyCallback {
     private val viewModel by activityViewModels<AppointmentViewModel>()
-
-    private val args : SetBoardFragmentArgs by navArgs()
+    private val args : BoardFragmentArgs by navArgs()
     private var detailBoardId : Int = 0
     private var detailCommentId : Int = 0
 
@@ -48,8 +50,8 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
     private var commentAdapter = CommentAdapter(commentList, detailBoardId)
     private val userAdapter = UserAdapter(userList)
 
-    private lateinit var mapView: MapView
-    private lateinit var naverMap: NaverMap
+    private lateinit var map: NaverMap
+    private lateinit var boardMap: Board
 
     private var participate = "참가하기"
 
@@ -60,26 +62,77 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
     var selectedId: Int? = null
     var flag: Boolean = false
 
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_board, container, false)
-
-        mapView = binding.mapView
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
-
-        return binding.root
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        Log.d("onon", "onAttach")
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("onon", "onCreate")
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        Log.d("onon", "onCreateView")
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("onon", "onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("onon", "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("onon", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("onon", "onStop")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("onon", "onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("onon", "onDestroy")
+    }
+
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentBoardBinding {
+        val fm = childFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.map, it).commit()
+            }
+        mapFragment.getMapAsync(this)
+        Log.d("onon", "onCreateBinding")
+
+        return FragmentBoardBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
 
     override fun init() {
         inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.tbBoard)
+            (activity as AppCompatActivity).setSupportActionBar(requireDataBinding().tbBoard)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
@@ -100,19 +153,17 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
             }
         }
 
-        observeData()
-
         if(args.boardId != null) {
             detailBoardId = args.boardId!!.toInt()
 
-            val swipe = binding.layoutSwipe
+            val swipe = requireDataBinding().layoutSwipe
             swipe.setOnRefreshListener {
                 viewModel.setAppointment(detailBoardId)
                 swipe.isRefreshing = false
             }
 
-            binding.btnParticipate.setOnClickListener {
-                if(binding.btnParticipate.text=="마감하기"){
+            requireDataBinding().btnParticipate.setOnClickListener {
+                if(requireDataBinding().btnParticipate.text=="마감하기"){
                     viewModel.closeAppointment(detailBoardId)
                 }
                 else {
@@ -127,17 +178,19 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
 //            onBackPressed()
 //        }
 
-        binding.etvComment.setOnEditorActionListener{ textView, action, event ->
+        requireDataBinding().etvComment.setOnEditorActionListener{ textView, action, event ->
             var handled = false
 
             if (action == EditorInfo.IME_ACTION_DONE) {
                 // 키보드 내리기
-                inputMethodManager!!.hideSoftInputFromWindow(binding.etvComment.windowToken, 0)
+                inputMethodManager!!.hideSoftInputFromWindow(requireDataBinding().etvComment.windowToken, 0)
                 handled = true
             }
 
             handled
         }
+
+        observeData()
     }
 
     private fun makeBuilder(title: String, content:String) {
@@ -211,10 +264,10 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
             override fun onAddReCommentClicked() {
                 if (position != null) {
                     if (selectedId!=null) {
-                        binding.rvComment[selectedId!!].setBackgroundColor(Color.parseColor("#FFFFFF"))
+                        requireDataBinding().rvComment[selectedId!!].setBackgroundColor(Color.parseColor("#FFFFFF"))
                     }
                     selectedId = position
-                    binding.rvComment[position].setBackgroundColor(Color.parseColor("#DADAEC"))
+                    requireDataBinding().rvComment[position].setBackgroundColor(Color.parseColor("#DADAEC"))
 //                    binding.commentRecyclerview.setBackgroundColor(Color.WHITE)
 //                    showSoftInput()
                     detailCommentId = commentId
@@ -250,17 +303,8 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
         with(viewModel) {
             result.observe(viewLifecycleOwner, Observer { board ->
                 setBoard(board)
+                boardMap = board
             })
-
-            val dialog = SetLoadingDialog(requireContext())
-            isLoading.observe(viewLifecycleOwner) {
-                if (isLoading.value!!) {
-                    dialog.show()
-                }
-                else if (!isLoading.value!!) {
-                    dialog.dismiss()
-                }
-            }
 
             errorMsg.observe(viewLifecycleOwner) {
                 when (errorMsg.value) {
@@ -294,43 +338,19 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
         }
     }
 
+    @UiThread
     override fun onMapReady(naverMap: NaverMap) {
-        this.naverMap = naverMap
-    }
+        this.map = naverMap
+        Log.d("onon", "onMapReady")
 
-    override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mapView.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
+//        val marker = Marker()
+//        marker.position = LatLng(boardMap.latitude!!, boardMap.longitude!!)
+//        marker.map = map
+//        val cameraPosition = CameraPosition( // 카메라 위치 변경
+//            LatLng(boardMap.latitude!!, boardMap.longitude!!),  // 위치 지정
+//            15.0 // 줌 레벨
+//        )
+//        map.cameraPosition = cameraPosition // 변경된 위치 반영
     }
 
     private fun setBoard(board : Board) {
@@ -341,76 +361,67 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
         }
 
         detailBoardId = board.id
-        binding.tvCurrentMember.text = board.currentNumberOfPeople.toString()
-        binding.tvTotalMember.text = board.totalNumberOfPeople.toString()
-        binding.tvCurrentCommentCount.text = board.amountOfComments.toString()
-        binding.tvWriteTime.text = board.createdAt
-        binding.tvBoardMeetingTime.text = appointmentTime
-        binding.tvBoardPlaceName.text = board.restaurantName
-        binding.tvBoardTitle.text = board.title
-        binding.tvBoardContent.text = board.content
-        binding.tvBoardWriter.text = board.author!!.nickname
+        requireDataBinding().tvCurrentMember.text = board.currentNumberOfPeople.toString()
+        requireDataBinding().tvTotalMember.text = board.totalNumberOfPeople.toString()
+        requireDataBinding().tvCurrentCommentCount.text = board.amountOfComments.toString()
+        requireDataBinding().tvWriteTime.text = board.createdAt
+        requireDataBinding().tvBoardMeetingTime.text = appointmentTime
+        requireDataBinding().tvBoardPlaceName.text = board.restaurantName
+        requireDataBinding().tvBoardTitle.text = board.title
+        requireDataBinding().tvBoardContent.text = board.content
+        requireDataBinding().tvBoardWriter.text = board.author!!.nickname
 
         if (board.ageRestrictionStart != null && board.ageRestrictionEnd != null) {
             val ageFilter = board.ageRestrictionStart.toString() + "부터 " + board.ageRestrictionEnd.toString() + "까지"
-            binding.tvBoardAge.text = ageFilter
+            requireDataBinding().tvBoardAge.text = ageFilter
         }
         else {
-            binding.layoutAge.visibility = View.GONE
+            requireDataBinding().layoutAge.visibility = View.GONE
         }
 
         when (board.sexRestriction) {
             "NONE" -> {
-                binding.layoutGender.visibility = View.GONE
+                requireDataBinding().layoutGender.visibility = View.GONE
             }
             "FEMALE" -> {
-                binding.tvBoardGender.text = "여성"
+                requireDataBinding().tvBoardGender.text = "여성"
             }
             "MALE" -> {
-                binding.tvBoardGender.text = "남성"
+                requireDataBinding().tvBoardGender.text = "남성"
             }
         }
 
-        binding.rvComment.adapter = commentAdapter
+        requireDataBinding().rvComment.adapter = commentAdapter
         val commentLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
-        binding.rvComment.layoutManager = commentLayoutManager
+        requireDataBinding().rvComment.layoutManager = commentLayoutManager
 
-        binding.imgPostComment.setOnClickListener {
-            if (binding.etvComment.text.toString() != "" && !flag) {
+        requireDataBinding().imgPostComment.setOnClickListener {
+            if (requireDataBinding().etvComment.text.toString() != "" && !flag) {
                 viewModel.createComment(
                     detailBoardId,
-                    binding.etvComment.text.toString()
+                    requireDataBinding().etvComment.text.toString()
                 )
-                binding.etvComment.text = null
-            } else if (binding.etvComment.text.toString() != "" && flag) {
+                requireDataBinding().etvComment.text = null
+            } else if (requireDataBinding().etvComment.text.toString() != "" && flag) {
                 viewModel.createComment(
                     detailBoardId,
-                    binding.etvComment.text.toString(),
+                    requireDataBinding().etvComment.text.toString(),
                     detailCommentId
                 )
-                binding.etvComment.text = null
+                requireDataBinding().etvComment.text = null
                 flag = false
             }
         }
-        binding.rvMember.layoutManager = LinearLayoutManager(
+        requireDataBinding().rvMember.layoutManager = LinearLayoutManager(
             requireContext(),
             RecyclerView.VERTICAL,
             false
         )
-        binding.rvMember.adapter = userAdapter
-
-        val marker = Marker()
-        marker.position = LatLng(board.latitude!!, board.longitude!!)
-        marker.map = naverMap
-        val cameraPosition = CameraPosition( // 카메라 위치 변경
-            LatLng(board.latitude!!, board.longitude!!),  // 위치 지정
-            15.0 // 줌 레벨
-        )
-        naverMap.cameraPosition = cameraPosition // 변경된 위치 반영
+        requireDataBinding().rvMember.adapter = userAdapter
 
         if (board.author!!.id == App.prefs.getInt("id", -1)) {
             participate = "마감하기"
-            binding.btnParticipate.text = participate
+            requireDataBinding().btnParticipate.text = participate
         }
         else {
             for (member in board.members!!) {
@@ -422,7 +433,7 @@ class SetBoardFragment : BaseFragment<FragmentSetBoardBinding>(
                     participate = "참가하기"
                 }
             }
-            binding.btnParticipate.text = participate
+            requireDataBinding().btnParticipate.text = participate
         }
 
         commentList.clear()

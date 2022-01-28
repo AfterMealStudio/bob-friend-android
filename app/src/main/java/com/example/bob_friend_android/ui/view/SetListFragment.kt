@@ -1,19 +1,20 @@
 package com.example.bob_friend_android.ui.view
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.bob_friend_android.App
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentSetListBinding
-import com.example.bob_friend_android.data.entity.Token
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -28,8 +29,17 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
     private var boardArrayList : ArrayList<Board> = ArrayList()
     private var listPage = 0 // 현재 페이지
 
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSetListBinding {
+        return FragmentSetListBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
+
     override fun init() {
-        val swipe = binding.layoutSwipe
+        val swipe = requireDataBinding().layoutSwipe
         swipe.setOnRefreshListener {
             listPage = 0
             boardArrayList.clear()
@@ -37,22 +47,22 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
             swipe.isRefreshing = false
         }
 
-        binding.recyclerview.layoutManager = LinearLayoutManager(requireActivity())
+        requireDataBinding().recyclerview.layoutManager = LinearLayoutManager(requireActivity())
         boardAdapter = BoardAdapter()
-        binding.recyclerview.adapter = boardAdapter
+        requireDataBinding().recyclerview.adapter = boardAdapter
 
         viewModel.setAppointmentList(listPage)
 
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.tbMain)
+            (activity as AppCompatActivity).setSupportActionBar(requireDataBinding().tbMain)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        requireDataBinding().recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 // 스크롤이 끝에 도달했는지 확인
-                if (!binding.recyclerview.canScrollVertically(1)) {
+                if (!requireDataBinding().recyclerview.canScrollVertically(1)) {
                     listPage++
                     viewModel.setAppointmentList(listPage)
                 }
@@ -70,7 +80,7 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
             }
         })
 
-        binding.tbMain.setOnClickListener {
+        requireDataBinding().tbMain.setOnClickListener {
             activity?.let {
                 goToNext(R.id.action_setListFragment_to_searchBoardFragment)
             }
@@ -100,16 +110,6 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
                 }
                 boardAdapter.addItems(boardArrayList)
             }
-
-            refreshToken.observe(this@SetListFragment, object : Observer<Token> {
-                override fun onChanged(t: Token) {
-                    val editor = App.prefs.edit()
-                    editor.putString("token", t.accessToken)
-                    editor.putString("refresh", t.refreshToken)
-                    editor.putBoolean("checked", true)
-                    editor.apply()
-                }
-            })
 
             val dialog = SetLoadingDialog(requireContext())
             isLoading.observe(viewLifecycleOwner) {
