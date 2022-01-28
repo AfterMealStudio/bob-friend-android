@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentCreateBoardBinding
 import com.example.bob_friend_android.ui.viewmodel.AppointmentViewModel
@@ -59,56 +60,59 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
     var ageRestrictionStart: Int? = null
     var ageRestrictionEnd: Int? = null
 
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentCreateBoardBinding {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_create_board, container, false)
+        val fm = childFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.map, it).commit()
+            }
+        mapFragment.getMapAsync(this)
 
-        mapView = binding.mapView
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
-
-        return binding.root
+        return FragmentCreateBoardBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
     }
 
     override fun init() {
-        binding.rgAge.setOnCheckedChangeListener { group, checkedId ->
+        requireDataBinding().rgAge.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
                 R.id.rb_yes -> {
-                    binding.rsAge.visibility = View.VISIBLE
-                    binding.layoutAgeFromTo.visibility = View.VISIBLE
+                    requireDataBinding().rsAge.visibility = View.VISIBLE
+                    requireDataBinding().layoutAgeFromTo.visibility = View.VISIBLE
                 }
                 R.id.rb_no -> {
-                    binding.rsAge.visibility = View.GONE
-                    binding.layoutAgeFromTo.visibility = View.GONE
+                    requireDataBinding().rsAge.visibility = View.GONE
+                    requireDataBinding().layoutAgeFromTo.visibility = View.GONE
                 }
             }
         }
 
-        binding.tvChoiceDate.setOnClickListener {
+        requireDataBinding().tvChoiceDate.setOnClickListener {
             hideKeyboard()
             setCalenderDay()
         }
 
-        binding.tvChoiceTime.setOnClickListener {
+        requireDataBinding().tvChoiceTime.setOnClickListener {
             hideKeyboard()
             setCalenderTime()
         }
-        binding.rsAge.setLabelFormatter { value: Float ->
+        requireDataBinding().rsAge.setLabelFormatter { value: Float ->
             val format = NumberFormat.getInstance(Locale.KOREAN)
             format.maximumFractionDigits = 0
             format.format(value.toDouble())
         }
 
-        binding.rsAge.addOnChangeListener { slider, value, fromUser ->
+        requireDataBinding().rsAge.addOnChangeListener { slider, value, fromUser ->
             val time = DecimalFormat("##0")
-            binding.tvAgeFrom.text = time.format(slider.values[0])
-            binding.tvAgeTo.text = time.format(slider.values[1])
+            requireDataBinding().tvAgeFrom.text = time.format(slider.values[0])
+            requireDataBinding().tvAgeTo.text = time.format(slider.values[1])
         }
 
-        binding.rgGender.setOnCheckedChangeListener { group, checkedId ->
+        requireDataBinding().rgGender.setOnCheckedChangeListener { group, checkedId ->
             gender = when(checkedId) {
                 R.id.btn_gender_male -> "MALE"
                 R.id.btn_gender_female -> "FEMALE"
@@ -117,18 +121,18 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
             }
         }
 
-        binding.btnCreateOk.setOnClickListener {
+        requireDataBinding().btnCreateOk.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("약속 작성하기")
             builder.setMessage("이렇게 글 작성을 진행할까요?")
 
-            val title = binding.etvTitle.text.toString().trim()
-            val boardContent = binding.etvContent.text.toString().trim()
-            val count = binding.etvPeopleCount.text.toString()
+            val title = requireDataBinding().etvTitle.text.toString().trim()
+            val boardContent = requireDataBinding().etvContent.text.toString().trim()
+            val count = requireDataBinding().etvPeopleCount.text.toString()
 
-            if (binding.rgAge.checkedRadioButtonId == binding.rbYes.id) {
-                ageRestrictionStart = binding.tvAgeFrom.text.toString().toInt()
-                ageRestrictionEnd = binding.tvAgeTo.text.toString().toInt()
+            if (requireDataBinding().rgAge.checkedRadioButtonId == requireDataBinding().rbYes.id) {
+                ageRestrictionStart = requireDataBinding().tvAgeFrom.text.toString().toInt()
+                ageRestrictionEnd = requireDataBinding().tvAgeTo.text.toString().toInt()
             }
 
             builder.setPositiveButton("예") { dialog, which ->
@@ -159,14 +163,14 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
 
         observeData()
 
-        binding.btnSearch.setOnClickListener {
+        requireDataBinding().btnSearch.setOnClickListener {
             activity?.let{
                 val editor = App.prefs.edit()
-                editor.putString("title", binding.etvTitle.text.toString())
-                editor.putString("content", binding.etvContent.text.toString())
-                editor.putString("count", binding.etvPeopleCount.text.toString())
-                editor.putString("date", binding.tvSetDate.text.toString())
-                editor.putString("time", binding.tvSetTime.text.toString())
+                editor.putString("title", requireDataBinding().etvTitle.text.toString())
+                editor.putString("content", requireDataBinding().etvContent.text.toString())
+                editor.putString("count", requireDataBinding().etvPeopleCount.text.toString())
+                editor.putString("date", requireDataBinding().tvSetDate.text.toString())
+                editor.putString("time", requireDataBinding().tvSetTime.text.toString())
                 editor.putString("appointmentDate", appointmentDate)
                 editor.putString("appointmentTime", appointmentTime)
                 editor.apply()
@@ -175,7 +179,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
             }
         }
 
-        binding.layoutCreate.setOnClickListener {
+        requireDataBinding().layoutCreate.setOnClickListener {
             hideKeyboard()
         }
     }
@@ -191,9 +195,9 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etvTitle.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.etvContent.windowToken, 0)
-        imm.hideSoftInputFromWindow(binding.etvPeopleCount.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvTitle.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvContent.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvPeopleCount.windowToken, 0)
     }
 
 
@@ -211,7 +215,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
                 monthDate: Int,
                 dayOfMonth: Int
             ) {
-                binding.tvSetDate.text = "${yearDate}년 ${monthDate+1} 월 ${dayOfMonth}일"
+                requireDataBinding().tvSetDate.text = "${yearDate}년 ${monthDate+1} 월 ${dayOfMonth}일"
                 thisMonth = "${monthDate+1}"
                 thisDay = "$dayOfMonth"
 
@@ -243,7 +247,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
         val timeListener = object : TimePickerDialog.OnTimeSetListener{
             @SuppressLint("SetTextI18n")
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                binding.tvSetTime.text = "${hourOfDay}시 ${minute}분"
+                requireDataBinding().tvSetTime.text = "${hourOfDay}시 ${minute}분"
 
                 thisHour = "$hourOfDay"
                 thisMinute = "$minute"
@@ -265,42 +269,42 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
 
 
     private fun validateTitle(): Boolean {
-        val title: String = binding.etvTitle.text.toString()
+        val title: String = requireDataBinding().etvTitle.text.toString()
 
         return if (title.isEmpty()) {
-            binding.etvTitle.error = "약속 제목을 입력해주세요."
+            requireDataBinding().etvTitle.error = "약속 제목을 입력해주세요."
             false
         } else {
-            binding.etvTitle.error = null
+            requireDataBinding().etvTitle.error = null
             true
         }
     }
 
 
     private fun validateContent(): Boolean {
-        val content: String = binding.etvContent.text.toString()
+        val content: String = requireDataBinding().etvContent.text.toString()
 
         return if (content.isEmpty()) {
-            binding.etvContent.error = "약속 내용을 입력해주세요."
+            requireDataBinding().etvContent.error = "약속 내용을 입력해주세요."
             false
         } else {
-            binding.etvContent.error = null
+            requireDataBinding().etvContent.error = null
             true
         }
     }
 
 
     private fun validateEtc(): Boolean {
-        val count: String = binding.etvPeopleCount.text.toString()
+        val count: String = requireDataBinding().etvPeopleCount.text.toString()
 
         return if (count.isEmpty()) {
-            binding.etvPeopleCount.error = "약속 인원을 입력해주세요."
+            requireDataBinding().etvPeopleCount.error = "약속 인원을 입력해주세요."
             false
         } else if (count.toInt() > 4) {
-            binding.etvPeopleCount.error = "거리두기 방침에 따라 4인 이하의 인원만 가능합니다."
+            requireDataBinding().etvPeopleCount.error = "거리두기 방침에 따라 4인 이하의 인원만 가능합니다."
             false
         } else if (count.toInt() < 2) {
-            binding.etvPeopleCount.error = "2인 이하의 글은 작성할 수 없습니다."
+            requireDataBinding().etvPeopleCount.error = "2인 이하의 글은 작성할 수 없습니다."
             false
         } else if(dateTime.length != 16) {
             showToast("약속 시간을 입력해주세요!")
@@ -309,7 +313,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
             showToast("약속 장소를 입력해주세요!")
             false
         } else {
-            binding.etvPeopleCount.error = null
+            requireDataBinding().etvPeopleCount.error = null
             true
         }
     }
@@ -326,7 +330,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
             longitude = item.x
 
             if (latitude != 0.0 && longitude != 0.0) {
-                binding.tvLocation.text = locationName
+                requireDataBinding().tvLocation.text = locationName
                 val marker = Marker()
                 marker.apply {
                     position = LatLng(latitude, longitude)
@@ -339,48 +343,13 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
                 }
             }
 
-            binding.etvTitle.setText(App.prefs.getString("title", ""))
-            binding.etvContent.setText(App.prefs.getString("content", ""))
-            binding.etvPeopleCount.setText(App.prefs.getString("count", ""))
-            binding.tvSetDate.text = App.prefs.getString("date", "")
-            binding.tvSetTime.text = App.prefs.getString("time", "")
+            requireDataBinding().etvTitle.setText(App.prefs.getString("title", ""))
+            requireDataBinding().etvContent.setText(App.prefs.getString("content", ""))
+            requireDataBinding().etvPeopleCount.setText(App.prefs.getString("count", ""))
+            requireDataBinding().tvSetDate.text = App.prefs.getString("date", "")
+            requireDataBinding().tvSetTime.text = App.prefs.getString("time", "")
             dateTime = "${App.prefs.getString("appointmentDate", "")}${App.prefs.getString("appointmentTime", "")}"
             Log.d("length", "${dateTime.length}")
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        mapView.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mapView.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
     }
 }

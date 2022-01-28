@@ -28,6 +28,7 @@ import com.example.bob_friend_android.databinding.FragmentSetMapBinding
 import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.data.entity.SearchLocation
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -66,32 +67,34 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
     private var bottomArrayList : ArrayList<Board> = ArrayList()
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View
-    {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_set_map, container, false)
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentSetMapBinding {
+        val fm = childFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.map, it).commit()
+            }
+        mapFragment.getMapAsync(this)
 
-//        mapView = binding.mapFragment
-//        mapView.onCreate(savedInstanceState)
-//        mapView.getMapAsync(this)
-
-        return binding.root
+        return FragmentSetMapBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
     }
 
     override fun init() {
-        binding.rvList.layoutManager = LinearLayoutManager(
+        requireDataBinding().rvList.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.VERTICAL,
             false
         )
-        binding.rvList.adapter = searchAdapter
-        binding.rvList.visibility = View.GONE
+        requireDataBinding().rvList.adapter = searchAdapter
+        requireDataBinding().rvList.visibility = View.GONE
 
-        binding.rvBottom.layoutManager = LinearLayoutManager(requireActivity())
-        binding.rvBottom.adapter = bottomViewAdapter
-        binding.layoutBottom.visibility = View.GONE
+        requireDataBinding().rvBottom.layoutManager = LinearLayoutManager(requireActivity())
+        requireDataBinding().rvBottom.adapter = bottomViewAdapter
+        requireDataBinding().layoutBottom.visibility = View.GONE
 
         x = arguments?.getDouble("x")
         y = arguments?.getDouble("y")
@@ -99,18 +102,18 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
         click = arguments?.getBoolean("click")
 
         if(activity is AppCompatActivity){
-            (activity as AppCompatActivity).setSupportActionBar(binding.tbMap)
+            (activity as AppCompatActivity).setSupportActionBar(requireDataBinding().tbMap)
             (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         }
 
-        binding.etvSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+        requireDataBinding().etvSearch.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH){
-                    keyword = binding.etvSearch.text.toString()
+                    keyword = requireDataBinding().etvSearch.text.toString()
                     pageNumber = 1
                     if(keyword!="") {
                         viewModel.searchKeywordMap(keyword)
-                        binding.rvList.visibility = View.VISIBLE
+                        requireDataBinding().rvList.visibility = View.VISIBLE
                     }
 
                     hideKeyboard()
@@ -134,11 +137,11 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
             }
         }
 
-        binding.rvBottom.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        requireDataBinding().rvBottom.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 // 스크롤이 끝에 도달했는지 확인
-                if (!binding.rvBottom.canScrollVertically(1)) {
+                if (!requireDataBinding().rvBottom.canScrollVertically(1)) {
                     listPage++
                     viewModel.setAppointmentList(page = listPage, type = "specific", address = address)
                 }
@@ -170,14 +173,14 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 
         observeData()
 
-        binding.layoutMap.setOnClickListener {
+        requireDataBinding().layoutMap.setOnClickListener {
             hideKeyboard()
         }
     }
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(binding.etvSearch.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvSearch.windowToken, 0)
     }
 
     private fun addMarkers(item: Location) {
@@ -202,9 +205,9 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
         this.naverMap = naverMap
         naverMap.uiSettings.isLocationButtonEnabled = false
         naverMap.setOnMapClickListener { point, coord ->
-            binding.rvBottom.visibility = View.GONE
+            requireDataBinding().rvBottom.visibility = View.GONE
             hideKeyboard()
-            binding.rvList.visibility = View.GONE
+            requireDataBinding().rvList.visibility = View.GONE
             val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
             val cameraPositionLongitude = naverMap.cameraPosition.target.longitude
             viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
@@ -246,7 +249,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                     bottomArrayList.add(document)
                 }
                 bottomViewAdapter.addItems(bottomArrayList)
-                binding.tvTotalElements.text = "약속 ${it.totalElements}개"
+                requireDataBinding().tvTotalElements.text = "약속 ${it.totalElements}개"
             }
         }
     }
@@ -256,7 +259,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
         bottomArrayList.clear()
         address = p0.tag.toString()
         viewModel.setAppointmentList(page = 0, type = "specific", address = address)
-        binding.layoutBottom.visibility = View.VISIBLE
+        requireDataBinding().layoutBottom.visibility = View.VISIBLE
         return true
     }
 }
