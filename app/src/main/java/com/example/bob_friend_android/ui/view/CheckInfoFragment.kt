@@ -1,9 +1,13 @@
 package com.example.bob_friend_android.ui.view
 
+import android.content.Intent
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentCheckInfoBinding
 import com.example.bob_friend_android.ui.viewmodel.LoginViewModel
@@ -14,6 +18,15 @@ class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
     R.layout.fragment_check_info
 ) {
     private val viewModel by activityViewModels<LoginViewModel>()
+
+    override fun onCreateBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentCheckInfoBinding {
+        return FragmentCheckInfoBinding.inflate(inflater, container, false).apply {
+            lifecycleOwner = viewLifecycleOwner
+        }
+    }
 
     override fun init() {
         observeData()
@@ -32,13 +45,13 @@ class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
             }
         }
 
-        binding.tvEmail.text = App.prefs.getString("email", "")
-        binding.tvUsername.text = App.prefs.getString("nickname","")
-        binding.tvBirth.text = App.prefs.getString("age","")
-        binding.tvGender.text = userGender
-        binding.ratingBar.rating = App.prefs.getFloat("rating",0.0F)
+        requireDataBinding().tvEmail.text = App.prefs.getString("email", "")
+        requireDataBinding().tvUsername.text = App.prefs.getString("nickname","")
+        requireDataBinding().tvBirth.text = App.prefs.getString("age","")
+        requireDataBinding().tvGender.text = userGender
+        requireDataBinding().ratingBar.rating = App.prefs.getFloat("rating",0.0F)
 
-        binding.btnLogout.setOnClickListener {
+        requireDataBinding().btnLogout.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("로그아웃")
             builder.setMessage("로그아웃을 하시겠습니까?")
@@ -58,23 +71,23 @@ class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
             builder.show()
         }
 
-        binding.btnDeleteUser.setOnClickListener {
+        requireDataBinding().btnDeleteUser.setOnClickListener {
             goToNext(R.id.action_checkInfoFragment_to_deleteUserFragment)
         }
 
-        binding.btnMyList.setOnClickListener {
+        requireDataBinding().btnMyList.setOnClickListener {
             goToNext(R.id.action_checkInfoFragment_to_myBoardFragment, "owned")
         }
 
-        binding.btnMyAppointmentList.setOnClickListener {
+        requireDataBinding().btnMyAppointmentList.setOnClickListener {
             goToNext(R.id.action_checkInfoFragment_to_myBoardFragment, "joined")
         }
 
-        binding.btnIntroduceTeam.setOnClickListener {
+        requireDataBinding().btnIntroduceTeam.setOnClickListener {
             goToNext(R.id.action_checkInfoFragment_to_introduceTeamFragment)
         }
 
-        binding.btnUpdateUserInfo.setOnClickListener {
+        requireDataBinding().btnUpdateUserInfo.setOnClickListener {
             goToNext(R.id.action_checkInfoFragment_to_updateUserInfoFragment)
         }
     }
