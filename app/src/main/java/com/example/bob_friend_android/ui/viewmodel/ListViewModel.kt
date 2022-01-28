@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.bob_friend_android.data.entity.AppointmentList
+import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.data.entity.ErrorResponse
 import com.example.bob_friend_android.data.entity.Token
 import com.example.bob_friend_android.data.network.NetworkResponse
@@ -40,6 +41,10 @@ class ListViewModel @Inject constructor(
     val errorMsg : LiveData<String>
         get() = _msg
 
+    private val _result = MutableLiveData<Board>()
+    val result : LiveData<Board>
+        get() = _result
+
     private val _searchKeyword = MutableLiveData<SearchKeyword>()
     val searchKeyword : LiveData<SearchKeyword>
         get() = _searchKeyword
@@ -47,10 +52,6 @@ class ListViewModel @Inject constructor(
     private val _location = MutableLiveData<List<Location>>()
     val location : MutableLiveData<List<Location>>
         get() = _location
-
-    private val _refreshToken = MutableLiveData<Token>()
-    val refreshToken : LiveData<Token>
-        get() = _refreshToken
 
 
     fun setAppointmentList(page: Int, type: String? = null, address: String? = null){
