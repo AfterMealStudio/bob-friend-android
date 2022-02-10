@@ -105,6 +105,7 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
             })
 
             appointmentList.observe(viewLifecycleOwner) {
+                boardArrayList.clear()
                 for(document in it.boardList) {
                     boardArrayList.add(document)
                 }
