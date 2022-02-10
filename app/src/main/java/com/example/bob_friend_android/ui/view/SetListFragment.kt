@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.R
-import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.databinding.FragmentSetListBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
@@ -105,10 +104,11 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
             })
 
             appointmentList.observe(viewLifecycleOwner) {
+                boardArrayList.clear()
                 for(document in it.boardList) {
                     boardArrayList.add(document)
                 }
-                boardAdapter.addItems(boardArrayList)
+                boardAdapter.setItems(boardArrayList)
             }
 
             val dialog = SetLoadingDialog(requireContext())

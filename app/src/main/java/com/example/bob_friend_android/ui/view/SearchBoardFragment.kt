@@ -20,7 +20,6 @@ import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.databinding.FragmentSearchBoardBinding
 import com.example.bob_friend_android.data.entity.Board
-import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -294,7 +293,7 @@ class SearchBoardFragment : BaseFragment<FragmentSearchBoardBinding>(
                 for(document in it.boardList) {
                     boardItems.add(document)
                 }
-                searchAdapter.addItems(boardItems)
+                searchAdapter.setItems(boardItems)
             }
         }
     }

@@ -3,7 +3,6 @@ package com.example.bob_friend_android.ui.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,7 +24,6 @@ import com.example.bob_friend_android.databinding.FragmentSetMapBinding
 import com.example.bob_friend_android.data.entity.Board
 import com.example.bob_friend_android.model.Location
 import com.example.bob_friend_android.data.entity.SearchLocation
-import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
@@ -65,6 +60,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 
     private val bottomViewAdapter = BoardAdapter()
     private var bottomArrayList : ArrayList<Board> = ArrayList()
+    private var isMapReady = false
 
 
     override fun onCreateBinding(
@@ -123,19 +119,19 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
             }
         })
 
-        getListResultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) {
-                result: ActivityResult ->
-            if(result.resultCode == AppCompatActivity.RESULT_OK) {
-                if(result.data != null) {
-                    val callType = result.data?.getStringExtra("CallType")
-                    if (callType == "delete" || callType == "close"){
-                        bottomArrayList.clear()
-                        viewModel.setAppointmentList(page = listPage, type = "specific", address = address)
-                    }
-                }
-            }
-        }
+//        getListResultLauncher = registerForActivityResult(
+//            ActivityResultContracts.StartActivityForResult()) {
+//                result: ActivityResult ->
+//            if(result.resultCode == AppCompatActivity.RESULT_OK) {
+//                if(result.data != null) {
+//                    val callType = result.data?.getStringExtra("CallType")
+//                    if (callType == "delete" || callType == "close"){
+//                        bottomArrayList.clear()
+//                        viewModel.setAppointmentList(page = listPage, type = "specific", address = address)
+//                    }
+//                }
+//            }
+//        }
 
         requireDataBinding().rvBottom.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -175,7 +171,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
             hideKeyboard()
         }
 
-
+        observeData()
     }
 
     private fun hideKeyboard(){
@@ -193,19 +189,22 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 
 
     fun setPosition(y: Double, x: Double) {
-        val cameraPosition = CameraPosition(
-            LatLng(y, x),
-            14.0
-        )
-        naverMap.cameraPosition = cameraPosition
+        if(this.isMapReady) {
+            val cameraPosition = CameraPosition(
+                LatLng(y, x),
+                14.0
+            )
+            naverMap.cameraPosition = cameraPosition
+        }
     }
 
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         naverMap.uiSettings.isLocationButtonEnabled = false
-        naverMap.setOnMapClickListener { point, coord ->
-            requireDataBinding().rvBottom.visibility = View.GONE
+        requireDataBinding().layoutBottom.visibility = View.GONE
+        naverMap.setOnMapClickListener { _, _ ->
+            requireDataBinding().layoutBottom.visibility = View.GONE
             hideKeyboard()
             requireDataBinding().rvList.visibility = View.GONE
             val cameraPositionLatitude = naverMap.cameraPosition.target.latitude
@@ -213,7 +212,14 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
             viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
         }
 
-        observeData()
+        with(viewModel){
+            location.observe(viewLifecycleOwner) {
+                for (document in it) {
+                    addMarkers(document)
+                }
+            }
+        }
+        this.isMapReady = true
     }
 
 
@@ -240,28 +246,23 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                 }
             }
 
-            location.observe(viewLifecycleOwner) {
-                for (document in it) {
-                    addMarkers(document)
-                }
-            }
-
             appointmentList.observe(viewLifecycleOwner) {
+                requireDataBinding().tvTotalElements.text = "약속 ${it.totalElements}개"
+                requireDataBinding().layoutBottom.visibility = View.VISIBLE
+
+                bottomArrayList.clear()
                 for(document in it.boardList) {
                     bottomArrayList.add(document)
                 }
-                bottomViewAdapter.addItems(bottomArrayList)
-                requireDataBinding().tvTotalElements.text = "약속 ${it.totalElements}개"
+                bottomViewAdapter.setItems(bottomArrayList)
             }
         }
     }
 
 
     override fun onClick(p0: Overlay): Boolean {
-        bottomArrayList.clear()
         address = p0.tag.toString()
         viewModel.setAppointmentList(page = 0, type = "specific", address = address)
-        requireDataBinding().layoutBottom.visibility = View.VISIBLE
         return true
     }
 }
