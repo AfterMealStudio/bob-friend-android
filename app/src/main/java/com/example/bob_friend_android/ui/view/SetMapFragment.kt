@@ -171,11 +171,11 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
             }
         })
 
-        observeData()
-
         requireDataBinding().layoutMap.setOnClickListener {
             hideKeyboard()
         }
+
+
     }
 
     private fun hideKeyboard(){
@@ -212,6 +212,8 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
             val cameraPositionLongitude = naverMap.cameraPosition.target.longitude
             viewModel.setMarkers(10, cameraPositionLongitude, cameraPositionLatitude)
         }
+
+        observeData()
     }
 
 

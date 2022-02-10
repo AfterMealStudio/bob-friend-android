@@ -189,8 +189,6 @@ class BoardFragment : BaseFragment<FragmentBoardBinding>(
 
             handled
         }
-
-        observeData()
     }
 
     private fun makeBuilder(title: String, content:String) {
@@ -303,7 +301,7 @@ class BoardFragment : BaseFragment<FragmentBoardBinding>(
         with(viewModel) {
             result.observe(viewLifecycleOwner, Observer { board ->
                 setBoard(board)
-                boardMap = board
+//                boardMap = board
             })
 
             errorMsg.observe(viewLifecycleOwner) {
@@ -341,16 +339,8 @@ class BoardFragment : BaseFragment<FragmentBoardBinding>(
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         this.map = naverMap
-        Log.d("onon", "onMapReady")
 
-//        val marker = Marker()
-//        marker.position = LatLng(boardMap.latitude!!, boardMap.longitude!!)
-//        marker.map = map
-//        val cameraPosition = CameraPosition( // 카메라 위치 변경
-//            LatLng(boardMap.latitude!!, boardMap.longitude!!),  // 위치 지정
-//            15.0 // 줌 레벨
-//        )
-//        map.cameraPosition = cameraPosition // 변경된 위치 반영
+        observeData()
     }
 
     private fun setBoard(board : Board) {
@@ -455,6 +445,15 @@ class BoardFragment : BaseFragment<FragmentBoardBinding>(
                 }
             }
         }
+
+        val marker = Marker()
+        marker.position = LatLng(board.latitude!!, board.longitude!!)
+        marker.map = map
+        val cameraPosition = CameraPosition( // 카메라 위치 변경
+            LatLng(board.latitude!!, board.longitude!!),  // 위치 지정
+            15.0 // 줌 레벨
+        )
+        map.cameraPosition = cameraPosition // 변경된 위치 반영
 
         userList.clear()
         for (member in board.members!!) {
