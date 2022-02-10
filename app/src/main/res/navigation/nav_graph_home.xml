@@ -32,10 +32,10 @@
             app:nullable="true"
             android:defaultValue="@null"/>
 
-        <argument
-            android:name="item"
-            app:argType="com.example.bob_friend_android.model.Location"
-            app:nullable="true" />
+<!--        <argument-->
+<!--            android:name="item"-->
+<!--            app:argType="com.example.bob_friend_android.model.Location"-->
+<!--            app:nullable="true" />-->
     </fragment>
 
     <fragment
