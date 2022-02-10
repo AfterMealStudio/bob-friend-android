@@ -70,7 +70,7 @@ class BoardAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
-    fun addItems(item: List<Board>) {
+    fun setItems(item: List<Board>) {
         boardList.clear()
         boardList.addAll(item)
         notifyDataSetChanged()

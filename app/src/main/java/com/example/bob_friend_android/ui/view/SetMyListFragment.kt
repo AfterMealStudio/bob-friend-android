@@ -12,7 +12,6 @@ import com.example.bob_friend_android.ui.view.base.BaseFragment
 import com.example.bob_friend_android.ui.adapter.BoardAdapter
 import com.example.bob_friend_android.databinding.FragmentSetMyListBinding
 import com.example.bob_friend_android.data.entity.Board
-import com.example.bob_friend_android.databinding.FragmentBoardBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.ArrayList
@@ -95,7 +94,7 @@ class SetMyListFragment : BaseFragment<FragmentSetMyListBinding>(
                 for(document in it.boardList) {
                     boardArrayList.add(document)
                 }
-                boardAdapter.addItems(boardArrayList)
+                boardAdapter.setItems(boardArrayList)
             }
 
             val dialog = SetLoadingDialog(requireContext())
