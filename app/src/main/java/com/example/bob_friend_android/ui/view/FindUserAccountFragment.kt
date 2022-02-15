@@ -29,17 +29,30 @@ class FindUserAccountFragment : BaseFragment<FragmentFindUserAccountBinding>(
 
     override fun init() {
         requireDataBinding().btnEmailCheck.setOnClickListener {
-
+            viewModel.checkUserEmail(requireDataBinding().etvEmail.text.toString().trim())
         }
 
         requireDataBinding().btnChangePassword.setOnClickListener {
-
+            val email = requireDataBinding().etvEmail2.text.toString().trim()
+            val birth = requireDataBinding().etvDateBirth.text.toString().trim()
+            viewModel.updateUserPassword(email, birth)
         }
 
         requireDataBinding().layoutFind.setOnClickListener {
             hideKeyboard()
         }
+
+        observeData()
     }
+
+    private fun observeData() {
+        with(viewModel) {
+            errorMsg.observe(viewLifecycleOwner) {
+                showToast(it)
+            }
+        }
+    }
+
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireDataBinding().etvEmail.windowToken, 0)

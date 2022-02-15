@@ -23,6 +23,8 @@ interface ApiService {
     @POST("/api/auth/issue")
     suspend fun refreshTokenResponse(@Body token: Token): NetworkResponse<Token, ErrorResponse>
 
+    @PUT("/api/user/password")
+    suspend fun updateUserPasswordResponse(@Body passwordReset: HashMap<String, String>): NetworkResponse<Void, ErrorResponse>
     //---
 
     //--- ListViewModel

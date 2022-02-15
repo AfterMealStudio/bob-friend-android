@@ -1,5 +1,6 @@
 package com.example.bob_friend_android.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -150,7 +151,7 @@ class UserViewModel @Inject constructor(
             val response = repository.checkUserNickname(userId)
             when (response) {
                 is NetworkResponse.Success -> {
-                    val check = response.body.duplicated
+                    val check = response.body.exist
                     if(check){
                         _msg.postValue("이미 있는 닉네임입니다.")
                     } else if (!check){
@@ -178,12 +179,42 @@ class UserViewModel @Inject constructor(
             val response = repository.checkUserEmail(email)
             when (response) {
                 is NetworkResponse.Success -> {
-                    val check = response.body.duplicated
+                    val check = response.body.exist
+                    Log.d("중복", "${response.body.exist}")
                     if (check) {
                         _msg.postValue("이미 있는 이메일입니다.")
                     } else if (!check) {
                         _msg.postValue("사용 가능한 이메일 입니다.")
                     }
+                }
+                is NetworkResponse.ApiError -> {
+                    _msg.postValue("Api 오류 : 회원정보조회에 실패했습니다.")
+                }
+                is NetworkResponse.NetworkError -> {
+                    _msg.postValue("서버 오류 : 회원정보조회에 실패했습니다.")
+                }
+                is NetworkResponse.UnknownError -> {
+                    _msg.postValue("알 수 없는 오류 : 회원정보조회에 실패했습니다.")
+                }
+            }
+            hideProgress()
+        }
+    }
+
+    fun updateUserPassword(email: String, birth: String) {
+        val date =
+            "${birth.substring(0, 4)}-${birth.substring(4, 6)}-${birth.substring(6)}"
+
+        val passwordReset = HashMap<String, String>()
+        passwordReset["email"] = email
+        passwordReset["birth"] = date
+
+        showProgress()
+        viewModelScope.launch {
+            val response = repository.updateUserPassword(passwordReset)
+            when (response) {
+                is NetworkResponse.Success -> {
+                    _msg.postValue("임시 비밀번호 메일이 전송되었습니다.")
                 }
                 is NetworkResponse.ApiError -> {
                     _msg.postValue("Api 오류 : 회원정보조회에 실패했습니다.")
