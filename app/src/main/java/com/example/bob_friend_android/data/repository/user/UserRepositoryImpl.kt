@@ -37,4 +37,7 @@ class UserRepositoryImpl @Inject constructor(
         return apiService.getEmailCheckResponse(email)
     }
 
+    override suspend fun updateUserPassword(passwordReset: HashMap<String, String>): NetworkResponse<Void, ErrorResponse> {
+        return apiService.updateUserPasswordResponse(passwordReset)
+    }
 }
