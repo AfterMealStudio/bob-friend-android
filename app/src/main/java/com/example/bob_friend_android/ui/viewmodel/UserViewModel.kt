@@ -54,6 +54,7 @@ class UserViewModel @Inject constructor(
                     _msg.postValue("알 수 없는 오류 : 회원가입을 실패했습니다.")
                 }
             }
+            hideProgress()
         }
     }
 
@@ -75,9 +76,9 @@ class UserViewModel @Inject constructor(
                 is NetworkResponse.NetworkError -> {
                     _msg.postValue("서버 오류 : 회원탈퇴에 실패했습니다.")
                 }
-                is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 회원탈퇴에 실패했습니다.")
-                }
+//                is NetworkResponse.UnknownError -> {
+//                    _msg.postValue("알 수 없는 오류 : 회원탈퇴에 실패했습니다.")
+//                }
             }
              hideProgress()
         }

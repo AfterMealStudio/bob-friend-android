@@ -304,7 +304,7 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
             requireDataBinding().etvPeopleCount.error = "거리두기 방침에 따라 4인 이하의 인원만 가능합니다."
             false
         } else if (count.toInt() < 2) {
-            requireDataBinding().etvPeopleCount.error = "2인 이하의 글은 작성할 수 없습니다."
+            requireDataBinding().etvPeopleCount.error = "2인 미만의 글은 작성할 수 없습니다."
             false
         } else if(dateTime.length != 16) {
             showToast("약속 시간을 입력해주세요!")

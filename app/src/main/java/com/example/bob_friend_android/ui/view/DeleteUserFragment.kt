@@ -1,6 +1,7 @@
 package com.example.bob_friend_android.ui.view
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -48,7 +49,10 @@ class DeleteUserFragment : BaseFragment<FragmentDeleteUserBinding>(
             val editor = App.prefs.edit()
             editor.clear()
             editor.apply()
-            goToNext(R.id.action_deleteUserFragment_to_loginFragment)
+//            goToNext(R.id.action_deleteUserFragment_to_loginFragment)
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
         }
 
         requireDataBinding().layoutDelete.setOnClickListener {
