@@ -230,12 +230,16 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
     private fun validatePassword(): Boolean {
         val value: String = requireDataBinding().editTextPassword.text.toString()
         val valueCheck: String = requireDataBinding().editTextPasswordCheck.text.toString()
+        val passwordPattern = "^(?=.*[a-zA-Z0-9])(?=.*[a-zA-Z!@#\$%^&*])(?=.*[0-9!@#\$%^&*]).{8,}\$"
 
         return if (value.isEmpty()) {
             requireDataBinding().editTextPassword.error = "비밀번호를 입력해주세요."
             false
         } else if (valueCheck.isEmpty()) {
             requireDataBinding().editTextPasswordCheck.error = "비밀번호 확인을 입력해주세요."
+            false
+        } else if (!value.matches(passwordPattern.toRegex())) {
+            requireDataBinding().editTextPasswordCheck.error = "숫자, 문자, 특수문자를 포함하여 8자 이상으로 구성해주세요."
             false
         } else if (value != valueCheck) {
             requireDataBinding().editTextPassword.error = "비밀번호와 비밀번호 확인이 다릅니다."
