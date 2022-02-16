@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
 import com.example.bob_friend_android.databinding.FragmentUpdatePasswordBinding
@@ -63,6 +64,8 @@ class UpdatePasswordFragment : BaseFragment<FragmentUpdatePasswordBinding>(
                         password = password, sex = null, birth = null
                     )
                 }
+
+                findNavController().popBackStack()
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton
