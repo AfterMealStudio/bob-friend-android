@@ -9,26 +9,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import com.example.bob_friend_android.App
 import com.example.bob_friend_android.R
+import com.example.bob_friend_android.databinding.FragmentUpdatePasswordBinding
 import com.example.bob_friend_android.ui.view.base.BaseFragment
-import com.example.bob_friend_android.databinding.FragmentUpdateUserInfoBinding
 import com.example.bob_friend_android.ui.viewmodel.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
-    R.layout.fragment_update_user_info
+class UpdatePasswordFragment : BaseFragment<FragmentUpdatePasswordBinding>(
+    R.layout.fragment_update_password
 ) {
     private val viewModel by activityViewModels<UserViewModel>()
 
-    private var nickname: String? = null
-    private var dateBirth: String? = null
-    private var gender : String? = null
+    private var password: String? = null
+    private var passwordCheck: String? = null
 
     override fun onCreateBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ): FragmentUpdateUserInfoBinding {
-        return FragmentUpdateUserInfoBinding.inflate(inflater, container, false).apply {
+    ): FragmentUpdatePasswordBinding {
+        return FragmentUpdatePasswordBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
         }
     }
@@ -44,41 +43,24 @@ class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
 
         observeData()
 
-        requireDataBinding().rgGender.setOnCheckedChangeListener { group, checkedId ->
-            gender = when(checkedId) {
-                R.id.male -> "MALE"
-                R.id.female -> "FEMALE"
-                R.id.third_gender -> "NONE"
-                else -> ""
-            }
-        }
-
-        var nicknameCheck = false
-        requireDataBinding().btnNicknameCheck.setOnClickListener {
-            nickname = requireDataBinding().etvNickname.text.toString().trim()
-            viewModel.checkUserNickname(nickname!!)
-            nicknameCheck = true
-        }
-
         requireDataBinding().btnUpdateUserInfo.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("회원정보수정")
             builder.setMessage("이렇게 정보 변경을 진행할까요?")
 
-            if(requireDataBinding().etvNickname.text!!.isNotBlank()){
-                nickname = requireDataBinding().etvNickname.text.toString().trim()
+            if (requireDataBinding().etvPassword.text!!.isNotBlank()){
+                password = requireDataBinding().etvPassword.text.toString().trim()
             }
-            if (requireDataBinding().etvDateBirth.text!!.isNotBlank()){
-                dateBirth = requireDataBinding().etvDateBirth.text.toString().trim()
+            if (requireDataBinding().etvPasswordCheck.text!!.isNotBlank()){
+                passwordCheck = requireDataBinding().etvPasswordCheck.text.toString().trim()
             }
 
             builder.setPositiveButton("예") { dialog, which ->
-                if(viewModel.validationUpdate(
-                        nicknameCheck = nicknameCheck, nickname = nickname,
-                        gender = gender,
-                        dateBirth = dateBirth)){
-                    viewModel.updateUser(agree = null, email = null, nickname = nickname,
-                        password = null, sex = gender, birth = dateBirth
+                if(viewModel.validationUpdatePassword(
+                        password = password,
+                        passwordCheck = passwordCheck)){
+                    viewModel.updateUser(agree = null, email = null, nickname = null,
+                        password = password, sex = null, birth = null
                     )
                 }
             }
@@ -96,8 +78,10 @@ class UpdateUserInfoFragment : BaseFragment<FragmentUpdateUserInfoBinding>(
 
     private fun hideKeyboard(){
         val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(requireDataBinding().etvNickname.windowToken, 0)
-        imm.hideSoftInputFromWindow(requireDataBinding().etvDateBirth.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvPassword.windowToken, 0)
+        imm.hideSoftInputFromWindow(requireDataBinding().etvPasswordCheck.windowToken, 0)
+
+
     }
 
 

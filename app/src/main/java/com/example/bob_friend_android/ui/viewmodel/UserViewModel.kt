@@ -230,16 +230,10 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun validationUpdate(password : String?, passwordCheck: String?, nickname: String?,
+    fun validationUpdate(nickname: String?,
                    dateBirth:String?, gender:String?, nicknameCheck: Boolean): Boolean {
-        if (nickname == null && password == null && passwordCheck == null
-            && dateBirth == null && gender == null) {
+        if (nickname == null && dateBirth == null && gender == null) {
             _msg.postValue("변경할 것이 없습니다.")
-            return false
-        }
-
-        if (password != passwordCheck) {
-            _msg.postValue("비밀번호가 서로 다릅니다.")
             return false
         }
 
@@ -248,6 +242,14 @@ class UserViewModel @Inject constructor(
             return false
         }
 
+        return true
+    }
+
+    fun validationUpdatePassword(password : String?, passwordCheck: String?): Boolean {
+        if (password != passwordCheck) {
+            _msg.postValue("비밀번호가 서로 다릅니다.")
+            return false
+        }
         return true
     }
 }

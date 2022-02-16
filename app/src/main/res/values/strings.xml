@@ -151,6 +151,7 @@
     <string name="setting_users">계정</string>
     <string name="setting_etc">기타</string>
     <string name="setting_revise_user_info">회원 정보 수정</string>
+    <string name="setting_update_user_password">비밀번호 수정</string>
     <string name="setting_user_info_agree_btn">정보 동의 설정</string>
     <string name="setting_ask">문의하기</string>
     <string name="setting_notification">알림 설정</string>
