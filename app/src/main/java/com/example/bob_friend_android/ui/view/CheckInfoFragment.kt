@@ -90,6 +90,10 @@ class CheckInfoFragment : BaseFragment<FragmentCheckInfoBinding>(
         requireDataBinding().btnUpdateUserInfo.setOnClickListener {
             goToNext(R.id.action_checkInfoFragment_to_updateUserInfoFragment)
         }
+
+        requireDataBinding().btnUpdatePassword.setOnClickListener {
+            goToNext(R.id.action_checkInfoFragment_to_updatePasswordFragment)
+        }
     }
 
     private fun observeData() {

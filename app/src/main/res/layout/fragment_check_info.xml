@@ -180,21 +180,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/header_layout" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/myCommentList"
-                    android:layout_width="match_parent"
-                    android:layout_height="65dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:backgroundTint="@color/white"
-                    android:text="@string/setting_comment"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/header_layout" />
-
                 <TextView
                     android:id="@+id/line_part2"
                     android:layout_width="match_parent"
@@ -241,35 +226,20 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/header_layout" />
 
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    android:id="@+id/user_info_agree_btn"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="65dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginRight="10dp"-->
-<!--                    style="@style/Widget.AppCompat.Button.Borderless"-->
-<!--                    android:backgroundTint="@color/white"-->
-<!--                    android:text="@string/setting_user_info_agree_btn"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="16sp"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/header_layout" />-->
-
-<!--                <androidx.appcompat.widget.AppCompatButton-->
-<!--                    android:id="@+id/setting_notification"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="65dp"-->
-<!--                    android:layout_marginLeft="10dp"-->
-<!--                    android:layout_marginRight="10dp"-->
-<!--                    style="@style/Widget.AppCompat.Button.Borderless"-->
-<!--                    android:backgroundTint="@color/white"-->
-<!--                    android:text="@string/setting_notification"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="16sp"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/header_layout" />-->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_update_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:backgroundTint="@color/white"
+                    android:text="@string/setting_update_user_password"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/header_layout" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_logout"

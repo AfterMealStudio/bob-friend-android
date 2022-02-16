@@ -104,6 +104,9 @@
         <action
             android:id="@+id/action_checkInfoFragment_to_updateUserInfoFragment"
             app:destination="@id/updateUserInfoFragment" />
+        <action
+            android:id="@+id/action_checkInfoFragment_to_updatePasswordFragment"
+            app:destination="@id/updatePasswordFragment" />
     </fragment>
     <fragment
         android:id="@+id/introduceTeamFragment"
@@ -149,4 +152,10 @@
             app:popUpTo="@+id/createBoardFragment"
             app:popUpToInclusive="true"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/updatePasswordFragment"
+        android:name="com.example.bob_friend_android.ui.view.UpdatePasswordFragment"
+        android:label="UpdatePasswordFragment"
+        tools:layout="@layout/fragment_update_password"/>
 </navigation>
