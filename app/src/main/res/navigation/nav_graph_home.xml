@@ -157,5 +157,6 @@
         android:id="@+id/updatePasswordFragment"
         android:name="com.example.bob_friend_android.ui.view.UpdatePasswordFragment"
         android:label="UpdatePasswordFragment"
-        tools:layout="@layout/fragment_update_password"/>
+        tools:layout="@layout/fragment_update_password">
+    </fragment>
 </navigation>

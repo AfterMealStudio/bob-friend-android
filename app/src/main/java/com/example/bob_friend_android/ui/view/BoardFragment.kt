@@ -178,7 +178,7 @@ class BoardFragment : BaseFragment<FragmentBoardBinding>(
 //            onBackPressed()
 //        }
 
-        requireDataBinding().etvComment.setOnEditorActionListener{ textView, action, event ->
+        requireDataBinding().etvComment.setOnEditorActionListener { textView, action, event ->
             var handled = false
 
             if (action == EditorInfo.IME_ACTION_DONE) {
