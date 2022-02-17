@@ -50,7 +50,7 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
         boardAdapter = BoardAdapter()
         requireDataBinding().recyclerview.adapter = boardAdapter
 
-        viewModel.setAppointmentList(listPage)
+        viewModel.setAppointmentList(0)
 
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(requireDataBinding().tbMain)
@@ -104,7 +104,6 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
             })
 
             appointmentList.observe(viewLifecycleOwner) {
-                boardArrayList.clear()
                 for(document in it.boardList) {
                     boardArrayList.add(document)
                 }

@@ -114,8 +114,9 @@
                 android:id="@+id/rv_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 tools:listitem="@layout/item_board"
-                tools:itemCount="2"/>
+                tools:itemCount="3"/>
         </LinearLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

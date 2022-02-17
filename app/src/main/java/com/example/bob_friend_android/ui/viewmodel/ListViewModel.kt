@@ -37,6 +37,10 @@ class ListViewModel @Inject constructor(
     val appointmentList : MutableLiveData<AppointmentList>
         get() = _appointmentList
 
+    private val _appointmentMap = MutableLiveData<AppointmentList>()
+    val appointmentMap : MutableLiveData<AppointmentList>
+        get() = _appointmentMap
+
     private val _msg = MutableLiveData<String>()
     val errorMsg : LiveData<String>
         get() = _msg
@@ -54,7 +58,10 @@ class ListViewModel @Inject constructor(
         get() = _location
 
 
-    fun setAppointmentList(page: Int, type: String? = null, address: String? = null){
+    fun setAppointmentList(page: Int){
+        val type: String? = null
+        val address: String? = null
+
         var lastPage: Boolean
         var element: Int
         showProgress()
@@ -67,6 +74,37 @@ class ListViewModel @Inject constructor(
                     if(!lastPage||(element != 0 && lastPage)){
                         for (document in response.body.boardList) {
                             _appointmentList.postValue(response.body)
+                        }
+                    }
+                }
+                is NetworkResponse.ApiError -> {
+                    _msg.postValue("Api 오류 : 약속 불러오는 것을 실패했습니다.")
+                }
+                is NetworkResponse.NetworkError -> {
+                    _msg.postValue("서버 오류 : 약속 불러오는 것을 실패했습니다.")
+                }
+                is NetworkResponse.UnknownError -> {
+                    _msg.postValue("알 수 없는 오류 : 약속 불러오는 것을 실패했습니다.")
+                }
+            }
+            hideProgress()
+        }
+    }
+
+
+    fun setAppointmentMap(page: Int, type: String, address: String){
+        var lastPage: Boolean
+        var element: Int
+        showProgress()
+        viewModelScope.launch {
+            val response = repository.setAppointmentList(page, type, address)
+            when(response) {
+                is NetworkResponse.Success -> {
+                    element = response.body.element
+                    lastPage = response.body.last
+                    if(!lastPage||(element != 0 && lastPage)){
+                        for (document in response.body.boardList) {
+                            _appointmentMap.postValue(response.body)
                         }
                     }
                 }
