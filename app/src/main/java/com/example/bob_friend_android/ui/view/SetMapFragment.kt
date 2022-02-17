@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -72,6 +73,19 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                 fm.beginTransaction().add(R.id.map, it).commit()
             }
         mapFragment.getMapAsync(this)
+//        lifecycle.addObserver(object :LifecycleEventObserver{
+//            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+//                val tag = "map_fragment"
+//                when(event) {
+//                    Lifecycle.Event.ON_CREATE -> Log.d(tag, "CREATE")
+//                    Lifecycle.Event.ON_START -> Log.d(tag, "START")
+//                    Lifecycle.Event.ON_RESUME -> Log.d(tag, "RESUME")
+//                    Lifecycle.Event.ON_PAUSE -> Log.d(tag, "PAUSE")
+//                    Lifecycle.Event.ON_STOP -> Log.d(tag, "STOP")
+//                    Lifecycle.Event.ON_DESTROY -> Log.d(tag, "DESTROY")
+//                }
+//            }
+//        })
 
         return FragmentSetMapBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
@@ -133,10 +147,20 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 //        }
 
         requireDataBinding().rvBottom.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                // 스크롤이 끝에 도달했는지 확인
-                if (!requireDataBinding().rvBottom.canScrollVertically(1)) {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                // 스크롤이 끝에 도달했는지 확인
+//                if (!requireDataBinding().rvBottom.canScrollVertically(1)) {
+//                    Log.d("map_scroll", "EventOccurs")
+//                    listPage++
+//                    viewModel.setAppointmentMap(page = listPage, type = "specific", address = address)
+//                }
+//            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == 0) {
+                    Log.d("map_scroll", "EventOccurs")
                     listPage++
                     viewModel.setAppointmentMap(page = listPage, type = "specific", address = address)
                 }
@@ -247,13 +271,16 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 
             appointmentMap.observe(viewLifecycleOwner) {
                 requireDataBinding().tvTotalElements.text = "약속 ${it.totalElements}개"
-                requireDataBinding().layoutBottom.visibility = View.VISIBLE
-
                 bottomArrayList.clear()
                 for(document in it.boardList) {
                     bottomArrayList.add(document)
                 }
                 bottomViewAdapter.setItems(bottomArrayList)
+                Log.d("map_observe", lifecycle.currentState.name)
+                requireDataBinding().layoutBottom.visibility = View.VISIBLE
+//                when(viewLifecycleOwner.lifecycle.currentState) {
+//                    Lifecycle.State.RESUMED -> requireDataBinding().layoutBottom.visibility = View.VISIBLE
+//                }
             }
         }
     }
