@@ -3,6 +3,7 @@ package com.example.bob_friend_android.ui.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -38,8 +39,6 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 ), OnMapReadyCallback, Overlay.OnClickListener {
 
     private val viewModel by activityViewModels<ListViewModel>()
-
-    private lateinit var  getListResultLauncher: ActivityResultLauncher<Intent>
 
     private var x: Double? = null
     private var y: Double? = null
@@ -139,7 +138,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                 // 스크롤이 끝에 도달했는지 확인
                 if (!requireDataBinding().rvBottom.canScrollVertically(1)) {
                     listPage++
-                    viewModel.setAppointmentList(page = listPage, type = "specific", address = address)
+                    viewModel.setAppointmentMap(page = listPage, type = "specific", address = address)
                 }
             }
         })
@@ -246,7 +245,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                 }
             }
 
-            appointmentList.observe(viewLifecycleOwner) {
+            appointmentMap.observe(viewLifecycleOwner) {
                 requireDataBinding().tvTotalElements.text = "약속 ${it.totalElements}개"
                 requireDataBinding().layoutBottom.visibility = View.VISIBLE
 
@@ -262,7 +261,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 
     override fun onClick(p0: Overlay): Boolean {
         address = p0.tag.toString()
-        viewModel.setAppointmentList(page = 0, type = "specific", address = address)
+        viewModel.setAppointmentMap(page = 0, type = "specific", address = address)
         return true
     }
 }
