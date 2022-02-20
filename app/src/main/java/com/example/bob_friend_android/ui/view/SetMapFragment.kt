@@ -159,7 +159,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (newState == 0) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && !recyclerView.canScrollVertically(1)) {
                     Log.d("map_scroll", "EventOccurs")
                     listPage++
                     viewModel.setAppointmentMap(page = listPage, type = "specific", address = address)

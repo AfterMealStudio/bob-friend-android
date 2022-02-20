@@ -1,5 +1,6 @@
 package com.example.bob_friend_android.ui.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.example.bob_friend_android.databinding.FragmentSetListBinding
 import com.example.bob_friend_android.ui.viewmodel.ListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class SetListFragment : BaseFragment<FragmentSetListBinding>(
@@ -25,8 +27,8 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
     private val viewModel by activityViewModels<ListViewModel>()
 
     private lateinit var boardAdapter: BoardAdapter
-    private var boardArrayList : ArrayList<Board> = ArrayList()
-    private var listPage = 0 // 현재 페이지
+    private lateinit var boardArrayList : ArrayList<Board>
+    private var listPage by Delegates.notNull<Int>()
 
     override fun onCreateBinding(
         inflater: LayoutInflater,
@@ -38,19 +40,13 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
     }
 
     override fun init() {
-        val swipe = requireDataBinding().layoutSwipe
-        swipe.setOnRefreshListener {
-            listPage = 0
-            boardArrayList.clear()
-            viewModel.setAppointmentList(listPage)
-            swipe.isRefreshing = false
-        }
-
         requireDataBinding().recyclerview.layoutManager = LinearLayoutManager(requireActivity())
         boardAdapter = BoardAdapter()
         requireDataBinding().recyclerview.adapter = boardAdapter
 
-        viewModel.setAppointmentList(0)
+        listPage = 0
+        boardArrayList = ArrayList()
+        viewModel.setAppointmentList(listPage)
 
         if(activity is AppCompatActivity){
             (activity as AppCompatActivity).setSupportActionBar(requireDataBinding().tbMain)
@@ -58,10 +54,18 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
         }
 
         requireDataBinding().recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                // 스크롤이 끝에 도달했는지 확인
-                if (!requireDataBinding().recyclerview.canScrollVertically(1)) {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                // 스크롤이 끝에 도달했는지 확인
+//                if (!requireDataBinding().recyclerview.canScrollVertically(1)) {
+//                    listPage++
+//                    viewModel.setAppointmentList(listPage)
+//                }
+//            }
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && !recyclerView.canScrollVertically(1)) {
+                    Log.d("map_scroll", "EventOccurs")
                     listPage++
                     viewModel.setAppointmentList(listPage)
                 }
@@ -84,6 +88,14 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
                 goToNext(R.id.action_setListFragment_to_searchBoardFragment)
             }
 
+        }
+
+        val swipe = requireDataBinding().layoutSwipe
+        swipe.setOnRefreshListener {
+            listPage = 0
+            boardArrayList.clear()
+            viewModel.setAppointmentList(listPage)
+            swipe.isRefreshing = false
         }
 
         observeData()
