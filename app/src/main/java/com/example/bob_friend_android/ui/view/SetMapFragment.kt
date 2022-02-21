@@ -2,7 +2,6 @@ package com.example.bob_friend_android.ui.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -11,10 +10,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -162,7 +159,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && !recyclerView.canScrollVertically(1)) {
                     Log.d("map_scroll", "EventOccurs")
                     listPage++
-                    viewModel.setAppointmentMap(page = listPage, type = "specific", address = address)
+                    viewModel.setAppointmentList(page = listPage, type = "specific", address = address)
                 }
             }
         })
@@ -249,8 +246,10 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
     @SuppressLint("SetTextI18n")
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(viewLifecycleOwner) {
-                showToast(it)
+            errorMsg.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let {
+                    showToast(it)
+                }
             }
 
             searchKeyword.observe(viewLifecycleOwner) {
@@ -269,18 +268,15 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
                 }
             }
 
-            appointmentMap.observe(viewLifecycleOwner) {
-                requireDataBinding().tvTotalElements.text = "약속 ${it.totalElements}개"
+            appointmentList.observe(viewLifecycleOwner) {
+                requireDataBinding().tvTotalElements.text = "약속 ${it.peekContent().totalElements}개"
                 bottomArrayList.clear()
-                for(document in it.boardList) {
+                for(document in it.peekContent().boardList) {
                     bottomArrayList.add(document)
                 }
                 bottomViewAdapter.setItems(bottomArrayList)
                 Log.d("map_observe", lifecycle.currentState.name)
                 requireDataBinding().layoutBottom.visibility = View.VISIBLE
-//                when(viewLifecycleOwner.lifecycle.currentState) {
-//                    Lifecycle.State.RESUMED -> requireDataBinding().layoutBottom.visibility = View.VISIBLE
-//                }
             }
         }
     }
@@ -288,7 +284,7 @@ class SetMapFragment : BaseFragment<FragmentSetMapBinding>(
 
     override fun onClick(p0: Overlay): Boolean {
         address = p0.tag.toString()
-        viewModel.setAppointmentMap(page = 0, type = "specific", address = address)
+        viewModel.setAppointmentList(page = 0, type = "specific", address = address)
         return true
     }
 }

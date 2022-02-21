@@ -97,8 +97,10 @@ class SearchLocationFragment : BaseFragment<FragmentSearchLocationBinding>(
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(viewLifecycleOwner) {
-                showToast(it)
+            errorMsg.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let {
+                    showToast(it)
+                }
             }
 
             searchKeyword.observe(viewLifecycleOwner) {
