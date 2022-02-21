@@ -5,6 +5,7 @@ import com.example.bob_friend_android.data.entity.Comment
 import com.example.bob_friend_android.data.entity.ErrorResponse
 import com.example.bob_friend_android.data.network.NetworkResponse
 import com.example.bob_friend_android.data.network.api.ApiService
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class AppointmentRepositoryImpl @Inject constructor(
@@ -14,11 +15,11 @@ class AppointmentRepositoryImpl @Inject constructor(
         return apiService.createAppointmentResponse(board)
     }
 
-    override suspend fun deleteAppointment(appointmentId: Int): NetworkResponse<Void, ErrorResponse> {
+    override suspend fun deleteAppointment(appointmentId: Int): NetworkResponse<ResponseBody, ErrorResponse> {
         return apiService.deleteAppointmentResponse(appointmentId)
     }
 
-    override suspend fun reportAppointment(appointmentId: Int): NetworkResponse<Void, ErrorResponse> {
+    override suspend fun reportAppointment(appointmentId: Int): NetworkResponse<ResponseBody, ErrorResponse> {
         return apiService.reportAppointmentResponse(appointmentId)
     }
 
@@ -26,7 +27,7 @@ class AppointmentRepositoryImpl @Inject constructor(
         return apiService.joinAppointmentResponse(appointmentId)
     }
 
-    override suspend fun closeAppointment(appointmentId: Int): NetworkResponse<Void, ErrorResponse> {
+    override suspend fun closeAppointment(appointmentId: Int): NetworkResponse<ResponseBody, ErrorResponse> {
         return apiService.closeAppointmentResponse(appointmentId)
     }
 
@@ -50,7 +51,7 @@ class AppointmentRepositoryImpl @Inject constructor(
         appointmentId: Int,
         commentId: Int,
         reCommentId: Int?
-    ): NetworkResponse<Void, ErrorResponse> {
+    ): NetworkResponse<ResponseBody, ErrorResponse> {
         return if (reCommentId == null) {
             apiService.deleteCommentResponse(appointmentId, commentId)
         } else {
@@ -62,7 +63,7 @@ class AppointmentRepositoryImpl @Inject constructor(
         appointmentId: Int,
         commentId: Int,
         reCommentId: Int?
-    ): NetworkResponse<Void, ErrorResponse> {
+    ): NetworkResponse<ResponseBody, ErrorResponse> {
         return if (reCommentId == null) {
             apiService.reportCommentResponse(appointmentId, commentId)
         } else {

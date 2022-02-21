@@ -29,7 +29,7 @@ class UserViewModel @Inject constructor(
         val msgArrayList = arrayOf("Api 오류 : $type 실패했습니다.",
             "서버 오류 : $type 실패했습니다.",
             "알 수 없는 오류 : $type 실패했습니다.",
-            "${type}에 성공했습니다.",
+            "$type 성공했습니다.",
             "이미 있는 ${type}입니다.",
             "사용 가능한 ${type}입니다."
         )
@@ -63,7 +63,7 @@ class UserViewModel @Inject constructor(
             val type = "회원가입에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    postValueEvent(4, type)
+                    postValueEvent(3, type)
                 }
                 is NetworkResponse.ApiError -> {
                     postValueEvent(0, type)
@@ -90,7 +90,7 @@ class UserViewModel @Inject constructor(
             val type = "회원탈퇴에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    postValueEvent(4, type)
+                    postValueEvent(3, type)
                 }
                 is NetworkResponse.ApiError -> {
                     postValueEvent(0, type)
@@ -126,7 +126,7 @@ class UserViewModel @Inject constructor(
             val type = "회원 정보수정에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    postValueEvent(4, type)
+                    postValueEvent(3, type)
                     _userInfo.postValue(response.body)
                 }
                 is NetworkResponse.ApiError -> {

@@ -65,7 +65,7 @@ class UpdatePasswordFragment : BaseFragment<FragmentUpdatePasswordBinding>(
                     )
                 }
 
-                findNavController().popBackStack()
+//                findNavController().popBackStack()
             }
             builder.setNegativeButton("아니오") { dialog, which ->
                 return@setNegativeButton
