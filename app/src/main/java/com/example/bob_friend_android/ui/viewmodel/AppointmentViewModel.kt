@@ -24,7 +24,6 @@ class AppointmentViewModel @Inject constructor(
     val errorMsg : LiveData<Event<String>> = _msg
 
 
-
     private fun postValueEvent(value : Int, type: String) {
         val msgArrayList = arrayOf("Api 오류 : $type 실패했습니다.",
             "서버 오류 : $type 실패했습니다.",
