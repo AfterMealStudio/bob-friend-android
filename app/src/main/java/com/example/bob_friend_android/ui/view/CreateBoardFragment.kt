@@ -38,7 +38,6 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
     private val viewModel by activityViewModels<AppointmentViewModel>()
 
     private val args : CreateBoardFragmentArgs by navArgs()
-    private lateinit var mapView: MapView
     private lateinit var naverMap: NaverMap
 
     private var gender : String = "NONE"
@@ -186,8 +185,10 @@ class CreateBoardFragment : BaseFragment<FragmentCreateBoardBinding>(
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(viewLifecycleOwner) {
-                showToast(it)
+            errorMsg.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let {
+                    showToast(it)
+                }
             }
         }
     }
