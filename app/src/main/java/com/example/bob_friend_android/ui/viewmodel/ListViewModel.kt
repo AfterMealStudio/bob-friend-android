@@ -6,10 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.bob_friend_android.data.entity.AppointmentList
-import com.example.bob_friend_android.data.entity.Board
-import com.example.bob_friend_android.data.entity.ErrorResponse
-import com.example.bob_friend_android.data.entity.Token
+import com.example.bob_friend_android.data.entity.*
 import com.example.bob_friend_android.data.network.NetworkResponse
 import com.example.bob_friend_android.data.repository.list.ListRepository
 import com.example.bob_friend_android.ui.view.base.BaseViewModel
@@ -33,66 +30,35 @@ class ListViewModel @Inject constructor(
 
     private val API_KEY = "KakaoAK 81e4657cca25cf97b1cec85102769390"
 
-    private val _appointmentList = MutableLiveData<AppointmentList>()
-    val appointmentList : MutableLiveData<AppointmentList>
-        get() = _appointmentList
+    private val _appointmentList = MutableLiveData<Event<AppointmentList>>()
+    val appointmentList : MutableLiveData<Event<AppointmentList>> = _appointmentList
 
-    private val _appointmentMap = MutableLiveData<AppointmentList>()
-    val appointmentMap : MutableLiveData<AppointmentList>
-        get() = _appointmentMap
-
-    private val _msg = MutableLiveData<String>()
-    val errorMsg : LiveData<String>
-        get() = _msg
+    private val _msg = MutableLiveData<Event<String>>()
+    val errorMsg : LiveData<Event<String>> = _msg
 
     private val _result = MutableLiveData<Board>()
-    val result : LiveData<Board>
-        get() = _result
+    val result : LiveData<Board> = _result
 
     private val _searchKeyword = MutableLiveData<SearchKeyword>()
-    val searchKeyword : LiveData<SearchKeyword>
-        get() = _searchKeyword
+    val searchKeyword : LiveData<SearchKeyword> = _searchKeyword
 
     private val _location = MutableLiveData<List<Location>>()
-    val location : MutableLiveData<List<Location>>
-        get() = _location
+    val location : MutableLiveData<List<Location>> = _location
 
 
-    fun setAppointmentList(page: Int){
-        val type: String? = null
-        val address: String? = null
+    var msgArrayList = arrayOf("Api 오류 : 약속 불러오는 것을 실패했습니다.",
+        "서버 오류 : 약속 불러오는 것을 실패했습니다.",
+        "알 수 없는 오류 : 약속 불러오는 것을 실패했습니다.")
 
-        var lastPage: Boolean
-        var element: Int
-        showProgress()
-        viewModelScope.launch {
-            val response = repository.setAppointmentList(page, type, address)
-            when(response) {
-                is NetworkResponse.Success -> {
-                    element = response.body.element
-                    lastPage = response.body.last
-                    if(!lastPage||(element != 0 && lastPage)){
-                        for (document in response.body.boardList) {
-                            _appointmentList.postValue(response.body)
-                        }
-                    }
-                }
-                is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속 불러오는 것을 실패했습니다.")
-                }
-                is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속 불러오는 것을 실패했습니다.")
-                }
-                is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속 불러오는 것을 실패했습니다.")
-                }
-            }
-            hideProgress()
+    private fun postValueEvent(value : Int) {
+        when(value) {
+            0 -> _msg.postValue(Event(msgArrayList[0]))
+            1 -> _msg.postValue(Event(msgArrayList[1]))
+            2 -> _msg.postValue(Event(msgArrayList[2]))
         }
     }
 
-
-    fun setAppointmentMap(page: Int, type: String, address: String){
+    fun setAppointmentList(page: Int, type: String? = null, address: String? = null){
         var lastPage: Boolean
         var element: Int
         showProgress()
@@ -104,18 +70,18 @@ class ListViewModel @Inject constructor(
                     lastPage = response.body.last
                     if(!lastPage||(element != 0 && lastPage)){
                         for (document in response.body.boardList) {
-                            _appointmentMap.postValue(response.body)
+                            _appointmentList.postValue(Event(response.body))
                         }
                     }
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(0)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(1)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(2)
                 }
             }
             hideProgress()
@@ -136,18 +102,18 @@ class ListViewModel @Inject constructor(
                     lastPage = response.body.last
                     if(!lastPage||(element != 0 && lastPage)){
                         for (document in response.body.boardList) {
-                            _appointmentList.postValue(response.body)
+                            _appointmentList.postValue(Event(response.body))
                         }
                     }
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(0)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(1)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(2)
                 }
             }
             hideProgress()
@@ -164,13 +130,13 @@ class ListViewModel @Inject constructor(
                     _location.postValue(response.body.List)
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(0)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(1)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속 불러오는 것을 실패했습니다.")
+                    postValueEvent(2)
                 }
             }
             hideProgress()
@@ -224,14 +190,14 @@ class ListViewModel @Inject constructor(
                 when(response.code()) {
                     200 -> _searchKeyword.postValue(response.body())
                     403 -> checkTokenExpiration(response.errorBody()!!.string())
-                    500 -> _msg.postValue("서버 오류입니다.")
-                    else -> _msg.postValue("오류 : ${response.errorBody()!!.string()}")
+                    500 -> postValueEvent(1)
+                    else -> postValueEvent(2)
                 }
                 hideProgress()
             }
 
             override fun onFailure(call: Call<SearchKeyword>, t: Throwable) {
-                _msg.postValue("서버에 연결이 되지 않았습니다. 다시 시도해주세요!")
+                postValueEvent(1)
                 hideProgress()
             }
         })
@@ -241,7 +207,9 @@ class ListViewModel @Inject constructor(
         val gson = GsonBuilder().create()
         try {
             val error = gson.fromJson<ErrorResponse>(msg, ErrorResponse::class.java)
-            _msg.postValue(error.message)
+            if (error.message != null) {
+                _msg.postValue(Event(error.message!!))
+            }
         } catch (e : IOException) {
             return
         }

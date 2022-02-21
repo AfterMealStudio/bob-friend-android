@@ -1,5 +1,6 @@
 package com.example.bob_friend_android.ui.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,15 +87,19 @@ class SetMyListFragment : BaseFragment<FragmentSetMyListBinding>(
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(viewLifecycleOwner) {
-                showToast(it)
+            errorMsg.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let {
+                    showToast(it)
+                }
             }
 
-            appointmentList.observe(viewLifecycleOwner) {
-                for(document in it.boardList) {
-                    boardArrayList.add(document)
+            appointmentList.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let { it ->
+                    for(document in it.boardList) {
+                        boardArrayList.add(document)
+                    }
+                    boardAdapter.setItems(boardArrayList)
                 }
-                boardAdapter.setItems(boardArrayList)
             }
 
             val dialog = SetLoadingDialog(requireContext())

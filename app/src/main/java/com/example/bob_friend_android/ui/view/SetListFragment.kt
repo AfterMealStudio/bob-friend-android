@@ -6,6 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +37,20 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentSetListBinding {
+                lifecycle.addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                val tag = "map_fragment"
+                when(event) {
+                    Lifecycle.Event.ON_CREATE -> Log.d(tag, "CREATE")
+                    Lifecycle.Event.ON_START -> Log.d(tag, "START")
+                    Lifecycle.Event.ON_RESUME -> Log.d(tag, "RESUME")
+                    Lifecycle.Event.ON_PAUSE -> Log.d(tag, "PAUSE")
+                    Lifecycle.Event.ON_STOP -> Log.d(tag, "STOP")
+                    Lifecycle.Event.ON_DESTROY -> Log.d(tag, "DESTROY")
+                }
+            }
+        })
+
         return FragmentSetListBinding.inflate(inflater, container, false).apply {
             lifecycleOwner = viewLifecycleOwner
         }
@@ -104,22 +121,20 @@ class SetListFragment : BaseFragment<FragmentSetListBinding>(
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(this@SetListFragment, object : Observer<String> {
-                override fun onChanged(t: String?) {
-                    if (t == "Access Denied") {
-//                        viewModel.refreshToken(App.prefs.getString("token", "")!!, App.prefs.getString("refresh", "")!!)
-                    }
-                    if (t != null) {
-                        showToast(t)
-                    }
+            errorMsg.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let {
+                    showToast(it)
                 }
-            })
+            }
 
-            appointmentList.observe(viewLifecycleOwner) {
-                for(document in it.boardList) {
-                    boardArrayList.add(document)
+            appointmentList.observe(viewLifecycleOwner) { event ->
+                Log.d(tag, "map appointmentList observer")
+                event.getContentIfNotHandled()?.let { it ->
+                    for(document in it.boardList) {
+                        boardArrayList.add(document)
+                    }
+                    boardAdapter.setItems(boardArrayList)
                 }
-                boardAdapter.setItems(boardArrayList)
             }
 
             val dialog = SetLoadingDialog(requireContext())
