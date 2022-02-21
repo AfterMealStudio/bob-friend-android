@@ -51,7 +51,6 @@ class BoardFragment : BaseFragment<FragmentBoardBinding>(
     private val userAdapter = UserAdapter(userList)
 
     private lateinit var map: NaverMap
-    private lateinit var boardMap: Board
 
     private var participate = "참가하기"
 
@@ -304,32 +303,34 @@ class BoardFragment : BaseFragment<FragmentBoardBinding>(
 //                boardMap = board
             })
 
-            errorMsg.observe(viewLifecycleOwner) {
-                when (errorMsg.value) {
-                    "접근할 수 없는 약속" -> {
-                        makeBuilder("접근할 수 없는 약속", "마감되거나 삭제되어 접근 할 수 없는 약속입니다.")
-                    }
-                    "댓글이 삭제되었습니다." -> {
-                        setAppointment(detailBoardId)
-                    }
-                    "참가할 수 없는 약속" -> {
-                        makeBuilder("참가할 수 없는 약속", "참가 조건이 맞지 않아 참가할 수 없는 약속입니다.")
-                    }
-                    "약속 참가 기능" -> {
-                        when (participate) {
-                            "참가하기" -> {
-                                makeBuilder("약속 취소", "해당 약속을 취소했습니다.")
-                            }
-                            "취소하기" -> {
-                                makeBuilder("약속 참가", "해당 약속에 참가되었습니다.")
-                            }
-                            "마감하기" -> {
-                                makeBuilder("약속 마감", "해당 약속을 마감했습니다.")
+            errorMsg.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let {
+                    when (it) {
+                        "접근할 수 없는 약속" -> {
+                            makeBuilder("접근할 수 없는 약속", "마감되거나 삭제되어 접근 할 수 없는 약속입니다.")
+                        }
+                        "댓글이 삭제되었습니다." -> {
+                            setAppointment(detailBoardId)
+                        }
+                        "참가할 수 없는 약속" -> {
+                            makeBuilder("참가할 수 없는 약속", "참가 조건이 맞지 않아 참가할 수 없는 약속입니다.")
+                        }
+                        "약속 참가 기능" -> {
+                            when (participate) {
+                                "참가하기" -> {
+                                    makeBuilder("약속 취소", "해당 약속을 취소했습니다.")
+                                }
+                                "취소하기" -> {
+                                    makeBuilder("약속 참가", "해당 약속에 참가되었습니다.")
+                                }
+                                "마감하기" -> {
+                                    makeBuilder("약속 마감", "해당 약속을 마감했습니다.")
+                                }
                             }
                         }
-                    }
-                    else -> {
-                        showToast(it)
+                        else -> {
+                            showToast(it)
+                        }
                     }
                 }
             }

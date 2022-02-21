@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.bob_friend_android.ui.view.base.BaseViewModel
 import com.example.bob_friend_android.data.entity.Board
+import com.example.bob_friend_android.data.entity.Event
 import com.example.bob_friend_android.data.network.NetworkResponse
 import com.example.bob_friend_android.data.repository.appointment.AppointmentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,12 +18,32 @@ class AppointmentViewModel @Inject constructor(
 ): BaseViewModel() {
 
     private val _result = MutableLiveData<Board>()
-    val result : LiveData<Board>
-        get() = _result
+    val result : LiveData<Board> = _result
 
-    private val _msg = MutableLiveData<String>()
-    val errorMsg : LiveData<String>
-        get() = _msg
+    private val _msg = MutableLiveData<Event<String>>()
+    val errorMsg : LiveData<Event<String>> = _msg
+
+
+    private fun postValueEvent(value : Int, type: String) {
+        val msgArrayList = arrayOf("Api 오류 : $type 실패했습니다.",
+            "서버 오류 : $type 실패했습니다.",
+            "알 수 없는 오류 : $type 실패했습니다.",
+            "${type}이 작성되었습니다.",
+            "${type}이 삭제되었습니다.",
+            "${type}이 신고되었습니다.",
+            "${type}이 마감되었습니다."
+        )
+
+        when(value) {
+            0 -> _msg.postValue(Event(msgArrayList[0]))
+            1 -> _msg.postValue(Event(msgArrayList[1]))
+            2 -> _msg.postValue(Event(msgArrayList[2]))
+            3 -> _msg.postValue(Event(msgArrayList[3]))
+            4 -> _msg.postValue(Event(msgArrayList[4]))
+            5 -> _msg.postValue(Event(msgArrayList[5]))
+            6 -> _msg.postValue(Event(msgArrayList[6]))
+        }
+    }
 
 
     fun createAppointment(title : String, content: String, count:String, address: String, locationName: String, x: Double?, y: Double?, time: String,
@@ -44,18 +65,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.createAppointment(board)
+            val type = "약속생성에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("약속이 작성되었습니다!")
+                    postValueEvent(3, "약속")
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속생성을 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속생성을 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속생성을 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -67,18 +89,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.setAppointment(appointmentId)
+            val type = "약속조회에"
             when (response) {
                 is NetworkResponse.Success -> {
                     _result.postValue(response.body)
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속조회를 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속조회를 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속조회를 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -90,18 +113,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.deleteAppointment(appointmentId)
+            val type = "약속삭제에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("약속이 삭제되었습니다.")
+                    postValueEvent(4, "약속")
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속삭제를 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속삭제를 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속삭제를 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -113,18 +137,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.reportAppointment(appointmentId)
+            val type = "약속신고에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("약속이 신고되었습니다.")
+                    postValueEvent(5, "약속")
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속신고를 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속신고를 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속신고를 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -136,18 +161,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.joinAppointment(appointmentId)
+            val type = "참가 및 취소에"
             when (response) {
                 is NetworkResponse.Success -> {
                     _result.postValue(response.body)
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속참가에 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속참가에 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 참가할 수 없는 약속입니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -159,18 +185,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.closeAppointment(appointmentId)
+            val type = "약속마감에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("약속이 마감되었습니다.")
+                    postValueEvent(6, "약속")
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 약속마감을 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 약속마감을 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 약속마감을 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -185,18 +212,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.createComment(appointmentId, commentData, commentId)
+            val type = "댓글작성에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("댓글이 작성되었습니다.")
+                    postValueEvent(3, "댓글")
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 댓글작성을 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 댓글작성을 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 댓글작성을 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -208,18 +236,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.deleteComment(appointmentId, commentId, reCommentId)
+            val type = "댓글삭제에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("댓글이 삭제되었습니다.")
+                    postValueEvent(4, "댓글")
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 댓글삭제를 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 댓글삭제를 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 댓글삭제를 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -231,18 +260,19 @@ class AppointmentViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.reportComment(appointmentId, commentId, reCommentId)
+            val type = "댓글신고에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("댓글이 신고되었습니다.")
+                    postValueEvent(5, "댓글")
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 댓글신고를 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 댓글신고를 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 댓글신고를 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()

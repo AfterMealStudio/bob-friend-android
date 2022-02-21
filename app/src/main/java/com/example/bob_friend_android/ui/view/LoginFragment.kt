@@ -70,12 +70,14 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(viewLifecycleOwner) {
-                showToast(it)
-                if (it == "자동 로그인"){
-                    val intent = Intent(context, SetHomeActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
+            errorMsg.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let {
+                    showToast(it)
+                    if (it == "자동 로그인"){
+                        val intent = Intent(context, SetHomeActivity::class.java)
+                        startActivity(intent)
+                        activity?.finish()
+                    }
                 }
             }
 
