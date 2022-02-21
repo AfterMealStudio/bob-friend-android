@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.bob_friend_android.data.entity.Event
 import com.example.bob_friend_android.ui.view.base.BaseViewModel
 import com.example.bob_friend_android.data.entity.User
 import com.example.bob_friend_android.data.network.NetworkResponse
@@ -17,13 +18,31 @@ class UserViewModel @Inject constructor(
     private val repository: UserRepository
 ): BaseViewModel() {
 
-    private val _msg = MutableLiveData<String>()
-    val errorMsg : LiveData<String>
-        get() = _msg
+    private val _msg = MutableLiveData<Event<String>>()
+    val errorMsg : LiveData<Event<String>> = _msg
 
     private val _userInfo = MutableLiveData<User>()
-    val userInfo : LiveData<User>
-        get() = _userInfo
+    val userInfo : LiveData<User> = _userInfo
+
+
+    private fun postValueEvent(value : Int, type: String) {
+        val msgArrayList = arrayOf("Api 오류 : $type 실패했습니다.",
+            "서버 오류 : $type 실패했습니다.",
+            "알 수 없는 오류 : $type 실패했습니다.",
+            "${type}에 성공했습니다.",
+            "이미 있는 ${type}입니다.",
+            "사용 가능한 ${type}입니다."
+        )
+
+        when(value) {
+            0 -> _msg.postValue(Event(msgArrayList[0]))
+            1 -> _msg.postValue(Event(msgArrayList[1]))
+            2 -> _msg.postValue(Event(msgArrayList[2]))
+            3 -> _msg.postValue(Event(msgArrayList[3]))
+            4 -> _msg.postValue(Event(msgArrayList[4]))
+            5 -> _msg.postValue(Event(msgArrayList[5]))
+        }
+    }
 
 
     fun signUp(password : String, nickname : String, email: String, dateBirth:String, gender:String, agreeChoice:Boolean) {
@@ -41,18 +60,19 @@ class UserViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.signUp(user)
+            val type = "회원가입에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("회원가입에 성공했습니다.")
+                    postValueEvent(4, type)
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 회원가입을 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 회원가입을 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 회원가입을 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -67,19 +87,20 @@ class UserViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.deleteUser(token, pwd)
+            val type = "회원탈퇴에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("회원탈퇴에 성공했습니다.")
+                    postValueEvent(4, type)
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 회원탈퇴에 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 회원탈퇴에 실패했습니다.")
+                    postValueEvent(1, type)
                 }
-//                is NetworkResponse.UnknownError -> {
-//                    _msg.postValue("알 수 없는 오류 : 회원탈퇴에 실패했습니다.")
-//                }
+                is NetworkResponse.UnknownError -> {
+                    postValueEvent(2, type)
+                }
             }
              hideProgress()
         }
@@ -102,19 +123,20 @@ class UserViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.updateUser(updateInfo)
+            val type = "회원 정보수정에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("회원정보수정에 성공했습니다.")
+                    postValueEvent(4, type)
                     _userInfo.postValue(response.body)
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 회원정보수정에 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 회원정보수정에 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 회원정보수정에 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -126,18 +148,19 @@ class UserViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.setUserInfo()
+            val type = "회원 정보세팅에"
             when (response) {
                 is NetworkResponse.Success -> {
                     _userInfo.postValue(response.body)
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 회원정보세팅에 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 회원정보세팅에 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 회원정보세팅에 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -149,23 +172,25 @@ class UserViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.checkUserNickname(userId)
+            val type = "회원 정보수정에"
+            val nickname = "닉네임"
             when (response) {
                 is NetworkResponse.Success -> {
                     val check = response.body.exist
                     if(check){
-                        _msg.postValue("이미 있는 닉네임입니다.")
+                        postValueEvent(4, nickname)
                     } else if (!check){
-                        _msg.postValue("사용 가능한 닉네임입니다.")
+                        postValueEvent(5, nickname)
                     }
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -177,24 +202,26 @@ class UserViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.checkUserEmail(email)
+            val type = "회원 정보조회에"
+            val type2 = "이메일"
             when (response) {
                 is NetworkResponse.Success -> {
                     val check = response.body.exist
                     Log.d("중복", "${response.body.exist}")
-                    if (check) {
-                        _msg.postValue("이미 있는 이메일입니다.")
-                    } else if (!check) {
-                        _msg.postValue("사용 가능한 이메일 입니다.")
+                    if(check){
+                        postValueEvent(4, type2)
+                    } else if (!check){
+                        postValueEvent(5, type2)
                     }
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -212,18 +239,19 @@ class UserViewModel @Inject constructor(
         showProgress()
         viewModelScope.launch {
             val response = repository.updateUserPassword(passwordReset)
+            val type = "회원 정보조회에"
             when (response) {
                 is NetworkResponse.Success -> {
-                    _msg.postValue("임시 비밀번호 메일이 전송되었습니다.")
+                    _msg.postValue(Event("임시 비밀번호 메일이 전송되었습니다."))
                 }
                 is NetworkResponse.ApiError -> {
-                    _msg.postValue("Api 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(0, type)
                 }
                 is NetworkResponse.NetworkError -> {
-                    _msg.postValue("서버 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(1, type)
                 }
                 is NetworkResponse.UnknownError -> {
-                    _msg.postValue("알 수 없는 오류 : 회원정보조회에 실패했습니다.")
+                    postValueEvent(2, type)
                 }
             }
             hideProgress()
@@ -233,12 +261,12 @@ class UserViewModel @Inject constructor(
     fun validationUpdate(nickname: String?,
                    dateBirth:String?, gender:String?, nicknameCheck: Boolean): Boolean {
         if (nickname == null && dateBirth == null && gender == null) {
-            _msg.postValue("변경할 것이 없습니다.")
+            _msg.postValue(Event("변경할 것이 없습니다."))
             return false
         }
 
         if (!nicknameCheck && nickname!=null) {
-            _msg.postValue("닉네임 중복확인을 해주세요.")
+            _msg.postValue(Event("닉네임 중복확인을 해주세요."))
             return false
         }
 
@@ -247,7 +275,7 @@ class UserViewModel @Inject constructor(
 
     fun validationUpdatePassword(password : String?, passwordCheck: String?): Boolean {
         if (password != passwordCheck) {
-            _msg.postValue("비밀번호가 서로 다릅니다.")
+            _msg.postValue(Event("비밀번호가 서로 다릅니다."))
             return false
         }
         return true

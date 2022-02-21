@@ -171,10 +171,12 @@ class JoinFragment : BaseFragment<FragmentJoinBinding>(
 
     private fun observeData() {
         with(viewModel) {
-            errorMsg.observe(viewLifecycleOwner) {
-                showToast(it)
-                if (it == "회원가입에 성공했습니다."){
-                    goToNext(R.id.action_joinFragment_to_explainJoinFragment)
+            errorMsg.observe(viewLifecycleOwner) { event ->
+                event.getContentIfNotHandled()?.let {
+                    showToast(it)
+                    if (it == "회원가입에 성공했습니다."){
+                        goToNext(R.id.action_joinFragment_to_explainJoinFragment)
+                    }
                 }
             }
 
