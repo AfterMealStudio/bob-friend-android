@@ -5,6 +5,7 @@ import com.example.bob_friend_android.data.entity.ErrorResponse
 import com.example.bob_friend_android.data.entity.User
 import com.example.bob_friend_android.data.network.NetworkResponse
 import com.example.bob_friend_android.data.network.api.ApiService
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -17,7 +18,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun deleteUser(
         token: String,
         password: HashMap<String, String>
-    ): NetworkResponse<Void, ErrorResponse> {
+    ): NetworkResponse<ResponseBody, ErrorResponse> {
         return apiService.deleteUserResponse(token, password)
     }
 
@@ -37,7 +38,7 @@ class UserRepositoryImpl @Inject constructor(
         return apiService.getEmailCheckResponse(email)
     }
 
-    override suspend fun updateUserPassword(passwordReset: HashMap<String, String>): NetworkResponse<Void, ErrorResponse> {
+    override suspend fun updateUserPassword(passwordReset: HashMap<String, String>): NetworkResponse<ResponseBody, ErrorResponse> {
         return apiService.updateUserPasswordResponse(passwordReset)
     }
 }

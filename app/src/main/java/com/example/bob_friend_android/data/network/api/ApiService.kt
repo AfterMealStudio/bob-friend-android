@@ -4,6 +4,7 @@ package com.example.bob_friend_android.data.network.api
 import com.example.bob_friend_android.data.entity.*
 import com.example.bob_friend_android.data.network.NetworkResponse
 import com.example.bob_friend_android.model.*
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -24,7 +25,7 @@ interface ApiService {
     suspend fun refreshTokenResponse(@Body token: Token): NetworkResponse<Token, ErrorResponse>
 
     @PUT("/api/user/password")
-    suspend fun updateUserPasswordResponse(@Body passwordReset: HashMap<String, String>): NetworkResponse<Void, ErrorResponse>
+    suspend fun updateUserPasswordResponse(@Body passwordReset: HashMap<String, String>): NetworkResponse<ResponseBody, ErrorResponse>
     //---
 
     //--- ListViewModel
@@ -53,8 +54,8 @@ interface ApiService {
     suspend fun signUpResponse(@Body user: Map<String, String>): NetworkResponse<User, ErrorResponse>
 
     //회원탈퇴
-    @HTTP(method = "DELETE", path = "http://117.17.102.143:8080/api/user/", hasBody = true)
-    suspend fun deleteUserResponse(@Header("Authorization") token:String, @Body password: Map<String, String>): NetworkResponse<Void, ErrorResponse>
+    @HTTP(method = "DELETE", path = "http://117.17.102.143:8080/api/user", hasBody = true)
+    suspend fun deleteUserResponse(@Header("Authorization") token:String, @Body password: Map<String, String>): NetworkResponse<ResponseBody, ErrorResponse>
 
     //회원정보 수정
     @PUT("/api/user")
@@ -86,11 +87,11 @@ interface ApiService {
 
     //약속신고
     @PATCH("/api/recruitments/{recruitmentId}/report")
-    suspend fun reportAppointmentResponse(@Path("recruitmentId") recruitmentId: Int): NetworkResponse<Void, ErrorResponse>
+    suspend fun reportAppointmentResponse(@Path("recruitmentId") recruitmentId: Int): NetworkResponse<ResponseBody, ErrorResponse>
 
     //약속마감
     @PATCH("/api/recruitments/{recruitmentId}/close")
-    suspend fun closeAppointmentResponse(@Path("recruitmentId") recruitmentId: Int): NetworkResponse<Void, ErrorResponse>
+    suspend fun closeAppointmentResponse(@Path("recruitmentId") recruitmentId: Int): NetworkResponse<ResponseBody, ErrorResponse>
 
     //약속조회
     @GET("/api/recruitments/{id}")
@@ -98,7 +99,7 @@ interface ApiService {
 
     //약속삭제
     @DELETE("/api/recruitments/{id}")
-    suspend fun deleteAppointmentResponse(@Path("id") boardId: Int): NetworkResponse<Void, ErrorResponse>
+    suspend fun deleteAppointmentResponse(@Path("id") boardId: Int): NetworkResponse<ResponseBody, ErrorResponse>
 
     //--------------------------
 
@@ -108,11 +109,11 @@ interface ApiService {
 
     //댓글 신고
     @PATCH("/api/recruitments/{recruitmentId}/comments/{commentId}/report")
-    suspend fun reportCommentResponse(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int): NetworkResponse<Void, ErrorResponse>
+    suspend fun reportCommentResponse(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int): NetworkResponse<ResponseBody, ErrorResponse>
 
     //댓글 삭제
     @DELETE("/api/recruitments/{recruitmentId}/comments/{commentId}")
-    suspend fun deleteCommentResponse(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int): NetworkResponse<Void, ErrorResponse>
+    suspend fun deleteCommentResponse(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int): NetworkResponse<ResponseBody, ErrorResponse>
 
     //대댓글 작성
     @POST("/api/recruitments/{recruitmentId}/comments/{commentId}/replies")
@@ -120,11 +121,11 @@ interface ApiService {
 
     //대댓글 신고
     @PATCH("/api/recruitments/{recruitmentId}/comments/{commentId}/replies/{replies}/report")
-    suspend fun reportReCommentResponse(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int, @Path("replies") recommentsId: Int): NetworkResponse<Void, ErrorResponse>
+    suspend fun reportReCommentResponse(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int, @Path("replies") recommentsId: Int): NetworkResponse<ResponseBody, ErrorResponse>
 
     //대댓글 삭제
     @DELETE("/api/recruitments/{recruitmentId}/comments/{commentId}/replies/{replies}")
-    suspend fun deleteReCommentResponse(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int, @Path("replies") recommentsId: Int): NetworkResponse<Void, ErrorResponse>
+    suspend fun deleteReCommentResponse(@Path("recruitmentId") recruitmentId: Int, @Path("commentId") commentsId: Int, @Path("replies") recommentsId: Int): NetworkResponse<ResponseBody, ErrorResponse>
 
     //---
 }

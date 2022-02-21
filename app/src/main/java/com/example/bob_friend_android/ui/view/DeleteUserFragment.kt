@@ -50,9 +50,9 @@ class DeleteUserFragment : BaseFragment<FragmentDeleteUserBinding>(
             editor.clear()
             editor.apply()
 //            goToNext(R.id.action_deleteUserFragment_to_loginFragment)
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
-            activity?.finish()
+//            val intent = Intent(requireContext(), MainActivity::class.java)
+//            startActivity(intent)
+//            activity?.finish()
         }
 
         requireDataBinding().layoutDelete.setOnClickListener {
